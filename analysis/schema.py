@@ -1,11 +1,21 @@
-"""Expected Metrocar schema, from Section 6.2 of the execution plan.
+"""Expected Metrocar schema, reconciled with the live database (Phase 1).
 
 This is the single source of truth for what Phase 1 validates against. The
 profiler compares the live database to these expectations and reports any
 mismatch instead of failing silently.
+
+Reconciliation note: the live database is authoritative. Column names and
+status values below reflect the verified live schema, which differs from the
+original plan (Section 6.2) in three ways:
+  - ride_requests uses ``dropoff_location`` (plan said ``destination_location``)
+  - reviews uses ``review`` (plan said ``free_response``)
+  - transactions has an extra candidate key ``transaction_id``
+  - transactions.charge_status values are exactly ``Approved`` / ``Decline``
+All timestamps are source-local ``timestamp without time zone`` (timezone
+unknown).
 """
 
-# Expected columns per table, in the order described by the plan.
+# Expected columns per table, matching the verified live schema.
 EXPECTED_TABLES: dict[str, list[str]] = {
     "app_downloads": ["app_download_key", "platform", "download_ts"],
     "signups": ["user_id", "session_id", "signup_ts", "age_range"],
@@ -16,18 +26,19 @@ EXPECTED_TABLES: dict[str, list[str]] = {
         "request_ts",
         "accept_ts",
         "pickup_location",
-        "destination_location",
+        "dropoff_location",
         "pickup_ts",
         "dropoff_ts",
         "cancel_ts",
     ],
     "transactions": [
+        "transaction_id",
         "ride_id",
         "purchase_amount_usd",
         "charge_status",
         "transaction_ts",
     ],
-    "reviews": ["review_id", "ride_id", "driver_id", "user_id", "rating", "free_response"],
+    "reviews": ["review_id", "ride_id", "driver_id", "user_id", "rating", "review"],
 }
 
 # Columns that must be unique and non-null (candidate primary keys).
@@ -35,8 +46,12 @@ UNIQUE_KEYS: dict[str, str] = {
     "app_downloads": "app_download_key",
     "signups": "user_id",
     "ride_requests": "ride_id",
+    "transactions": "transaction_id",
     "reviews": "review_id",
 }
+
+# Exact charge_status values present in the live database.
+CHARGE_STATUSES: tuple[str, str] = ("Approved", "Decline")
 
 # Provisional relationships from Section 6.3 to validate.
 # Each entry: (left_table, left_key, right_table, right_key, description).

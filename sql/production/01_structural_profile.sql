@@ -37,6 +37,10 @@ SELECT 'ride_requests', COUNT(*), COUNT(DISTINCT ride_id),
        COUNT(*) FILTER (WHERE ride_id IS NULL)
 FROM ride_requests
 UNION ALL
+SELECT 'transactions', COUNT(*), COUNT(DISTINCT transaction_id),
+       COUNT(*) FILTER (WHERE transaction_id IS NULL)
+FROM transactions
+UNION ALL
 SELECT 'reviews', COUNT(*), COUNT(DISTINCT review_id),
        COUNT(*) FILTER (WHERE review_id IS NULL)
 FROM reviews;
@@ -114,7 +118,7 @@ FROM ride_requests;
 SELECT
   (SELECT COUNT(*) FROM transactions t
      JOIN ride_requests r ON r.ride_id = t.ride_id
-    WHERE t.charge_status = 'approved' AND r.dropoff_ts IS NULL) AS approved_payment_without_dropoff,
+    WHERE t.charge_status = 'Approved' AND r.dropoff_ts IS NULL) AS approved_payment_without_dropoff,
   (SELECT COUNT(*) FROM reviews rv
      JOIN ride_requests r ON r.ride_id = rv.ride_id
     WHERE r.dropoff_ts IS NULL) AS review_without_dropoff;

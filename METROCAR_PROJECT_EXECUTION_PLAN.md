@@ -1,6 +1,6 @@
 # Metrocar Funnel Analysis — VS Code Agent Execution Plan
 
-> **Plan status:** PHASE 1 LIVE PROFILING AUTHORIZED — PHASE 2 BLOCKED
+> **Plan status:** PHASE 1 SCHEMA RECONCILIATION IN PROGRESS — PHASE 2 BLOCKED
 >
 > The user has approved the clean-room product direction. Execute only the phase explicitly authorized by the current prompt and Section 12. Stop at its checkpoint; later phases remain blocked until separately approved.
 
@@ -402,6 +402,8 @@ Use **SQLAlchemy 2.x with psycopg 3** in synchronous mode:
 
 ### 6.2 Tables
 
+The names below were reconciled with the live PostgreSQL schema on 2026-08-26. The verified live schema is authoritative where the earlier instructional description differed.
+
 #### `app_downloads`
 
 - `app_download_key` — unique identifier for an app download
@@ -423,16 +425,17 @@ Use **SQLAlchemy 2.x with psycopg 3** in synchronous mode:
 - `request_ts` — ride-request timestamp
 - `accept_ts` — driver-acceptance timestamp
 - `pickup_location` — pickup coordinates
-- `destination_location` — destination coordinates
+- `dropoff_location` — destination/drop-off coordinates
 - `pickup_ts` — pickup timestamp
 - `dropoff_ts` — drop-off timestamp
 - `cancel_ts` — cancellation timestamp; acceptance, pickup, and drop-off timestamps can be null
 
 #### `transactions`
 
+- `transaction_id` — non-null candidate primary identifier; uniqueness must be confirmed by the live Phase 1 test
 - `ride_id` — foreign key to a ride
 - `purchase_amount_usd` — purchase amount in USD
-- `charge_status` — `approved` or `cancelled`
+- `charge_status` — exact live values `Approved` or `Decline`
 - `transaction_ts` — transaction timestamp
 
 #### `reviews`
@@ -442,7 +445,9 @@ Use **SQLAlchemy 2.x with psycopg 3** in synchronous mode:
 - `driver_id` — foreign key to a driver
 - `user_id` — foreign key to the requesting user
 - `rating` — rating from 0 to 5
-- `free_response` — review text supplied by the user
+- `review` — review text supplied by the user
+
+All inspected timestamp columns use PostgreSQL `timestamp without time zone`. Their timezone is therefore unknown; treat them as source-local values and do not apply an invented timezone conversion. Phase 1 also found 24,727 rides with both `accept_ts` and `cancel_ts`, but none with both cancellation and pickup or drop-off. Treat this as a valid cancel-after-accept outcome, not a separate funnel stage; its analytical treatment belongs in the Phase 2 metric contract.
 
 ### 6.3 Provisional relationships to validate
 
@@ -962,6 +967,10 @@ During this remediation pass, do not create or read `.env`, connect to the datab
 
 The credential-free remediation is verified complete: 28 tests pass and the four live-database tests skip because `.env` is absent. The user may now configure `.env` locally, and a fresh agent chat may run only the safe Phase 1 runner, live schema/profile tests, and credential-free data-quality report. Stop at the Phase 1 checkpoint in Section 12.2. Do not print the URL, calculate final metrics, begin Phase 2, build the frontend, inspect legacy assets, commit, or deploy.
 
+### 12.1.3 Live-schema reconciliation
+
+The live Phase 1 runner connected read-only and produced the credential-free report. The database revealed three plan differences: `dropoff_location` replaces `destination_location`, `review` replaces `free_response`, and `transactions.transaction_id` exists as a non-null candidate key. The exact payment-status values are `Approved` and `Decline`. Reconcile code, tests, SQL, and the generated report with these verified facts; validate `transaction_id` uniqueness; require zero remaining schema mismatches and a fully passing test suite; then stop for Phase 2 review. The implementation agent must follow Section 12.4 and must not edit this plan.
+
 ### 12.2 Phase 1 checkpoint
 
 Before requesting Phase 2 approval, report:
@@ -988,8 +997,13 @@ Later phases may proceed only when their prerequisites are satisfied:
 - the previous phase's acceptance checks pass;
 - the user explicitly approves the next phase.
 
+### 12.4 Canonical plan ownership
+
+The user and the planning assistant exclusively maintain `METROCAR_PROJECT_EXECUTION_PLAN.md`. Implementation agents, including Kimi, must treat it as read-only: they may read it and may stage, commit, or push an already reviewed plan change made by the planning assistant, but they must not edit, rewrite, rename, restore, or delete it. Proposed plan changes belong in the checkpoint report for the planning assistant to incorporate. If an implementation agent observes an unexpected plan diff, it must stop and report it without attempting repair.
+
 ## 13. Change Log
 
+- **2026-08-26:** Reconciled the canonical plan with the live Phase 1 schema: adopted `dropoff_location`, `review`, candidate key `transaction_id`, and exact `Approved`/`Decline` statuses; recorded unknown timestamp timezone and valid cancel-after-accept behavior. Reserved all future canonical-plan edits for the user and planning assistant after an implementation-agent edit accidentally truncated the file; implementation agents may now read and commit reviewed plan changes but may never modify the plan themselves.
 - **2026-08-26:** Verified the completed credential-free remediation, including gated joins and fully skipped partial-report rendering. Independently confirmed 28 tests pass and four database tests skip. Authorized live Phase 1 profiling in a fresh agent chat while keeping Phase 2 and all later work blocked until the generated data-quality report is reviewed.
 - **2026-08-26:** Reviewed the first Phase 1 credential-free implementation report and the created files. Confirmed 9 local tests pass and 4 database tests skip because `.env` is absent. Kept Phase 2 blocked and added a credential-free remediation gate for connection-level read-only enforcement, full-path secret redaction, a safe runner, graceful schema mismatch handling, stronger structural ride-status evidence, accurate SQL/Python scope wording, and focused regression tests before any live database access.
 - **2026-08-26:** Reviewed and accepted the z.ai preflight report. Confirmed the workspace contains only the plan and that no implementation or historical asset inspection occurred. Changed the status to staged execution, authorized only Phase 0 setup plus Phase 1 structural profiling, added explicit allowed/forbidden actions and checkpoint reporting, and fixed the initial simple repository layout. Deferred Python Plotly unless a concrete analysis-layer need is demonstrated because Plotly.js owns the confirmed frontend visualization layer.

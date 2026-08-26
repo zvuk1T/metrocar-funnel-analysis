@@ -408,7 +408,7 @@ def paid_without_completion(engine: Engine) -> dict:
         SELECT COUNT(*) AS n
         FROM transactions t
         JOIN ride_requests r ON r.ride_id = t.ride_id
-        WHERE t.charge_status = 'approved' AND r.dropoff_ts IS NULL
+        WHERE t.charge_status = 'Approved' AND r.dropoff_ts IS NULL
         """,
     )[0]["n"]
     reviewed = _rows(
@@ -426,7 +426,7 @@ def paid_without_completion(engine: Engine) -> dict:
         SELECT COUNT(*) AS n
         FROM transactions t
         JOIN ride_requests r ON r.ride_id = t.ride_id
-        WHERE t.charge_status = 'approved' AND r.cancel_ts IS NOT NULL
+        WHERE t.charge_status = 'Approved' AND r.cancel_ts IS NOT NULL
         """,
     )[0]["n"]
     return {
