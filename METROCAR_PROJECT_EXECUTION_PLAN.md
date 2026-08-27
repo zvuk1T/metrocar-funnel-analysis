@@ -1,12 +1,12 @@
 # Metrocar Funnel Analysis — VS Code Agent Execution Plan
 
-> **Plan status:** PHASE 1 SCHEMA RECONCILIATION IN PROGRESS — PHASE 2 BLOCKED
+> **Plan status:** PHASE 1 COMPLETE — PHASE 2 READINESS GATE — IMPLEMENTATION NOT AUTHORIZED
 >
-> The user has approved the clean-room product direction. Execute only the phase explicitly authorized by the current prompt and Section 12. Stop at its checkpoint; later phases remain blocked until separately approved.
+> Phase 1 is complete and independently accepted. The Phase 2 metric definitions and governance baseline are locked in the canonical documents listed in Section 2.4. Phase 2 analytical implementation has not started and is not currently authorized. The current checkpoint is the Phase 2 readiness gate in Section 12.2.1. Passing that gate does not itself authorize implementation; the user must provide a separate explicit authorization.
 
 ## 1. Purpose of This Document
 
-This file will be the single implementation brief for a VS Code coding agent. When complete, it must contain enough verified context, constraints, acceptance criteria, work phases, and validation steps for the agent to finish the Metrocar rebuild without guessing the user's intent or the verified analytical requirements.
+This file is the top-level execution brief and canonical index for a VS Code coding agent. Together with the binding documents in Section 2.4, it provides the verified context, constraints, acceptance criteria, work phases, and validation steps needed to finish the Metrocar rebuild without guessing the user's intent or analytical requirements.
 
 The final agent must:
 
@@ -67,6 +67,20 @@ Apply instructions in this order:
 Historical MasterSchool submission logistics and deadlines do not define the current deliverables.
 
 If two higher-authority instructions conflict, document the conflict and ask the user before implementation.
+
+### 2.4 Canonical project document map
+
+| Document | Authority and purpose | Content ownership |
+|---|---|---|
+| `METROCAR_PROJECT_EXECUTION_PLAN.md` | Governs project scope, phases, checkpoints, deliverables, and readiness gates. | User and planning assistant only. |
+| `docs/METRIC_DEFINITION_CONTRACT.md` | Sole detailed authority for Phase 2 funnel entities, stage membership, joins, filters, formulas, attribution, limitations, and validation rules. | User and planning assistant only. |
+| `AGENTS.md` | Binding working method for tiered reading, agent boundaries, checkpoints, safety, validation, documentation, and Git discipline. | User and planning assistant only. |
+| `docs/ANALYSIS_INSIGHT_LOG.md` | Durable register for evidence-backed observations, patterns, caveats, hypotheses, and recommendations. | User and planning assistant by default; an implementation agent may append only when the task explicitly grants that authority. |
+| `docs/data_quality_report.md` | Accepted Phase 1 evidence for the live schema and structural data-quality profile. | Generated evidence; update only through an explicitly authorized reproducible Phase 1 rerun. |
+
+The task-specific reading tier is governed by `AGENTS.md`. The execution plan intentionally does not duplicate the detailed metric contract. If a detailed Phase 2 metric rule appears ambiguous here, use `docs/METRIC_DEFINITION_CONTRACT.md`; if the documents materially conflict, stop and escalate to the user and planning assistant rather than choosing an interpretation.
+
+Canonical SQL files, Python modules and named functions, notebooks, and validation outputs created during implementation must be registered in the relevant task handover and in authorized Insight Log records. Their exact paths must be named by the bounded implementation task or recorded when the artifacts are created; this plan does not invent paths for files that do not yet exist.
 
 ## 3. Confirmed Project Brief
 
@@ -161,7 +175,7 @@ Before handoff, the implementing agent must verify and report `PASS` or `FAIL` f
 - Python and frontend code remain proportionate to a student project: direct transformations, small focused functions/components, and no unnecessary frameworks or abstraction layers;
 - every transformation and analysis step is reproducible and documented in code, a notebook, or both;
 - both confirmed funnel grains are represented accurately and clearly;
-- the user funnel implements Downloaded → Signed Up → Requested at Least One Ride → Completed at Least One Ride at a compatible person/download grain;
+- the user funnel implements Downloaded → Signed Up → Requested at Least One Ride → Completed at Least One Ride at the download-entrant grain defined in `docs/METRIC_DEFINITION_CONTRACT.md`;
 - the rides funnel implements Requested → Finished → Paid → Reviewed at ride grain;
 - platform, age-range, and date-range controls behave according to documented metric rules;
 - the user can compare two platforms or two age groups side by side without changing metric definitions or counting grain; date remains a filter;
@@ -201,7 +215,7 @@ Use the following business sequence as the initial funnel definition:
 6. **Payment** — the user is charged after the ride.
 7. **Review** — the user can rate the driver and leave a written review.
 
-The conceptual sequence above describes the business lifecycle. Do not force all seven concepts into one mixed-grain chart. The confirmed implementation uses the two compatible funnels in Section 4.2, while exact source-column qualification for paid and reviewed rides remains subject to schema validation.
+The conceptual sequence above describes the business lifecycle. Do not force all seven concepts into one mixed-grain chart. The confirmed implementation uses the two compatible funnels in Section 4.2. Exact entity, stage, join, filter, attribution, formula, and limitation rules are locked in `docs/METRIC_DEFINITION_CONTRACT.md` and must not be redefined during implementation.
 
 ### 4.1 Confirmed funnel-construction rules
 
@@ -305,13 +319,13 @@ The Insights page defines two distinct funnel views. They must not share incompa
 
 #### 4.2.1 User funnel
 
-- Uses a compatible person/download-level entity throughout and contains four ordered stages: **Downloaded App → Signed Up → Requested at Least One Ride → Completed at Least One Ride**.
+- Uses the analytical download entrant defined in `docs/METRIC_DEFINITION_CONTRACT.md` throughout and contains four ordered stages: **Downloaded App → Signed Up → Requested at Least One Ride → Completed at Least One Ride**.
 - Build one base table with one row per compatible funnel entity and one Boolean column per stage.
-- Preserve downloads without a matching signup. Under the course assumption, each unregistered download may be treated as one person for this funnel.
+- Preserve downloads without a matching signup. A download entrant is an analytical proxy and must not be described as a proven unique physical person.
 - For registered users, reduce repeated ride rows to per-user Booleans; `any()` is the intended simple aggregation pattern for at-least-one requested or completed ride.
-- Validate the exact completion condition against the live schema; the supplied example derives `is_finished` from a non-null `dropoff_ts`.
+- Use the locked stage-membership rules in the metric contract; live-schema checks validate their implementation rather than redefine them.
 - Include `platform`, derived `age_group`, and download date in the base table for filtering and segmentation.
-- Fill missing categorical attributes created by non-registration with an explicit display category such as `Unknown`; never silently drop those first-stage entities.
+- Preserve the metric contract's distinction between source `Unknown` and `Not available — no signup`; never silently drop first-stage entities.
 - Shows absolute stage counts and conversion context.
 
 #### 4.2.2 Rides funnel
@@ -320,7 +334,7 @@ The Insights page defines two distinct funnel views. They must not share incompa
 - Uses ride-level granularity throughout.
 - Uses the confirmed ordered sequence **Ride Requested → Ride Finished → Ride Paid → Ride Reviewed**.
 - Build a separate ride-grain base table and aggregation rather than reusing incompatible user counts.
-- Finalize and validate the exact qualifying source columns, timestamp/null rules, deduplication, and transaction/review handling before publishing results.
+- Implement and validate the locked qualifying, timestamp/null, deduplication, transaction, and review rules in `docs/METRIC_DEFINITION_CONTRACT.md` without introducing alternatives.
 
 #### 4.2.3 Required interactive behavior
 
@@ -449,9 +463,9 @@ The names below were reconciled with the live PostgreSQL schema on 2026-08-26. T
 
 All inspected timestamp columns use PostgreSQL `timestamp without time zone`. Their timezone is therefore unknown; treat them as source-local values and do not apply an invented timezone conversion. Phase 1 also found 24,727 rides with both `accept_ts` and `cancel_ts`, but none with both cancellation and pickup or drop-off. Treat this as a valid cancel-after-accept outcome, not a separate funnel stage; its analytical treatment belongs in the Phase 2 metric contract.
 
-### 6.3 Provisional relationships to validate
+### 6.3 Confirmed relationships with continuing validation
 
-The column descriptions imply these joins, but the implementing agent must validate uniqueness, cardinality, null behavior, and referential coverage before relying on them:
+Phase 1 and the metric contract confirm these joins. Every analytical rerun must still validate uniqueness, cardinality, null behavior, and referential coverage before relying on them:
 
 - `app_downloads.app_download_key` → `signups.session_id`
 - `signups.user_id` → `ride_requests.user_id`
@@ -483,8 +497,7 @@ The project uses these questions to guide the initial Pandas work and begin cons
 - Independently reconcile important SQL results with Pandas calculations so the repository demonstrates both database querying and analytical validation.
 - Give every result a clearly named metric, explicit unit, denominator where relevant, and reproducible calculation path.
 - Keep event counts and distinct-entity counts separate. In particular, do not confuse ride-request rows with unique requesting users.
-- Define the qualifying rules for `completed ride`, `accepted ride`, and `successful payment` in the metric dictionary before calculating them.
-- Do not infer those qualifying rules silently from column names; confirm them against later instructions and validate them against actual null/status patterns.
+- Use the locked qualifying rules for `completed ride`, `accepted ride`, and `successful payment` from `docs/METRIC_DEFINITION_CONTRACT.md` and validate their implementation against actual null/status patterns.
 - State the time unit used for average ride duration and exclude or separately report invalid or incomplete timestamp pairs.
 - Validate platform attribution through the download → signup → ride-request join and prove that the join does not multiply ride requests.
 - For the signup-to-request drop-off, state the counting grain, numerator, denominator, conversion formula, and drop-off formula explicitly.
@@ -596,31 +609,48 @@ web/
 - enumerate expected tables and verify required columns;
 - capture safe schema metadata without exposing credentials;
 - profile rows, keys, duplicates, nulls, categorical values, and timestamp bounds;
-- validate the provisional relationships in Section 6.3;
+- validate the confirmed relationships in Section 6.3;
 - fail clearly if the live schema differs from this specification.
 
-### Phase 2 — Metric-definition contract
+### Phase 2 — Reproducible funnel analysis
 
-Before calculating results, create a compact metric dictionary containing:
+**Status:** Not started. Blocked at the Phase 2 readiness gate in Section 12.2.1.
 
-- the business meaning of each funnel stage;
-- the source table and qualifying condition;
-- the counting grain;
-- the deduplication rule;
-- the time-window rule;
-- the segment attribution rule for platform and age;
-- conversion and drop-off formulas;
-- known limitations.
+**Authorization:** No implementation agent is currently authorized to execute this phase.
 
-This contract must be reviewed against the approved metric requirements and the user's final scope decisions. Do not allow funnel counts to be silently distorted by repeated ride requests, multiple transactions, or multiple reviews.
+#### Objective
 
-### Phase 3 — Reproducible analysis
+Implement the locked analytical definitions in `docs/METRIC_DEFINITION_CONTRACT.md` as a small, readable, reproducible SQL/Python pipeline. Produce validated user- and ride-funnel outputs without changing definitions, expanding product scope, or editing protected planning documents.
 
-- write SQL that extracts only required fields and produces auditable intermediate datasets;
-- keep the canonical rerunnable pipeline in small `.py` modules; notebooks may explain or explore but must import/reuse canonical functions instead of duplicating business logic;
+#### Required implementation evidence
+
+- exact, reviewable SQL that extracts only the fields required by the locked metric rules;
+- small canonical Python modules with named functions that build the two governed base tables and funnel-stage outputs;
+- independent reconciliation of material counts and rates across SQL and Pandas where practical;
+- automated validation of grain, joins, stage subsets, multiplicity, null/status behavior, safe denominators, and rounding boundaries;
+- browser-safe generated aggregates only after the analytical outputs pass validation;
+- explanations proportional to difficulty so a student can follow every non-trivial grain change, join, stage flag, formula, and caveat;
+- an explanatory notebook only if explicitly included in the authorized task, importing canonical logic rather than duplicating it;
+- evidence-backed observations recorded according to the write authority in `AGENTS.md` and Section 12.4.
+
+#### Boundaries
+
+- Do not redefine or paraphrase detailed metric rules in implementation files when a reference to the canonical contract is sufficient.
+- Do not inspect historical project assets, start frontend work, deploy, publish final business recommendations, or expand the approved analytical questions unless separately authorized.
+- Do not edit, restore, rename, move, or delete any protected planning document.
+- Do not access `.env` except through the existing safe runtime mechanism explicitly authorized for the bounded task, and never print or persist secrets.
+
+#### Mandatory checkpoint
+
+Stop after the bounded Phase 2 deliverables and validation evidence named in the implementation prompt are complete. Report files changed, commands run, validation results, metric reconciliations, observed caveats, and any proposed planning changes. Further analysis, Insight Log status changes, publication, visual/frontend work, recommendations, commits, or pushes require the separate authorization specified by the plan and task brief.
+
+### Phase 3 — Extended business-question analysis
+
+- after separate Phase 3 authorization, extend the validated Phase 2 outputs with SQL that answers the remaining approved business questions and produces only necessary auditable intermediate datasets;
+- reuse and extend the canonical rerunnable pipeline in small `.py` modules; notebooks may explain or explore but must import/reuse canonical functions instead of duplicating business logic;
 - use Pandas for validation, additional calculations, segmentation, and chart-ready outputs;
-- construct the user base table with one compatible entity per row, Boolean funnel-stage columns, and retained `Unknown` values for unregistered downloads;
-- construct a separate ride-grain base table for requested, finished, paid, and reviewed stages;
+- reuse the validated Phase 2 user base table with one governed entrant per row, Boolean funnel-stage columns, and the metric contract's distinct unavailable-age categories;
+- reuse the validated Phase 2 ride-grain base table for requested, finished, paid, and reviewed stages;
 - use straightforward Pandas operations such as `groupby`, `any`, `sum`, Boolean masks, and transpose where they clearly express the calculation;
 - keep funnel and rate functions small, avoid mutating caller-owned DataFrames, and copy inputs when a function performs intermediate transformations;
 - document each non-trivial change of grain, join, derived stage flag, denominator, and business-rule decision at the point where a student needs that context;
@@ -733,11 +763,18 @@ For production SQL, use a concise header containing the business question, outpu
 
 The repository README or methodology index must provide a short reading order that tells a student where to begin, which analysis files build the two base tables, where funnel metrics are calculated, where validation occurs, how public outputs are generated, and how those outputs reach the Plotly components.
 
-## 10. Decisions Still Open
+## 10. Decision Status
 
-- Exact stage qualification and entity mapping within the confirmed user-level and ride-level funnels
-- Exact definitions of accepted, completed, paid, and reviewed rides
-- Date-range filtering and cohort-attribution semantics across funnel stages
+### 10.1 Resolved Phase 2 metric-definition items
+
+- **Exact stage qualification and entity mapping within the confirmed user-level and ride-level funnels** — resolved in `docs/METRIC_DEFINITION_CONTRACT.md`, especially Sections 3–5.
+- **Exact definitions of accepted, completed, paid, and reviewed rides** — resolved in `docs/METRIC_DEFINITION_CONTRACT.md`, especially Sections 4–6 and 12.
+- **Date-range filtering and cohort-attribution semantics across funnel stages** — resolved in `docs/METRIC_DEFINITION_CONTRACT.md`, especially Section 7.
+
+These resolutions lock the definitions; they do not authorize calculation or implementation.
+
+### 10.2 Decisions still open
+
 - Exact name and orchestration implementation for the confirmed one-command analytical refresh
 - Exact Render static-site build and deployment configuration
 - Availability, condition, and reuse value of the historical Dash source files and presentation assets
@@ -748,7 +785,7 @@ The repository README or methodology index must provide a short reading order th
 - Future Data Gym Brain integration boundary and reusable artifact contract
 - Exact single-repository folder layout and final filenames
 
-The implementing agent must not resolve these items by assumption while this plan remains `IN PROGRESS`.
+An implementation agent must not resolve these open items by assumption. If an open item is outside the explicitly authorized task, leave it open and stop at the task checkpoint.
 
 ## 11. User Additions
 
@@ -922,7 +959,7 @@ Presentation rules:
 
 ## 12. Staged Execution Gates
 
-### 12.1 Current authorization: Phase 0 setup and Phase 1 only
+### 12.1 Execution history and current authorization
 
 The preflight agent read the complete plan and confirmed that the workspace contains only this Markdown file. The user approved moving forward through controlled prompts.
 
@@ -971,6 +1008,12 @@ The credential-free remediation is verified complete: 28 tests pass and the four
 
 The live Phase 1 runner connected read-only and produced the credential-free report. The database revealed three plan differences: `dropoff_location` replaces `destination_location`, `review` replaces `free_response`, and `transactions.transaction_id` exists as a non-null candidate key. The exact payment-status values are `Approved` and `Decline`. Reconcile code, tests, SQL, and the generated report with these verified facts; validate `transaction_id` uniqueness; require zero remaining schema mismatches and a fully passing test suite; then stop for Phase 2 review. The implementation agent must follow Section 12.4 and must not edit this plan.
 
+### 12.1.4 Phase 1 acceptance
+
+Phase 1 is complete. The reconciled runner generated `docs/data_quality_report.md` with zero schema mismatches, the complete live test suite passed with 32 tests and zero failures, and `.env` remained ignored and untracked. Commit `27df7f3` (`fix: align Phase 1 profile with live schema`) was pushed successfully to `main`. The user and planning assistant independently reviewed the report, repository state, plan integrity, and secret handling.
+
+Phase 2 implementation remains blocked at the readiness gate in Section 12.2.1. The reviewed metric contract and governance baseline are now incorporated into this plan. The next eligible planning action is to prepare and review one bounded Phase 2 implementation brief. Kimi or another implementation agent must not calculate funnel metrics, create analytical datasets, inspect historical assets, or begin frontend work until the gate conditions are confirmed and the user separately authorizes that exact task.
+
 ### 12.2 Phase 1 checkpoint
 
 Before requesting Phase 2 approval, report:
@@ -987,6 +1030,23 @@ Before requesting Phase 2 approval, report:
 
 Stop after the report. Phase 2 becomes eligible only after the user and planning assistant review these findings and update the metric-definition contract.
 
+### 12.2.1 Phase 2 readiness gate
+
+Phase 2 implementation may be proposed only after every condition below is confirmed:
+
+- Phase 1 remains accepted, with `docs/data_quality_report.md` as the canonical structural evidence and no new unresolved schema conflict.
+- `AGENTS.md`, `docs/METRIC_DEFINITION_CONTRACT.md`, and `docs/ANALYSIS_INSIGHT_LOG.md` exist at their canonical paths and have been reviewed by the user and planning assistant.
+- The matching metric-definition items in Section 10.1 are marked resolved and no material conflict exists between this plan and the metric contract.
+- The implementation prompt names the assigned implementation agent, one bounded task, its permitted files or output locations, required deliverables, required validation evidence, and mandatory stop point.
+- The task names exact SQL and/or canonical Python modules and named functions as the reproducibility route for every implemented material metric; any notebook remains explanatory and imports canonical logic.
+- The task follows the tiered reading order and protected-document rules in `AGENTS.md`.
+- Insight Log write access is either explicitly granted with the task or remains reserved for the user and planning assistant.
+- The task forbids unapproved metric redefinition, scope expansion, protected-document edits, historical-asset inspection, frontend work, deployment, and Git actions unless each is separately and explicitly authorized.
+- Secret handling remains unchanged: `.env` stays local, ignored, untracked, and must never be printed, copied into artifacts, or committed.
+- The user gives a separate explicit authorization to execute the bounded Phase 2 task.
+
+This gate is currently **not passed for implementation**. Completing or reviewing planning documentation does not authorize Kimi or any other implementation agent.
+
 ### 12.3 Full-build readiness
 
 Later phases may proceed only when their prerequisites are satisfied:
@@ -997,12 +1057,24 @@ Later phases may proceed only when their prerequisites are satisfied:
 - the previous phase's acceptance checks pass;
 - the user explicitly approves the next phase.
 
-### 12.4 Canonical plan ownership
+### 12.4 Planning ownership and protected documents
 
-The user and the planning assistant exclusively maintain `METROCAR_PROJECT_EXECUTION_PLAN.md`. Implementation agents, including Kimi, must treat it as read-only: they may read it and may stage, commit, or push an already reviewed plan change made by the planning assistant, but they must not edit, rewrite, rename, restore, or delete it. Proposed plan changes belong in the checkpoint report for the planning assistant to incorporate. If an implementation agent observes an unexpected plan diff, it must stop and report it without attempting repair.
+The user and planning assistant exclusively maintain the content of:
+
+- `AGENTS.md`;
+- `METROCAR_PROJECT_EXECUTION_PLAN.md`;
+- `docs/METRIC_DEFINITION_CONTRACT.md`.
+
+Implementation agents, including Kimi, must treat these files as protected and read-only. They may not edit, rewrite, restore, rename, move, delete, replace, regenerate, or format them. Proposed changes belong in the checkpoint report for the planning assistant to evaluate and apply. If an implementation agent observes an unexpected diff, merge conflict, missing protected document, or inconsistency, it must stop and report the issue without attempting repair.
+
+An implementation agent may stage, commit, or push an already reviewed protected-document change only when the user explicitly authorizes that exact transport action and names the files. Transport authority is not content-edit authority: the agent must verify that the reviewed files remain byte-for-byte unchanged, must not resolve conflicts, and must stop on any discrepancy.
+
+`docs/ANALYSIS_INSIGHT_LOG.md` is writable by the user and planning assistant by default. An implementation agent may append to it only when the current task explicitly grants Insight Log write authority and defines the permitted evidence scope. Existing entries must not be silently rewritten or deleted.
 
 ## 13. Change Log
 
+- **2026-08-27:** Applied the reviewed Phase 2 governance amendment. Registered the canonical planning documents and accepted Phase 1 evidence, made the metric contract the sole detailed definition authority, reconciled outdated provisional wording, marked the three original metric-definition decisions resolved, replaced the former contract-drafting phase with a bounded reproducible-analysis phase, strengthened protected-document ownership, and added the Phase 2 readiness gate. This was a planning-only change; analytical implementation remains not started and not authorized.
+- **2026-08-26:** Accepted Phase 1 after independently confirming zero live-schema mismatches, 32 passing tests, safe `.env` handling, a clean synchronized `main`, and successful push of commit `27df7f3`. Opened only the Phase 2 metric-contract review for the user and planning assistant; implementation remains blocked pending an approved contract and explicit authorization.
 - **2026-08-26:** Reconciled the canonical plan with the live Phase 1 schema: adopted `dropoff_location`, `review`, candidate key `transaction_id`, and exact `Approved`/`Decline` statuses; recorded unknown timestamp timezone and valid cancel-after-accept behavior. Reserved all future canonical-plan edits for the user and planning assistant after an implementation-agent edit accidentally truncated the file; implementation agents may now read and commit reviewed plan changes but may never modify the plan themselves.
 - **2026-08-26:** Verified the completed credential-free remediation, including gated joins and fully skipped partial-report rendering. Independently confirmed 28 tests pass and four database tests skip. Authorized live Phase 1 profiling in a fresh agent chat while keeping Phase 2 and all later work blocked until the generated data-quality report is reviewed.
 - **2026-08-26:** Reviewed the first Phase 1 credential-free implementation report and the created files. Confirmed 9 local tests pass and 4 database tests skip because `.env` is absent. Kept Phase 2 blocked and added a credential-free remediation gate for connection-level read-only enforcement, full-path secret redaction, a safe runner, graceful schema mismatch handling, stronger structural ride-status evidence, accurate SQL/Python scope wording, and focused regression tests before any live database access.
