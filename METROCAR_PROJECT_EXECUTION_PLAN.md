@@ -1,8 +1,8 @@
 # Metrocar Funnel Analysis — VS Code Agent Execution Plan
 
-> **Plan status:** PHASE 1 COMPLETE — PHASE 2 READINESS GATE — IMPLEMENTATION NOT AUTHORIZED
+> **Plan status:** PHASES 1–3 COMPLETE AND ACCEPTED — PHASE 4 AWAITING SEPARATE AUTHORIZATION
 >
-> Phase 1 is complete and independently accepted. The Phase 2 metric definitions and governance baseline are locked in the canonical documents listed in Section 2.4. Phase 2 analytical implementation has not started and is not currently authorized. The current checkpoint is the Phase 2 readiness gate in Section 12.2.1. Passing that gate does not itself authorize implementation; the user must provide a separate explicit authorization.
+> Phases 1, 2, and 3 are complete and accepted at trusted repository checkpoint `4d3269117cd258a443c138aa8d3b0ce10c3564af` (`feat: canonicalize Phase 3 business insights`). The accepted validation evidence is `68 passed, 0 failed, 0 skipped`, with Phase 3 SQL/Pandas first-ride reconciliation `all_match=True`. Phase 4 is the next project phase; frontend implementation and deployment of the new Metrocar portfolio application have not begun. Phase 4 implementation, commit, push, and deployment each require separate bounded authorization unless Data explicitly bundles those actions.
 
 ## 1. Purpose of This Document
 
@@ -614,9 +614,9 @@ web/
 
 ### Phase 2 — Reproducible funnel analysis
 
-**Status:** Not started. Blocked at the Phase 2 readiness gate in Section 12.2.1.
+**Status:** Complete and accepted.
 
-**Authorization:** No implementation agent is currently authorized to execute this phase.
+**Authorization:** This phase was completed under separate bounded authorization. Its accepted implementation is not reopened by this plan.
 
 #### Objective
 
@@ -646,6 +646,10 @@ Stop after the bounded Phase 2 deliverables and validation evidence named in the
 
 ### Phase 3 — Extended business-question analysis
 
+**Status:** Complete and accepted at trusted repository checkpoint `4d3269117cd258a443c138aa8d3b0ce10c3564af`.
+
+**Authorization:** This phase was completed under separate bounded authorization. Its accepted implementation and findings are not reopened by this plan.
+
 - after separate Phase 3 authorization, extend the validated Phase 2 outputs with SQL that answers the remaining approved business questions and produces only necessary auditable intermediate datasets;
 - reuse and extend the canonical rerunnable pipeline in small `.py` modules; notebooks may explain or explore but must import/reuse canonical functions instead of duplicating business logic;
 - use Pandas for validation, additional calculations, segmentation, and chart-ready outputs;
@@ -662,6 +666,10 @@ Stop after the bounded Phase 2 deliverables and validation evidence named in the
 - refuse unnecessary abstraction: do not build a generic analytics framework when a few readable functions and tables solve the confirmed problem.
 
 ### Phase 4 — Visual analysis and storytelling
+
+**Status:** Next project phase. Frontend implementation has not begun.
+
+**Authorization:** Phase 4 requires separate bounded authorization. This plan status correction does not authorize implementation, commit, push, or deployment.
 
 - create the full user-level funnel and separate ride-level funnel defined in Section 4.2;
 - implement or prepare the validated data products for platform, age-range, and date-range filters;
@@ -959,11 +967,11 @@ Presentation rules:
 
 ## 12. Staged Execution Gates
 
-### 12.1 Execution history and current authorization
+### 12.1 Execution history and initial Phase 1 authorization
 
 The preflight agent read the complete plan and confirmed that the workspace contains only this Markdown file. The user approved moving forward through controlled prompts.
 
-The current phase prompt may authorize the agent to:
+The initial Phase 1 prompt authorized the agent to:
 
 - create the minimal root safeguards and Phase 1 folders/files required by the confirmed layout;
 - create `.gitignore`, `.env.example`, pinned `requirements.txt`, the project-local `venv`, and small database/profiling modules;
@@ -973,7 +981,7 @@ The current phase prompt may authorize the agent to:
 - create tests for credential safety, connection configuration, schema expectations, and non-inflating join checks;
 - write a credential-free data-quality/profile report.
 
-During this authorization, the agent must not:
+During that authorization, the agent was required not to:
 
 - calculate or publish final funnel metrics, insight conclusions, or recommendations;
 - generate browser-facing analytical datasets;
@@ -982,7 +990,7 @@ During this authorization, the agent must not:
 - commit, deploy, or perform destructive operations;
 - continue into Phase 2 without a new approval prompt.
 
-If the database credential is absent, the agent must finish all safe local setup it can, report the exact non-secret configuration step required from the user, and stop. It must never ask the user to paste the credential into chat or a tracked file.
+If the database credential was absent, the agent was required to finish all safe local setup it could, report the exact non-secret configuration step required from the user, and stop. It was never permitted to ask the user to paste the credential into chat or a tracked file.
 
 ### 12.1.1 Interim review after credential-free setup
 
@@ -1045,7 +1053,7 @@ Phase 2 implementation may be proposed only after every condition below is confi
 - Secret handling remains unchanged: `.env` stays local, ignored, untracked, and must never be printed, copied into artifacts, or committed.
 - The user gives a separate explicit authorization to execute the bounded Phase 2 task.
 
-This gate is currently **not passed for implementation**. Completing or reviewing planning documentation does not authorize Kimi or any other implementation agent.
+This gate was passed before the accepted Phase 2 implementation began. It is retained as a historical readiness record and does not authorize new work or reopen the accepted implementation.
 
 ### 12.3 Full-build readiness
 
@@ -1073,6 +1081,7 @@ An implementation agent may stage, commit, or push an already reviewed protected
 
 ## 13. Change Log
 
+- **2026-08-28:** Aligned current-status statements with accepted repository checkpoint `4d3269117cd258a443c138aa8d3b0ce10c3564af`: Phases 1–3 are complete and accepted, Phase 4 frontend implementation and deployment have not begun, and Phase 4 implementation, commit, push, and deployment remain separately gated. Preserved earlier readiness gates and dated authorization records as project history.
 - **2026-08-27:** Applied the reviewed Phase 2 governance amendment. Registered the canonical planning documents and accepted Phase 1 evidence, made the metric contract the sole detailed definition authority, reconciled outdated provisional wording, marked the three original metric-definition decisions resolved, replaced the former contract-drafting phase with a bounded reproducible-analysis phase, strengthened protected-document ownership, and added the Phase 2 readiness gate. This was a planning-only change; analytical implementation remains not started and not authorized.
 - **2026-08-26:** Accepted Phase 1 after independently confirming zero live-schema mismatches, 32 passing tests, safe `.env` handling, a clean synchronized `main`, and successful push of commit `27df7f3`. Opened only the Phase 2 metric-contract review for the user and planning assistant; implementation remains blocked pending an approved contract and explicit authorization.
 - **2026-08-26:** Reconciled the canonical plan with the live Phase 1 schema: adopted `dropoff_location`, `review`, candidate key `transaction_id`, and exact `Approved`/`Decline` statuses; recorded unknown timestamp timezone and valid cancel-after-accept behavior. Reserved all future canonical-plan edits for the user and planning assistant after an implementation-agent edit accidentally truncated the file; implementation agents may now read and commit reviewed plan changes but may never modify the plan themselves.
