@@ -76,6 +76,7 @@ If two higher-authority instructions conflict, document the conflict and ask the
 | `docs/METRIC_DEFINITION_CONTRACT.md` | Sole detailed authority for Phase 2 funnel entities, stage membership, joins, filters, formulas, attribution, limitations, and validation rules. | User and planning assistant only. |
 | `AGENTS.md` | Binding working method for tiered reading, agent boundaries, checkpoints, safety, validation, documentation, and Git discipline. | User and planning assistant only. |
 | `docs/ANALYSIS_INSIGHT_LOG.md` | Durable register for evidence-backed observations, patterns, caveats, hypotheses, and recommendations. | User and planning assistant by default; an implementation agent may append only when the task explicitly grants that authority. |
+| `docs/METROCAR_VISUAL_SPEC.md` | Governs approved Phase 4 visual hierarchy, interaction, project-specific visual identity, Plotly presentation, responsive behavior, and visual acceptance criteria. It is subordinate to this execution plan and `docs/METRIC_DEFINITION_CONTRACT.md` and must not redefine analytical metrics. | User and planning assistant by default; an implementation agent may create or update it only under explicit bounded authority. |
 | `docs/data_quality_report.md` | Accepted Phase 1 evidence for the live schema and structural data-quality profile. | Generated evidence; update only through an explicitly authorized reproducible Phase 1 rerun. |
 
 The task-specific reading tier is governed by `AGENTS.md`. The execution plan intentionally does not duplicate the detailed metric contract. If a detailed Phase 2 metric rule appears ambiguous here, use `docs/METRIC_DEFINITION_CONTRACT.md`; if the documents materially conflict, stop and escalate to the user and planning assistant rather than choosing an interpretation.
@@ -194,7 +195,7 @@ Before handoff, the implementing agent must verify and report `PASS` or `FAIL` f
 - the project documents how to add a new business question, its SQL/Pandas analysis, validation, Plotly view, insight narrative, and recommendation without restructuring the application;
 - all public-facing product copy is written in clear English;
 - the interface follows a serious, elegant business-dashboard direction rather than a playful or purely decorative style;
-- the visual system uses the confirmed light foundation, dark-navy typography, and restrained blue-green accents;
+- the visual system follows the approved Metrocar project-specific visual specification: a near-black or dark-neutral analytical foundation, restrained muted green/olive/teal-green analytical tones, selective lime emphasis, and semantic warm exception colors where evidence requires attention;
 - the single page follows the confirmed section order and uses tabs for the two funnel views;
 - important metrics provide an expandable `How was this calculated?` explanation and a path to the full production SQL in the repository;
 - exploratory and practice SQL remain repository-only and cannot be loaded by the production refresh command or linked as authoritative methodology;
@@ -788,7 +789,7 @@ These resolutions lock the definitions; they do not authorize calculation or imp
 - Availability, condition, and reuse value of the historical Dash source files and presentation assets
 - Remaining interactive controls and comparison behaviors beyond the confirmed side-by-side segment comparison
 - Exact sticky/in-page navigation behavior within the confirmed single-page section order
-- Detailed spacing, typography scale, chart palette, and component tokens within the confirmed light, navy, and blue-green business-dashboard direction
+- Detailed spacing, typography scale, exact chart-palette/token values, component tokens, and final intensity or saturation choices within the approved dark personal-portfolio / restrained Metrocar analytical direction; these project-specific decisions belong in `docs/METROCAR_VISUAL_SPEC.md`
 - Exact accessibility target and portfolio branding treatment; the public product language is confirmed as English
 - Future Data Gym Brain integration boundary and reusable artifact contract
 - Exact single-repository folder layout and final filenames
@@ -961,7 +962,7 @@ Presentation rules:
 - Support side-by-side comparison for platform and age group; use date as a filter in the first version.
 - Provide a concise expandable `How was this calculated?` explanation for important metrics, with a link to the complete production SQL in the repository.
 - Keep practice SQL separate from the production query linked by the public metric explanation.
-- Use a light interface foundation, dark-navy typography, and restrained blue-green accents.
+- Use the approved Metrocar visual direction: a near-black or dark-neutral analytical foundation, muted green/olive/teal-green analytical tones, selective lime accents, and semantic warm exception colors where evidence requires emphasis; preserve restrained saturation, accessible contrast, and continuity with the personal portfolio visual family.
 - Preserve generous spacing, clear hierarchy, and readable annotations so the dashboard remains serious and accessible to students.
 - Use purposeful hover, selection, filtering, and transitions to make the presentation engaging; avoid visual effects that do not improve understanding.
 
@@ -1081,6 +1082,7 @@ An implementation agent may stage, commit, or push an already reviewed protected
 
 ## 13. Change Log
 
+- **2026-08-28:** Reopened and replaced the earlier light/navy/blue-green Phase 4 visual direction. Approved a portfolio-aligned dark analytical direction using near-black or dark-neutral foundations, restrained muted green/olive/teal-green analytical tones, selective lime emphasis, and semantic warm exception colors where evidence requires attention. Registered `docs/METROCAR_VISUAL_SPEC.md` as the project-specific visual specification while preserving the confirmed dual-funnel, platform/age comparison, date-filter, label-mode, accessibility, and analytical requirements. This planning amendment does not authorize frontend implementation, dependency changes, commit, push, or deployment.
 - **2026-08-28:** Aligned current-status statements with accepted repository checkpoint `4d3269117cd258a443c138aa8d3b0ce10c3564af`: Phases 1–3 are complete and accepted, Phase 4 frontend implementation and deployment have not begun, and Phase 4 implementation, commit, push, and deployment remain separately gated. Preserved earlier readiness gates and dated authorization records as project history.
 - **2026-08-27:** Applied the reviewed Phase 2 governance amendment. Registered the canonical planning documents and accepted Phase 1 evidence, made the metric contract the sole detailed definition authority, reconciled outdated provisional wording, marked the three original metric-definition decisions resolved, replaced the former contract-drafting phase with a bounded reproducible-analysis phase, strengthened protected-document ownership, and added the Phase 2 readiness gate. This was a planning-only change; analytical implementation remains not started and not authorized.
 - **2026-08-26:** Accepted Phase 1 after independently confirming zero live-schema mismatches, 32 passing tests, safe `.env` handling, a clean synchronized `main`, and successful push of commit `27df7f3`. Opened only the Phase 2 metric-contract review for the user and planning assistant; implementation remains blocked pending an approved contract and explicit authorization.
