@@ -171,6 +171,7 @@ Keep changes small, scoped, and reviewable.
 - Review the final diff for scope, accidental changes, generated files, and secrets.
 - Run required validations before any authorized commit.
 - Do not stage, commit, or push unless explicitly authorized.
+- Keep commit and push as separate authorization gates by default. Data may explicitly bundle them for a small, already-reviewed, low-risk change with fixed scope; the agent must still verify the approved diff, clean working state, and remote divergence before a normal non-force push.
 - Use a clear task-specific commit message.
 - Do not rewrite history, discard user work, or use destructive Git operations without explicit approval.
 
