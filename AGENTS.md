@@ -11,15 +11,18 @@ Read documents in the following order.
 ### Tier 1 — Every Task
 
 1. Read `AGENTS.md` completely.
-2. Read the governing sections of `METROCAR_PROJECT_EXECUTION_PLAN.md`, including:
+2. Read `HOW-WE-WORK.md` completely.
+3. Read the governing sections of `METROCAR_PROJECT_EXECUTION_PLAN.md`, including:
    - project and phase status;
    - the current authorized task;
    - the document map and ownership;
    - the applicable readiness gate or checkpoint;
    - relevant changelog entries.
-3. Read the explicit task authorization, brief, or handover.
+4. Read the explicit task authorization, brief, or handover.
 
 Before acting, identify the authorized scope, permitted files, protected files, required evidence, and next mandatory stop.
+
+Before any non-trivial code or analytical implementation task, complete the Pre-Implementation Synthesis defined in `HOW-WE-WORK.md` before mutation.
 
 ### Tier 2 — Task-Dependent Governance
 
