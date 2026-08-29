@@ -31,7 +31,7 @@ Read these after Tier 1 when relevant:
 - For metric calculation, analytical implementation, validation, interpretation, visualization, or insight logging: read `docs/METRIC_DEFINITION_CONTRACT.md` completely.
 - When Phase 1 evidence is used: read the relevant sections of `docs/data_quality_report.md`.
 - When creating, changing, or relying on a finding: read `docs/ANALYSIS_INSIGHT_LOG.md` and all related records.
-- For notebook work: read the canonical SQL, Python modules/functions, tests, and source documentation used by that notebook.
+- For student-facing analytical walkthrough work, whether an approved notebook or cell-based Python walkthrough: read the canonical SQL, Python modules/functions, tests, and source documentation used by that walkthrough.
 
 ### Tier 3 — Execution Materials
 
@@ -89,22 +89,22 @@ If implementation reveals a schema conflict, missing definition, unexpected data
 
 ## Reproducibility and Traceability
 
-A notebook is the student-facing analytical narrative. It is not the sole source of truth for analytical logic.
+The student-facing analytical walkthrough is the learning narrative. It may be an approved Jupyter/Colab notebook or a cell-based Python walkthrough using `# %%` sections. It is not the sole or canonical source of analytical truth.
 
 Every published metric or finding must be reproducible through one or both of:
 
 - exact saved SQL identified by repository-relative path and stable query, CTE, statement, or output name;
 - a canonical Python module and function identified by repository-relative path, import path, and function name.
 
-Notebook-only calculations are insufficient final evidence. A notebook should invoke or clearly reference the canonical SQL or Python implementation and record the relevant parameters and source-data cutoff.
+Walkthrough-only calculations are insufficient final evidence. The walkthrough must invoke or clearly reference the canonical SQL or Python implementation, or explicitly reconcile an approved teaching reconstruction to it, and must record the relevant parameters and source-data cutoff.
 
 Every published metric must reference its governing Metric Contract section and its exact SQL and/or canonical Python implementation. Every finding must have an Insight Log ID and reproducibility reference. Every recommendation must identify the Validated finding or findings supporting it. Observations, interpretations, and recommendations must remain distinct.
 
 Screenshots, copied result tables, and undocumented manual calculations may supplement evidence but cannot replace reproducible logic.
 
-## Notebook Documentation
+## Student Walkthrough Documentation
 
-Place a Markdown explanation before every significant code cell or coherent group of closely related cells.
+Before every significant code cell or section, or coherent group of closely related steps, place an explanatory learning block appropriate to the artifact: a Markdown cell for `.ipynb`, or a `# %% [markdown]` block or clearly separated teaching section for cell-based `.py`. Follow the learning principles in `HOW-WE-WORK.md` rather than duplicating them here.
 
 As applicable, explain:
 
@@ -116,7 +116,7 @@ As applicable, explain:
 - the expected output;
 - how success will be validated.
 
-Import-only, configuration-only, and simple display cells may share a short explanation. Avoid unexplained monolithic cells.
+Import-only, configuration-only, and simple display steps may share a short explanation. Avoid unexplained monolithic code sections.
 
 ## Secrets
 

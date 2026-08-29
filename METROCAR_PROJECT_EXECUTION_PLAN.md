@@ -81,7 +81,7 @@ If two higher-authority instructions conflict, document the conflict and ask the
 
 The task-specific reading tier is governed by `AGENTS.md`. The execution plan intentionally does not duplicate the detailed metric contract. If a detailed Phase 2 metric rule appears ambiguous here, use `docs/METRIC_DEFINITION_CONTRACT.md`; if the documents materially conflict, stop and escalate to the user and planning assistant rather than choosing an interpretation.
 
-Canonical SQL files, Python modules and named functions, notebooks, and validation outputs created during implementation must be registered in the relevant task handover and in authorized Insight Log records. Their exact paths must be named by the bounded implementation task or recorded when the artifacts are created; this plan does not invent paths for files that do not yet exist.
+Canonical SQL files, Python modules and named functions, student-facing analytical walkthroughs, and validation outputs created during implementation must be registered in the relevant task handover and in authorized Insight Log records. Their exact paths must be named by the bounded implementation task or recorded when the artifacts are created; this plan does not invent paths for files that do not yet exist.
 
 ## 3. Confirmed Project Brief
 
@@ -130,7 +130,7 @@ The implementing agent must **not** open or complete a MasterSchool submission f
 - Render interactive figures in the web frontend with **Plotly.js or the selected framework's Plotly binding**.
 - Do **not** build the new application with Dash and do not require a Dash/Python web server for public interaction.
 - Matplotlib and Seaborn may be used for supporting analysis where they are the clearest choice, but they do not replace the Plotly implementation.
-- Keep every published metric traceable to the validated SQL/Pandas pipeline. Canonical repeatable analysis lives in readable `.py` files; a notebook is optional as an explanatory portfolio artifact and must not become a second conflicting source of metric logic.
+- Keep every published metric traceable to the validated SQL/Pandas pipeline. Canonical repeatable analysis lives in readable production `.py` and `.sql` files. The student-facing analytical walkthrough required by Section 3.4.6 may use either an optional Jupyter/Colab notebook format or the preferred cell-based Python format; either format remains subordinate to canonical SQL/Python and must not become a second conflicting source of metric logic.
 
 #### 3.4.3 Funnel-analysis criteria
 
@@ -174,7 +174,8 @@ Before handoff, the implementing agent must verify and report `PASS` or `FAIL` f
 - the public application reads only validated, precomputed, non-sensitive analytical data and makes no live database connection;
 - the frontend is implemented with Astro, React interactive islands, TypeScript, and Plotly.js;
 - Python and frontend code remain proportionate to a student project: direct transformations, small focused functions/components, and no unnecessary frameworks or abstraction layers;
-- every transformation and analysis step is reproducible and documented in code, a notebook, or both;
+- every transformation and analysis step is reproducible and documented in canonical code, the student-facing walkthrough, or both;
+- the required student-facing learning walkthrough exists and makes the major analytical reasoning reconstructable through small, explicit teaching steps that reconcile with the canonical SQL/Python implementation;
 - both confirmed funnel grains are represented accurately and clearly;
 - the user funnel implements Downloaded → Signed Up → Requested at Least One Ride → Completed at Least One Ride at the download-entrant grain defined in `docs/METRIC_DEFINITION_CONTRACT.md`;
 - the rides funnel implements Requested → Finished → Paid → Reviewed at ride grain;
@@ -203,6 +204,57 @@ Before handoff, the implementing agent must verify and report `PASS` or `FAIL` f
 - the repository provides a short student-oriented reading order for the analysis, production SQL, generated outputs, and frontend;
 - the production site is deployed on Render and its deployment configuration is reproducible from the repository;
 - automated checks and a documented manual QA pass succeed for the analysis and web application.
+
+#### 3.4.6 Required student-facing learning walkthrough
+
+Metrocar must include a student-facing analytical walkthrough whose purpose is to make the project's reasoning reconstructable and explainable by the learner.
+
+This learning artifact is required; a Jupyter or Colab notebook is not the required format. An approved walkthrough may be a Jupyter/Colab notebook or a cell-based Python walkthrough using `# %%` sections. For Metrocar, the preferred first implementation is the cell-based Python form because it remains ordinary text for Git review while supporting an interactive notebook-like learning flow. An `.ipynb` form should be selected initially or added later only when it provides a concrete learning, presentation, or interoperability benefit.
+
+The walkthrough is subordinate to the canonical production SQL/Python pipeline. It does not replace `analysis/*.py`, production SQL, tests, the Metric Contract, or accepted reconciliation evidence and must never become an independent source of metric truth.
+
+Its educational purpose is different from the canonical production implementation:
+
+- production SQL/Python should remain robust, reusable, validated, and suitable for deterministic execution;
+- the walkthrough should reconstruct the important analytical ideas with small, explicit, student-level steps that Data can read and explain;
+- where the walkthrough intentionally reconstructs selected core logic with a simpler teaching calculation, it must identify the step as a learning reconstruction, preserve the governed analytical definition, and reconcile the result exactly to the accepted canonical implementation before presenting it as verified;
+- it must not silently weaken or redefine analytical rules merely to make the teaching code shorter.
+
+For every conceptually meaningful section, use the smallest useful version of:
+
+`Goal → Why → Mental model → Code → Result → Validation → Takeaway`
+
+Add a common trap, business interpretation, or interview explanation when it materially improves understanding. Do not turn trivial syntax into teaching ceremony.
+
+The walkthrough should progressively cover:
+
+1. Metrocar business context and project objective;
+2. the approved business questions;
+3. source tables, relationships, and analytical grain;
+4. the user funnel;
+5. the ride funnel and conversion/drop-off measures;
+6. the first-ride diagnostic;
+7. platform, age, and request-hour analysis;
+8. validated insights, evidence limits, and recommendations; and
+9. reconciliation with canonical SQL/Python outputs.
+
+Implementation must proceed in bounded learning slices rather than generating the complete walkthrough at once.
+
+The first authorized learning slice must stop after:
+
+- project and business context;
+- approved business questions;
+- relevant source-table relationships;
+- explanation of analytical grain;
+- step-by-step reconstruction of the User Funnel;
+- reconciliation to the accepted canonical User Funnel; and
+- a concise learning recap sufficient for Data to explain the major reasoning in his own words.
+
+The acceptance question for a learning slice is not merely whether the code runs:
+
+> Can Data explain why each material step exists, what it does, and how its result was validated?
+
+If not, the learning slice is incomplete even when the calculation is technically correct.
 
 ## 4. Confirmed Metrocar Funnel
 
@@ -519,7 +571,7 @@ Create one auditable baseline-metrics table containing at least:
 - validation status;
 - notes or limitations.
 
-This baseline table must feed the canonical analysis, any optional notebook, later funnel calculations, website data products, and QA checks so the same metric is not reimplemented differently across deliverables.
+This baseline table must feed the canonical analysis, later funnel calculations, website data products, and QA checks, and must serve as the reconciliation target for the required student-facing walkthrough so the same metric is not reimplemented differently across deliverables.
 
 #### 6.4.3 Quiz evidence and answer-value policy
 
@@ -530,7 +582,7 @@ The quiz introduction confirms:
 - the minimum passing grade is `60`;
 - the learner may retake the quiz as many times as necessary during the sprint.
 
-The supplied screenshots contain multiple-choice candidate values for counts, durations, payment totals, platform totals, and drop-off. Those choices are **not authoritative project data** and must not be copied into code, fixtures, tests, documentation, the notebook, or the website as expected results.
+The supplied screenshots contain multiple-choice candidate values for counts, durations, payment totals, platform totals, and drop-off. Those choices are **not authoritative project data** and must not be copied into code, fixtures, tests, documentation, the student-facing walkthrough, or the website as expected results.
 
 Required clean-room handling:
 
@@ -652,7 +704,7 @@ Stop after the bounded Phase 2 deliverables and validation evidence named in the
 **Authorization:** This phase was completed under separate bounded authorization. Its accepted implementation and findings are not reopened by this plan.
 
 - after separate Phase 3 authorization, extend the validated Phase 2 outputs with SQL that answers the remaining approved business questions and produces only necessary auditable intermediate datasets;
-- reuse and extend the canonical rerunnable pipeline in small `.py` modules; notebooks may explain or explore but must import/reuse canonical functions instead of duplicating business logic;
+- reuse and extend the canonical rerunnable pipeline in small `.py` modules; ordinary explanatory use should import or reuse canonical functions, while an authorized student-facing walkthrough may reconstruct selected core logic in smaller, explicitly educational steps only when it preserves governed definitions, reconciles exactly to canonical results, and does not become an independent analytical authority;
 - use Pandas for validation, additional calculations, segmentation, and chart-ready outputs;
 - reuse the validated Phase 2 user base table with one governed entrant per row, Boolean funnel-stage columns, and the metric contract's distinct unavailable-age categories;
 - reuse the validated Phase 2 ride-grain base table for requested, finished, paid, and reviewed stages;
@@ -766,7 +818,7 @@ For multi-table joins, entity/grain reconciliation, unregistered-download handli
 - state assumptions, edge cases, and data limitations;
 - show the validation or reconciliation that makes the result trustworthy.
 
-Use notebook Markdown cells only when a notebook is intentionally included as an explanatory artifact. Canonical `.py` and `.sql` files must remain understandable without requiring that optional notebook.
+Use format-appropriate learning blocks when the student-facing walkthrough is implemented: Markdown cells for `.ipynb`, or `# %% [markdown]` blocks or clearly separated teaching sections for cell-based `.py`. Canonical production `.py` and `.sql` files must remain understandable without requiring the walkthrough or either presentation format.
 
 For production SQL, use a concise header containing the business question, output grain, and important filters. Comment only non-obvious CTEs, joins, window logic, or deduplication decisions. Keep comments synchronized with the query.
 
@@ -925,7 +977,7 @@ Use this working architecture unless the user later approves a better equivalent
 7. The product is delivered as one coherent page with in-page navigation and progressive disclosure instead of separate content pages.
 8. Analysis, SQL, generated public data, frontend, tests, and documentation live in one repository with clear boundaries between source data work and browser-safe artifacts.
 9. One documented command reruns the approved SQL/Pandas analysis, executes validation checks, and regenerates the public analytical outputs. It must stop on validation failure and must never publish partially validated results.
-10. Python uses a project-local `venv` and pinned `requirements.txt`; canonical repeatable analysis is implemented in `.py` files, while any notebook remains an optional explanatory client of that code.
+10. Python uses a project-local `venv` and pinned `requirements.txt`; canonical repeatable analysis is implemented in production `.py` and `.sql` files. The student-facing walkthrough required by Section 3.4.6 may use an optional notebook format or the preferred cell-based Python format, and either remains subordinate to the canonical implementation.
 11. PostgreSQL access uses a synchronous SQLAlchemy 2.x engine with the psycopg 3 driver and readable raw SQL, without ORM or async infrastructure.
 
 The user may later reuse parts of this project in the **Data Gym Brain Project**. The current workspace contains no reliable specification for that project, so the implementing agent must not invent an integration. It should instead keep metric definitions, validated aggregate schemas, insight content, and reusable frontend components modular and documented so a later integration can be designed without rewriting the analysis.
