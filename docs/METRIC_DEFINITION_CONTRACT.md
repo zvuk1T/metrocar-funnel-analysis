@@ -19,7 +19,7 @@ It defines:
 - join direction and row preservation;
 - multiplicity handling;
 - validation and monotonicity requirements;
-- reproducibility and notebook-documentation requirements.
+- reproducibility and student-walkthrough documentation requirements.
 
 All future SQL, Python modules, notebooks, datasets, visualizations, findings, and recommendations must follow this contract.
 
@@ -743,15 +743,22 @@ Observations, interpretations, and recommendations must remain clearly distingui
 
 If a value cannot be reproduced from the documented source, parameters, and canonical executable logic, it must not be presented as an accepted project result.
 
-## 14. Notebook Role and Documentation
+## 14. Student Walkthrough Role and Documentation
 
-The notebook is the student-facing analytical narrative. It explains the reasoning, executes or calls the canonical logic, presents validation evidence, and interprets results.
+The student-facing analytical walkthrough is the learning narrative. It may be an approved Jupyter/Colab notebook or an approved cell-based Python walkthrough using `# %%` sections. The artifact explains analytical reasoning, presents validation evidence, and interprets results.
 
-The notebook is not the sole source of truth for a metric calculation.
+The walkthrough is not the sole or canonical source of metric truth. Canonical analytical truth remains in the exact SQL and/or canonical Python artifacts governed by Section 13.
 
-No material metric calculation may exist only inside a notebook cell. The exact calculation must be available through the canonical SQL and/or Python artifact defined in Section 13.
+No material metric calculation may exist only inside the walkthrough. Ordinary walkthrough use must execute, invoke, or clearly reference the canonical SQL and/or Python artifact defined in Section 13.
 
-Before every significant code cell or coherent group of closely related cells, a Markdown cell must explain, in proportion to the operation’s complexity:
+An explicitly educational teaching reconstruction may reproduce selected core logic in simpler steps only when:
+
+1. the reconstruction preserves every relevant rule in this contract;
+2. it is clearly labeled as educational;
+3. it reconciles exactly to the canonical implementation for the same parameters and source-data cutoff; and
+4. it does not become an independent metric authority.
+
+Before every significant code cell, `# %%` section, or coherent group of closely related steps, an explanatory learning block appropriate to the artifact must explain, in proportion to the operation’s complexity:
 
 - why the step is needed;
 - the business question;
@@ -764,19 +771,19 @@ Before every significant code cell or coherent group of closely related cells, a
 - the required validation or monotonicity condition;
 - relevant maturity, attribution, or timezone limitations.
 
-Import-only, configuration-only, or simple display cells may share a short introductory Markdown block.
+For `.ipynb`, the learning block may be a Markdown cell. For a cell-based `.py` walkthrough, it may be a `# %% [markdown]` section or clearly separated teaching block. Import-only, configuration-only, or simple display steps may share a short introductory block.
 
-The notebook must record or display:
+The walkthrough must record or expose:
 
 - filter parameters;
-- the data-source cutoff;
+- the source-data cutoff;
 - canonical executable references;
 - validation outputs;
 - related Insight Log IDs where findings are discussed.
 
-Notebook code may execute and explain this contract but may not redefine it.
+The walkthrough may explain or reconstruct this contract for learning, but it may not redefine it.
 
-Any required change to grain, stage logic, attribution, filtering, formulas, validation treatment, or business meaning must return to the planning checkpoint for explicit approval.
+Any change to grain, stages, attribution, filtering, formulas, validation treatment, or business meaning still requires explicit planning approval.
 
 ## 15. Scope Protection
 

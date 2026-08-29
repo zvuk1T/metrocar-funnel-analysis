@@ -400,6 +400,36 @@ green/lime, selective warm loss signals, clear KPIs, prominent funnels, and seri
 density—but none of its numbers is evidence. Placeholder values such as the generated first-ride
 counts must never enter copy, tests, data, or charts.
 
+### 11.3 Approved Metrocar reference palette
+
+These are Metrocar project-specific reference colors captured from Data's approved VS Code
+screenshots. They are screenshot-derived references, not claims about official VS Code theme-token
+values. They refine the existing semantic roles in Section 11.1 rather than replace them.
+
+| Role | Reference HEX | Intent |
+|---|---|---|
+| Preferred primary analytical teal | `#71C6B1` | Data's strongest preference; inspired by the `pandas`, `sqlalchemy`, and `analysis` syntax color; candidate for important analytical accents, active analytical detail, selected structure, or restrained emphasis |
+| Fresh secondary green | `#73C991` | Inspired by the active file/tab text; candidate for secondary active/status accents |
+| Muted olive green | `#6A9955` | Inspired by explanatory comments; candidate for subdued structural/supporting context where contrast permits |
+| Dark neutral reference | `#1F1F1F` | Screenshot-derived dark surface reference; candidate analytical background/surface, not automatically the final page background |
+
+`#71C6B1` is the preferred Metrocar primary analytical teal reference. These colors do not replace
+the Job Pipeline shared portfolio visual identity. That identity remains the higher shared visual
+family, and the references are intended to help the Metrocar analytical page harmonize with the
+future shared Portfolio / Career Hub shell. They should be evaluated together with that shared shell
+rather than in isolation, with Metrocar remaining the calmer analytical member of the same visual
+family.
+
+The existing semantic roles remain unchanged: muted green, olive, and teal-green carry ordinary
+analytical structure; lime provides rare stronger emphasis; warm red, coral, or amber communicate
+justified exception, loss, or risk; and neutral gray provides secondary context. Do not use all
+available greens simultaneously merely because they are available. Every color must continue to
+have a semantic or hierarchical reason.
+
+Each reference remains subject to actual foreground/background WCAG 2.2 AA contrast testing before
+final implementation-token assignment. Exact final CSS and design tokens remain implementation-level
+decisions after contrast testing, Plotly readability review, and full-page visual review.
+
 ## 12. Layout, navigation, and KPI treatment
 
 The simplest approved orientation pattern is a slim sticky in-page navigation bar on wide screens,
