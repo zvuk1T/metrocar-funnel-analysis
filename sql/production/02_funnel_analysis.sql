@@ -7,9 +7,9 @@
 --   :source_cutoff        one shared observation cutoff for the run
 --
 -- Reconciliation loads the named statements in this file. Keep the
--- ``-- name`` / ``-- end`` markers stable. Each one-to-many source is reduced
--- to its governing grain before a preserving LEFT JOIN; there are no
--- per-entity correlated scans.
+-- ``-- name`` / ``-- end`` markers stable. Repeated downstream activity is
+-- reduced before preserving LEFT JOINs. Material source-cardinality anomalies
+-- are reported separately by the ``source_validation`` statement.
 
 -- name: source_cutoff
 SELECT MAX(source_timestamp)::timestamp AS source_cutoff
@@ -33,27 +33,7 @@ FROM (
 -- end
 
 -- name: user_base
-WITH download_by_key AS (
-  SELECT
-    app_download_key,
-    COUNT(*)::bigint AS download_row_count,
-    MIN(download_ts) AS download_ts,
-    (COUNT(DISTINCT download_ts) > 1) AS download_ts_conflict,
-    BOOL_OR(download_ts IS NULL) AS download_ts_missing,
-    CASE
-      WHEN COUNT(DISTINCT platform) = 1
-       AND COUNT(*) FILTER (WHERE platform IS NULL) = 0
-      THEN MIN(platform)
-      ELSE NULL
-    END AS platform,
-    (COUNT(DISTINCT platform) > 1) AS platform_conflict,
-    BOOL_OR(platform IS NULL) AS platform_source_missing
-  FROM app_downloads
-  WHERE download_ts IS NULL
-     OR download_ts <= CAST(:source_cutoff AS timestamp)
-  GROUP BY app_download_key
-),
-ride_flags_by_user AS (
+WITH ride_flags_by_user AS (
   SELECT
     user_id,
     TRUE AS requested,
@@ -62,90 +42,73 @@ ride_flags_by_user AS (
       AND dropoff_ts <= CAST(:source_cutoff AS timestamp)
     ) AS completed
   FROM ride_requests
-  WHERE request_ts IS NULL
-     OR request_ts <= CAST(:source_cutoff AS timestamp)
+  WHERE user_id IS NOT NULL
+    AND (
+      request_ts IS NULL
+      OR request_ts <= CAST(:source_cutoff AS timestamp)
+    )
   GROUP BY user_id
-),
-observed_signups AS (
-  SELECT user_id, session_id, age_range
-  FROM signups
-  WHERE signup_ts IS NULL
-     OR signup_ts <= CAST(:source_cutoff AS timestamp)
-),
-signup_by_session AS (
-  SELECT
-    s.session_id,
-    COUNT(*)::bigint AS signup_count,
-    COUNT(DISTINCT s.user_id)::bigint AS signup_user_count,
-    BOOL_OR(s.user_id IS NULL) AS signup_user_missing,
-    (COUNT(DISTINCT s.user_id) > 1) AS signup_user_conflict,
-    BOOL_OR(COALESCE(r.requested, FALSE)) AS requested,
-    BOOL_OR(COALESCE(r.completed, FALSE)) AS completed,
-    CASE
-      WHEN COUNT(DISTINCT s.age_range) = 1
-       AND COUNT(*) FILTER (WHERE s.age_range IS NULL) = 0
-      THEN MIN(s.age_range)
-      ELSE NULL
-    END AS age_range,
-    BOOL_OR(s.age_range IS NULL) AS age_source_missing,
-    (COUNT(DISTINCT s.age_range) > 1) AS age_conflict
-  FROM observed_signups s
-  LEFT JOIN ride_flags_by_user r ON r.user_id = s.user_id
-  WHERE s.session_id IS NOT NULL
-  GROUP BY s.session_id
-),
-entrant_base AS (
-  SELECT
-    d.app_download_key,
-    d.download_ts,
-    d.platform,
-    CASE
-      WHEN s.session_id IS NULL THEN 'Not available — no signup'
-      ELSE s.age_range
-    END AS age_group,
-    TRUE AS downloaded,
-    (s.session_id IS NOT NULL) AS signed_up,
-    (s.session_id IS NOT NULL AND COALESCE(s.requested, FALSE)) AS requested,
-    (
-      s.session_id IS NOT NULL
-      AND COALESCE(s.requested, FALSE)
-      AND COALESCE(s.completed, FALSE)
-    ) AS completed,
-    d.download_row_count,
-    COALESCE(s.signup_count, 0)::bigint AS signup_count,
-    COALESCE(s.signup_user_count, 0)::bigint AS signup_user_count,
-    d.download_ts_conflict,
-    d.download_ts_missing,
-    d.platform_conflict,
-    (d.platform IS NULL OR d.platform_source_missing) AS platform_missing,
-    (d.platform IS NOT NULL AND d.platform NOT IN ('ios', 'android', 'web'))
-      AS platform_unexpected,
-    COALESCE(s.signup_user_missing, FALSE) AS signup_user_missing,
-    COALESCE(s.signup_user_conflict, FALSE) AS signup_user_conflict,
-    (
-      s.session_id IS NOT NULL
-      AND (COALESCE(s.age_source_missing, FALSE) OR s.age_range IS NULL)
-    ) AS age_missing,
-    COALESCE(s.age_conflict, FALSE) AS age_conflict,
-    (
-      s.session_id IS NOT NULL
-      AND s.age_range IS NOT NULL
-      AND s.age_range NOT IN ('18-24', '25-34', '35-44', '45-54', 'Unknown')
-    ) AS age_unexpected
-  FROM download_by_key d
-  LEFT JOIN signup_by_session s ON s.session_id = d.app_download_key
 )
-SELECT *
-FROM entrant_base
+SELECT
+  d.app_download_key,
+  d.download_ts,
+  d.platform,
+  CASE
+    WHEN s.session_id IS NULL THEN 'Not available — no signup'
+    ELSE s.age_range
+  END AS age_group,
+  TRUE AS downloaded,
+  (s.session_id IS NOT NULL) AS signed_up,
+  (s.session_id IS NOT NULL AND COALESCE(r.requested, FALSE)) AS requested,
+  (
+    s.session_id IS NOT NULL
+    AND COALESCE(r.requested, FALSE)
+    AND COALESCE(r.completed, FALSE)
+  ) AS completed,
+  1::bigint AS download_row_count,
+  (CASE WHEN s.session_id IS NULL THEN 0 ELSE 1 END)::bigint AS signup_count,
+  (
+    CASE
+      WHEN s.session_id IS NOT NULL AND s.user_id IS NOT NULL THEN 1
+      ELSE 0
+    END
+  )::bigint AS signup_user_count,
+  FALSE AS download_ts_conflict,
+  (d.download_ts IS NULL) AS download_ts_missing,
+  FALSE AS platform_conflict,
+  (d.platform IS NULL) AS platform_missing,
+  (d.platform IS NOT NULL AND d.platform NOT IN ('ios', 'android', 'web'))
+    AS platform_unexpected,
+  (s.session_id IS NOT NULL AND s.user_id IS NULL) AS signup_user_missing,
+  FALSE AS signup_user_conflict,
+  (s.session_id IS NOT NULL AND s.age_range IS NULL) AS age_missing,
+  FALSE AS age_conflict,
+  (
+    s.session_id IS NOT NULL
+    AND s.age_range IS NOT NULL
+    AND s.age_range NOT IN ('18-24', '25-34', '35-44', '45-54', 'Unknown')
+  ) AS age_unexpected
+FROM app_downloads d
+LEFT JOIN signups s
+  ON s.session_id = d.app_download_key
+ AND (
+   s.signup_ts IS NULL
+   OR s.signup_ts <= CAST(:source_cutoff AS timestamp)
+ )
+LEFT JOIN ride_flags_by_user r ON r.user_id = s.user_id
 WHERE (
+        d.download_ts IS NULL
+        OR d.download_ts <= CAST(:source_cutoff AS timestamp)
+      )
+  AND (
         CAST(:cohort_start AS timestamp) IS NULL
-        OR download_ts >= CAST(:cohort_start AS timestamp)
+        OR d.download_ts >= CAST(:cohort_start AS timestamp)
       )
   AND (
         CAST(:cohort_end_exclusive AS timestamp) IS NULL
-        OR download_ts < CAST(:cohort_end_exclusive AS timestamp)
+        OR d.download_ts < CAST(:cohort_end_exclusive AS timestamp)
       )
-ORDER BY app_download_key;
+ORDER BY d.app_download_key;
 -- end
 
 -- name: ride_base
