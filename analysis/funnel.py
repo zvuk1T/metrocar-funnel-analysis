@@ -1,9 +1,10 @@
 """Canonical Pandas implementation of the locked Phase 2 funnel contract.
 
 The two base tables use different grains: one app-download entrant and one
-ride. Source fan-out is reduced before enrichment joins, so a source anomaly
-is reported without multiplying either base population. SQL/Pandas
-reconciliation uses one shared cohort and source cutoff.
+ride. User Funnel grain and join conditions are validated before construction;
+repeated ride activity is then reduced to Boolean results per user. The Ride
+Funnel retains its grain-level source aggregation. SQL/Pandas reconciliation
+uses one shared cohort and source cutoff.
 """
 
 from __future__ import annotations
@@ -233,6 +234,7 @@ def _aggregate_user_ride_flags(
     rides: pd.DataFrame,
     parameters: AnalysisParameters,
 ) -> pd.DataFrame:
+    """Reduce repeated observed rides to Requested/Completed flags per user."""
     observed = rides.loc[
         _source_row_mask(rides["request_ts"], parameters.source_cutoff)
         & rides["user_id"].notna()
@@ -258,48 +260,52 @@ def _observed_signups(
     ].copy()
 
 
-def _aggregate_signups_by_session(
+def _validate_user_source_conditions(
+    downloads: pd.DataFrame,
     signups: pd.DataFrame,
-    user_ride_flags: pd.DataFrame,
     parameters: AnalysisParameters,
-) -> pd.DataFrame:
-    observed = _observed_signups(signups, parameters)
-    observed = observed.loc[observed["session_id"].notna()].merge(
-        user_ride_flags,
-        how="left",
-        on="user_id",
-        validate="many_to_one",
+) -> None:
+    """Fail before construction when User Funnel join keys are ambiguous."""
+    observed_downloads = downloads.loc[
+        _source_row_mask(downloads["download_ts"], parameters.source_cutoff)
+    ]
+    _require_non_null_identifier(observed_downloads, "app_download_key")
+    duplicate_downloads = observed_downloads["app_download_key"].duplicated(
+        keep=False
     )
-    if observed.empty:
-        return pd.DataFrame(
-            columns=[
-                "session_id", "signup_count", "signup_user_count",
-                "signup_user_missing", "signup_user_conflict", "requested",
-                "completed", "age_range", "age_source_missing", "age_conflict",
-            ]
+    if duplicate_downloads.any():
+        duplicate_groups = observed_downloads.loc[
+            duplicate_downloads, "app_download_key"
+        ].nunique()
+        raise ValueError(
+            "app_download_key must be unique before User Funnel construction; "
+            f"found {duplicate_groups} duplicate key group(s)"
         )
-    observed["requested"] = (
-        observed["requested"].astype("boolean").fillna(False).astype(bool)
-    )
-    observed["completed"] = (
-        observed["completed"].astype("boolean").fillna(False).astype(bool)
-    )
-    grouped = observed.groupby("session_id", as_index=False, sort=False)
-    result = grouped.agg(
-        signup_count=("session_id", "size"),
-        signup_user_count=("user_id", lambda s: s.nunique(dropna=True)),
-        signup_user_missing=("user_id", lambda s: bool(s.isna().any())),
-        requested=("requested", "any"),
-        completed=("completed", "any"),
-        age_range=("age_range", _first_non_null),
-        age_value_count=("age_range", lambda s: s.nunique(dropna=True)),
-        age_source_missing=("age_range", lambda s: bool(s.isna().any())),
-    )
-    result["signup_user_conflict"] = result["signup_user_count"].gt(1)
-    result["age_conflict"] = result["age_value_count"].gt(1)
-    unsafe_age = result["age_value_count"].ne(1) | result["age_source_missing"]
-    result.loc[unsafe_age, "age_range"] = pd.NA
-    return result.drop(columns="age_value_count")
+
+    linked_signups = _observed_signups(signups, parameters).loc[
+        lambda frame: frame["session_id"].notna()
+    ]
+    duplicate_sessions = linked_signups["session_id"].duplicated(keep=False)
+    if duplicate_sessions.any():
+        duplicate_groups = linked_signups.loc[
+            duplicate_sessions, "session_id"
+        ].nunique()
+        raise ValueError(
+            "session_id must identify at most one signup before User Funnel "
+            f"construction; found {duplicate_groups} duplicate session group(s)"
+        )
+
+    known_users = linked_signups.loc[
+        linked_signups["user_id"].notna(), "user_id"
+    ]
+    duplicate_users = known_users.duplicated(keep=False)
+    if duplicate_users.any():
+        duplicate_groups = known_users.loc[duplicate_users].nunique()
+        raise ValueError(
+            "user_id must identify at most one signup-linked entrant before "
+            f"User Funnel construction; found {duplicate_groups} duplicate "
+            "user group(s)"
+        )
 
 
 def build_user_base_from_frames(
@@ -308,26 +314,43 @@ def build_user_base_from_frames(
     rides: pd.DataFrame,
     parameters: AnalysisParameters,
 ) -> pd.DataFrame:
-    """Build one row per distinct app-download entrant."""
+    """Build one row per selected download through two preserving LEFT joins.
+
+    Material download/signup cardinality failures are rejected first. Missing
+    or unexpected platform and age values remain visible in the returned base.
+    """
     parameters = _normalise_parameters(parameters)
     if parameters.source_cutoff is None:
         raise ValueError("source_cutoff is required")
-    download_by_key = _aggregate_downloads(downloads, parameters)
-    download_by_key = download_by_key.loc[
-        _cohort_mask(download_by_key["download_ts"], parameters)
+
+    _validate_user_source_conditions(downloads, signups, parameters)
+
+    observed_downloads = downloads.loc[
+        _source_row_mask(downloads["download_ts"], parameters.source_cutoff)
     ].copy()
-    signup_by_session = _aggregate_signups_by_session(
-        signups,
-        _aggregate_user_ride_flags(rides, parameters),
-        parameters,
+    download_cohort = observed_downloads.loc[
+        _cohort_mask(observed_downloads["download_ts"], parameters)
+    ].copy()
+
+    user_ride_flags = _aggregate_user_ride_flags(rides, parameters)
+    signup_details = _observed_signups(signups, parameters).loc[
+        lambda frame: frame["session_id"].notna(),
+        ["session_id", "user_id", "age_range"],
+    ].merge(
+        user_ride_flags,
+        how="left",
+        on="user_id",
+        validate="many_to_one",
     )
-    base = download_by_key.merge(
-        signup_by_session,
+
+    base = download_cohort.merge(
+        signup_details,
         how="left",
         left_on="app_download_key",
         right_on="session_id",
         validate="one_to_one",
     )
+
     base["downloaded"] = True
     base["signed_up"] = base["session_id"].notna()
     base["requested"] = base["signed_up"] & (
@@ -339,24 +362,26 @@ def build_user_base_from_frames(
     base["age_group"] = base["age_range"].astype("object")
     base.loc[~base["signed_up"], "age_group"] = NO_SIGNUP_AGE
 
-    for column in (
-        "signup_user_missing", "signup_user_conflict", "age_source_missing",
-        "age_conflict",
-    ):
-        base[column] = base[column].astype("boolean").fillna(False).astype(bool)
-    for column in ("signup_count", "signup_user_count"):
-        base[column] = base[column].astype("Int64").fillna(0).astype("int64")
-
-    base["platform_missing"] = (
-        base["platform"].isna() | base["platform_source_missing"]
-    )
+    base["download_row_count"] = 1
+    base["signup_count"] = base["signed_up"].astype("int64")
+    base["signup_user_count"] = (
+        base["signed_up"] & base["user_id"].notna()
+    ).astype("int64")
+    base["download_ts_conflict"] = False
+    base["download_ts_missing"] = base["download_ts"].isna()
+    base["platform_conflict"] = False
+    base["platform_missing"] = base["platform"].isna()
     base["platform_unexpected"] = (
         base["platform"].notna() & ~base["platform"].isin(VALID_PLATFORMS)
     )
-    base["age_missing"] = (
-        base["signed_up"]
-        & (base["age_source_missing"] | base["age_group"].isna())
+    base["signup_user_missing"] = (
+        base["signed_up"] & base["user_id"].isna()
     )
+    base["signup_user_conflict"] = False
+    base["age_missing"] = (
+        base["signed_up"] & base["age_group"].isna()
+    )
+    base["age_conflict"] = False
     base["age_unexpected"] = (
         base["signed_up"]
         & base["age_group"].notna()

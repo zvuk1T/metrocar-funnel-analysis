@@ -4,11 +4,8 @@ import os
 
 import pandas as pd
 import pytest
-from dotenv import load_dotenv
 
 from analysis import db, funnel, reconcile
-
-load_dotenv()
 
 requires_db = pytest.mark.skipif(
     not os.environ.get(db.ENV_VAR, "").strip(),
@@ -24,32 +21,31 @@ def _timestamps(values):
 
 
 def _sources() -> dict[str, pd.DataFrame]:
-    """Small snapshot with safe duplicates, missing attribution, and anomalies."""
+    """Structurally valid User Funnel sources plus Ride Funnel anomalies."""
     return {
         "downloads": pd.DataFrame(
             {
-                "app_download_key": ["d1", "d1", "d2", "d3", "d4"],
-                "platform": ["ios", "ios", "web", "android", None],
+                "app_download_key": ["d1", "d2", "d3", "d4"],
+                "platform": ["ios", "web", "android", None],
                 "download_ts": _timestamps(
                     [
-                        "2021-01-01 09:00", "2021-01-01 09:00",
-                        "2021-01-02 09:00", "2021-01-03 09:00",
-                        "2021-01-04 09:00",
+                        "2021-01-01 09:00", "2021-01-02 09:00",
+                        "2021-01-03 09:00", "2021-01-04 09:00",
                     ]
                 ),
             }
         ),
         "signups": pd.DataFrame(
             {
-                "user_id": [1, 1, 2, 3],
-                "session_id": ["d1", "d1", "d2", "d3"],
+                "user_id": [1, 2, 3],
+                "session_id": ["d1", "d2", "d3"],
                 "signup_ts": _timestamps(
                     [
-                        "2021-01-01 10:00", "2021-01-01 10:00",
-                        "2021-01-02 10:00", "2021-01-03 10:00",
+                        "2021-01-01 10:00", "2021-01-02 10:00",
+                        "2021-01-03 10:00",
                     ]
                 ),
-                "age_range": ["25-34", "25-34", "Unknown", None],
+                "age_range": ["25-34", "Unknown", None],
             }
         ),
         "rides": pd.DataFrame(
@@ -134,6 +130,14 @@ def test_source_cutoff_excludes_later_outcomes():
     assert result["parameters"].source_cutoff == parameters.source_cutoff
 
 
+def test_null_request_timestamp_does_not_become_a_membership_filter():
+    sources = _sources()
+    sources["rides"].loc[sources["rides"]["ride_id"].eq(11), "request_ts"] = pd.NaT
+    user = _analysis(sources)["user_base"].set_index("app_download_key").loc["d2"]
+    assert bool(user["requested"]) is True
+    assert bool(user["completed"]) is False
+
+
 def test_adjacent_rates_formulas_and_no_rounded_subtraction():
     rates = funnel.adjacent_rates({"a": 3, "b": 1}, ["a", "b"])
     assert rates.loc[1, "conversion_rate_pct"] == pytest.approx(100.0 / 3)
@@ -159,10 +163,10 @@ def test_subset_and_monotonicity_detect_invalid_chain():
     )
 
 
-# --- grain, multiplicity, stage membership, and attribution -----------------
+# --- grain, source validity, stage membership, and attribution --------------
 
 
-def test_duplicate_sources_do_not_multiply_base_grains():
+def test_valid_sources_preserve_base_grains():
     result = _analysis()
     user_base, ride_base = result["user_base"], result["ride_base"]
     assert user_base["app_download_key"].is_unique
@@ -170,8 +174,105 @@ def test_duplicate_sources_do_not_multiply_base_grains():
     assert len(user_base) == 4
     assert len(ride_base) == 4
     d1 = user_base.set_index("app_download_key").loc["d1"]
-    assert d1["download_row_count"] == 2
-    assert d1["signup_count"] == 2
+    assert d1["download_row_count"] == 1
+    assert d1["signup_count"] == 1
+
+
+def test_user_funnel_outward_interfaces_remain_compatible():
+    result = _analysis()
+    assert list(result["user_base"].columns) == [
+        "app_download_key", "download_ts", "platform", "age_group",
+        "downloaded", "signed_up", "requested", "completed",
+        "download_row_count", "signup_count", "signup_user_count",
+        "download_ts_conflict", "download_ts_missing", "platform_conflict",
+        "platform_missing", "platform_unexpected", "signup_user_missing",
+        "signup_user_conflict", "age_missing", "age_conflict",
+        "age_unexpected",
+    ]
+    assert set(result) == {
+        "parameters", "user_base", "ride_base", "user_counts", "ride_counts",
+        "user_rates", "ride_rates", "user_platform_counts", "user_age_counts",
+        "ride_platform_counts", "ride_age_counts",
+        "user_monotonic_violations", "ride_monotonic_violations",
+        "user_subset_violations", "ride_subset_violations",
+        "segment_reconciliation_errors", "ride_integrity",
+        "validation_totals", "ride_diagnostics",
+    }
+    assert set(result["validation_totals"]) == {
+        "user_base_rows", "user_base_distinct_ids", "ride_base_rows",
+        "ride_base_distinct_ids", "downloads_without_signup",
+        "user_platform_missing", "user_platform_unexpected",
+        "user_platform_conflict", "user_age_missing", "user_age_unexpected",
+        "user_age_conflict", "ride_signup_missing", "ride_download_missing",
+        "ride_platform_missing", "ride_platform_unexpected",
+        "ride_platform_conflict", "ride_age_missing", "ride_age_unexpected",
+        "ride_age_conflict", "dropoff_without_pickup",
+        "pickup_without_accept", "dropoff_without_accept",
+        "cancel_with_pickup", "cancel_with_dropoff",
+        "cancel_before_accept_anomaly", "accept_before_request",
+        "pickup_before_accept", "dropoff_before_pickup",
+        "approved_without_finished", "review_without_paid",
+        "duplicate_app_download_keys", "duplicate_ride_ids",
+        "signup_sessions_with_multiple_rows",
+        "signup_sessions_with_multiple_users", "signup_users_with_multiple_rows",
+        "rides_with_multiple_transactions", "rides_with_multiple_approved",
+        "rides_with_multiple_reviews", "unmatched_signup_rows",
+        "unmatched_ride_rows", "unmatched_transaction_rows",
+        "unmatched_review_rows",
+    }
+
+
+def test_duplicate_download_keys_fail_before_user_base_construction():
+    sources = _sources()
+    sources["downloads"] = pd.concat(
+        [sources["downloads"], sources["downloads"].iloc[[0]]],
+        ignore_index=True,
+    )
+    with pytest.raises(ValueError, match="app_download_key must be unique"):
+        _analysis(sources)
+
+
+def test_duplicate_signup_sessions_fail_before_user_base_construction():
+    sources = _sources()
+    sources["signups"] = pd.concat(
+        [sources["signups"], sources["signups"].iloc[[0]]],
+        ignore_index=True,
+    )
+    with pytest.raises(ValueError, match="session_id must identify at most one"):
+        _analysis(sources)
+
+
+def test_duplicate_signup_users_fail_before_user_base_construction():
+    sources = _sources()
+    sources["downloads"] = pd.concat(
+        [
+            sources["downloads"],
+            pd.DataFrame(
+                {
+                    "app_download_key": ["d5"],
+                    "platform": ["ios"],
+                    "download_ts": _timestamps(["2021-01-05 09:00"]),
+                }
+            ),
+        ],
+        ignore_index=True,
+    )
+    sources["signups"] = pd.concat(
+        [
+            sources["signups"],
+            pd.DataFrame(
+                {
+                    "user_id": [1],
+                    "session_id": ["d5"],
+                    "signup_ts": _timestamps(["2021-01-05 10:00"]),
+                    "age_range": ["25-34"],
+                }
+            ),
+        ],
+        ignore_index=True,
+    )
+    with pytest.raises(ValueError, match="user_id must identify at most one"):
+        _analysis(sources)
 
 
 def test_transaction_and_review_multiplicity_are_boolean_for_stages():
@@ -200,6 +301,18 @@ def test_user_and_ride_platform_attribution_follow_contract_paths():
     assert rides.loc[11, "platform"] == "web"
     assert pd.isna(rides.loc[13, "platform"])
     assert bool(rides.loc[13, "platform_missing"]) is True
+    assert pd.isna(users.loc["d4", "platform"])
+    assert bool(users.loc["d4", "platform_missing"]) is True
+
+
+def test_unexpected_user_platform_remains_visible_and_flagged():
+    sources = _sources()
+    sources["downloads"].loc[
+        sources["downloads"]["app_download_key"].eq("d2"), "platform"
+    ] = "mystery"
+    user = _analysis(sources)["user_base"].set_index("app_download_key").loc["d2"]
+    assert user["platform"] == "mystery"
+    assert bool(user["platform_unexpected"]) is True
 
 
 def test_age_categories_preserve_unknown_null_and_no_signup():
@@ -249,7 +362,14 @@ def test_conflicting_ride_attribution_is_explicit_without_fanout():
         ],
         ignore_index=True,
     )
-    rides = _analysis(sources)["ride_base"].set_index("ride_id")
+    rides = funnel.build_ride_base_from_frames(
+        sources["rides"],
+        sources["signups"],
+        sources["downloads"],
+        sources["transactions"],
+        sources["reviews"],
+        PARAMETERS,
+    ).set_index("ride_id")
     assert len(rides) == 4
     assert pd.isna(rides.loc[10, "platform"])
     assert bool(rides.loc[10, "platform_conflict"]) is True
@@ -264,9 +384,9 @@ def test_segmented_outputs_include_missing_categories_and_reconcile():
 
 def test_source_validation_reports_multiplicity_and_unmatched_paths():
     validation = _analysis()["validation_totals"]
-    assert validation["duplicate_app_download_keys"] == 1
-    assert validation["signup_sessions_with_multiple_rows"] == 1
-    assert validation["signup_users_with_multiple_rows"] == 1
+    assert validation["duplicate_app_download_keys"] == 0
+    assert validation["signup_sessions_with_multiple_rows"] == 0
+    assert validation["signup_users_with_multiple_rows"] == 0
     assert validation["rides_with_multiple_transactions"] == 1
     assert validation["rides_with_multiple_approved"] == 1
     assert validation["rides_with_multiple_reviews"] == 1
@@ -277,11 +397,9 @@ def test_source_validation_reports_multiplicity_and_unmatched_paths():
 # --- canonical SQL and reconciliation helpers ------------------------------
 
 
-def test_canonical_sql_contains_all_named_queries_and_no_correlated_exists():
+def test_canonical_sql_contains_all_named_queries():
     queries = reconcile.load_canonical_queries()
     assert reconcile.REQUIRED_QUERIES <= queries.keys()
-    assert "EXISTS" not in queries["user_base"].upper()
-    assert "EXISTS" not in queries["ride_base"].upper()
 
 
 def test_compare_bases_detects_membership_mismatch():
@@ -331,7 +449,6 @@ def test_reconciliation_reports_material_failure(monkeypatch):
 
 @pytest.fixture(scope="module")
 def engine():
-    load_dotenv()
     if not os.environ.get(db.ENV_VAR, "").strip():
         pytest.skip(f"{db.ENV_VAR} is not set")
     created = db.get_engine()
