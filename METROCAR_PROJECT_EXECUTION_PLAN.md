@@ -1,12 +1,12 @@
 # Metrocar Funnel Analysis — VS Code Agent Execution Plan
 
-> **Plan status:** PHASES 1–3 REMAIN ACCEPTED — USER FUNNEL IMPLEMENTATION CALIBRATION ACTIVE — PHASE 4 PAUSED
+> **Plan status:** PHASES 1–3 AND USER FUNNEL CALIBRATION COMPLETE AND ACCEPTED — PHASE 4 PAUSED / AWAITING SEPARATE DATA AUTHORIZATION
 >
-> Phases 1, 2, and 3 remain accepted at the historical analytical checkpoint `4d3269117cd258a443c138aa8d3b0ce10c3564af` (`feat: canonicalize Phase 3 business insights`). The current trusted pushed `main` checkpoint is `45a35f360937e510d5f42785cbf2bc62559958cf` (`docs: calibrate analytical code to DataCamp level`).
+> Phases 1, 2, and 3 remain accepted at the stable analytical checkpoint `4d3269117cd258a443c138aa8d3b0ce10c3564af` (`feat: canonicalize Phase 3 business insights`). The accepted User Funnel calibration checkpoints are `4d3e3c2cec4e6442ccc3f81b5580bb63b3174f43` for Pandas and `132226337e29459f3f6f23c40d7c0459cc6db4fa` for SQL. These are stable acceptance checkpoints, not a record of the current repository HEAD; current local, tracking, and live remote state must be verified when needed.
 >
-> A bounded post-acceptance calibration of the canonical User Funnel implementation is now active. Its purpose is to align the real production analytical code with the DataCamp beginner → intermediate default established in `HOW-WE-WORK.md` while preserving the locked Metric Contract, accepted analytical results, reproducibility, required validation, the Ride Funnel, and accepted Phase 3 findings.
+> The bounded post-acceptance calibration aligned the canonical User Funnel implementation with the DataCamp beginner → intermediate default established in `HOW-WE-WORK.md` while preserving the locked Metric Contract, accepted analytical results, reproducibility, required validation, the Ride Funnel, and accepted Phase 3 findings.
 >
-> Additional Phase 4 work is paused until this analytical calibration reaches its required checkpoint and Data explicitly reauthorizes Phase 4. Pre-existing local Phase 4A work remains unaccepted working-tree state and must be preserved without expansion.
+> Phase 4 remains paused and requires separate explicit Data authorization. Pre-existing local Phase 4A work remains unaccepted working-tree state and must be preserved without expansion.
 
 ## 1. Purpose of This Document
 
@@ -726,13 +726,13 @@ Stop after the bounded Phase 2 deliverables and validation evidence named in the
 
 ### Post-Acceptance Analytical Calibration — User Funnel
 
-**Status:** Active planning scope. Analytical implementation still requires a separate bounded Data authorization.
+**Status:** Complete and accepted.
 
 #### Purpose
 
-Rework the canonical User Funnel implementation so that the real production analytical logic is understandable at approximately DataCamp beginner → intermediate analytical complexity, as required by `HOW-WE-WORK.md`.
+The canonical User Funnel implementation was reworked so that the real production analytical logic is understandable at approximately DataCamp beginner → intermediate analytical complexity, as required by `HOW-WE-WORK.md`.
 
-This is an implementation-complexity calibration, not a metric redesign.
+This was an implementation-complexity calibration, not a metric redesign.
 
 `docs/METRIC_DEFINITION_CONTRACT.md` remains unchanged and authoritative for:
 
@@ -751,7 +751,7 @@ The historically accepted Phase 2 results and accepted Phase 3 findings remain r
 
 #### Target analytical mental model
 
-The preferred User Funnel implementation should expose the analytical reasoning directly:
+The accepted User Funnel implementation exposes the analytical reasoning directly:
 
 1. validate the source conditions and relationships required by the User Funnel;
 2. reduce repeated ride activity to one Boolean Requested/Completed result per signup-linked user;
@@ -773,41 +773,18 @@ Material Metric Contract validation failures remain mandatory STOP conditions.
 
 Non-material reportable anomalies must remain visible according to the Metric Contract and must not be silently discarded, imputed, or reclassified.
 
-#### First eligible implementation slice
+#### Accepted implementation slices
 
-After a separate explicit Data authorization, the first eligible mutation slice is the Pandas User Funnel only.
+The calibration was completed through two separately reviewed and validated slices:
 
-Authorized candidate implementation files for that future slice:
+1. The Pandas User Funnel and its relevant focused tests were simplified in `analysis/funnel.py` and `tests/test_funnel.py`, accepted at commit `4d3e3c2cec4e6442ccc3f81b5580bb63b3174f43`.
+2. The `user_base` named query in `sql/production/02_funnel_analysis.sql` was simplified and accepted at commit `132226337e29459f3f6f23c40d7c0459cc6db4fa`.
 
-- `analysis/funnel.py`
-- User-Funnel-relevant portions of `tests/test_funnel.py`
+The slices preserved the governed User Funnel meaning, public callable and reconciliation interfaces, source-cutoff and cohort-entry semantics, required validation, accepted results, and the unchanged Ride Funnel. Pandas was first reconciled against the unchanged canonical SQL; the later SQL calibration was then reconciled exactly against the accepted Pandas implementation.
 
-The first implementation slice should:
+#### Preserved scope during calibration
 
-- simplify only the Pandas User Funnel path;
-- preserve existing public callable interfaces where practical;
-- preserve the governed User Funnel meaning;
-- preserve source-cutoff and cohort-entry semantics;
-- preserve required validation;
-- preserve accepted User Funnel results;
-- leave the Ride Funnel implementation unchanged.
-
-For the first Pandas slice, keep these files unchanged:
-
-- `analysis/reconcile.py`
-- `sql/production/02_funnel_analysis.sql`
-
-The existing canonical SQL remains the independent accepted regression oracle while Pandas is simplified.
-
-If the Pandas rewrite cannot reconcile without changing `analysis/reconcile.py`, canonical SQL, the Ride Funnel, Metric Contract meaning, or another out-of-scope artifact, STOP for a new planning decision rather than expanding scope.
-
-The first slice must not include SQL simplification.
-
-Only after the rewritten Pandas User Funnel passes its checkpoint may a separate SQL User Funnel simplification slice be proposed.
-
-#### Frozen scope during calibration
-
-Unless separately authorized, do not continue or modify:
+The calibration did not continue or modify:
 
 - the Ride Funnel implementation;
 - Phase 3 business-analysis logic;
@@ -821,11 +798,24 @@ Unless separately authorized, do not continue or modify:
 - deployment;
 - unrelated cleanup or refactoring.
 
-Pre-existing working-tree changes outside an authorized analytical slice must be preserved exactly.
+Pre-existing working-tree changes outside the authorized analytical slices were preserved exactly.
 
-#### Calibration checkpoint
+#### Calibration acceptance checkpoint
 
-Before the rewritten Pandas User Funnel can be accepted, verify and report:
+**Status:** Complete and accepted.
+
+Stable acceptance evidence:
+
+- Pandas calibration commit: `4d3e3c2cec4e6442ccc3f81b5580bb63b3174f43`;
+- SQL calibration commit: `132226337e29459f3f6f23c40d7c0459cc6db4fa`;
+- focused tests: 25 passed, 3 live tests deselected;
+- live SQL/Pandas reconciliation: `all_match=True`;
+- source cutoff: `2022-04-24 20:00:00`;
+- User Funnel preserved: 23,608 → 17,623 → 12,406 → 6,233;
+- Ride Funnel preserved: 385,477 → 223,652 → 212,628 → 148,464;
+- the Metric Contract and accepted Phase 3 findings remained unchanged.
+
+The completed checkpoint also confirmed:
 
 - one row per governed `app_download_key`;
 - preservation of the selected download cohort through enrichment joins;
@@ -839,17 +829,17 @@ Before the rewritten Pandas User Funnel can be accepted, verify and report:
 - full-precision formulas;
 - zero-denominator behavior;
 - segmented-to-overall reconciliation;
-- exact identifier-, membership-, attribution-, count-, rate-, and segment-level reconciliation against the unchanged canonical SQL;
+- exact identifier-, membership-, attribution-, count-, rate-, and segment-level reconciliation between the accepted Pandas and SQL implementations;
 - reconciliation to the accepted full-snapshot User Funnel values registered in `docs/METROCAR_VISUAL_SPEC.md` §4.1 and related accepted repository evidence;
 - preservation of the accepted source cutoff and relevant Insight Log evidence;
 - no regression in the untouched Ride Funnel;
 - focused automated tests;
-- required live read-only reconciliation when explicitly authorized;
+- completed live read-only reconciliation under explicit authorization;
 - preservation of all unrelated pre-existing working-tree changes.
 
-A material Metric Contract validation failure is a mandatory STOP.
+No material Metric Contract validation failure or reconciliation discrepancy remained.
 
-This calibration section does not itself authorize:
+Acceptance of this calibration does not itself authorize:
 
 - analytical code mutation;
 - database access;
@@ -862,9 +852,9 @@ Those actions remain separately gated.
 
 ### Phase 4 — Visual analysis and storytelling
 
-**Status:** Paused while the post-acceptance User Funnel analytical calibration is active.
+**Status:** Paused / awaiting separate Data authorization.
 
-**Authorization:** Phase 4 remains separately gated. No additional frontend, public-data, visual-polish, deployment, or related Phase 4 work is authorized until the User Funnel analytical calibration reaches its checkpoint and Data explicitly reopens Phase 4. Pre-existing local Phase 4A working-tree work remains unaccepted and must be preserved without expansion.
+**Authorization:** Phase 4 remains separately gated. Completion of the User Funnel calibration does not reopen Phase 4. No additional frontend, public-data, visual-polish, deployment, or related Phase 4 work is authorized until Data explicitly authorizes it. Pre-existing local Phase 4A working-tree work remains unaccepted and must be preserved without expansion.
 
 - create the full user-level funnel and separate ride-level funnel defined in Section 4.2;
 - implement or prepare the validated data products for platform, age-range, and date-range filters;
@@ -1294,6 +1284,7 @@ Preserve the accepted `docs/data_quality_report.md`, source databases, source ta
 
 ## 13. Change Log
 
+- **2026-08-29:** Accepted the completed post-acceptance User Funnel implementation calibration at Pandas checkpoint `4d3e3c2cec4e6442ccc3f81b5580bb63b3174f43` and SQL checkpoint `132226337e29459f3f6f23c40d7c0459cc6db4fa`. Recorded 25 focused tests passed with 3 live tests deselected, live SQL/Pandas `all_match=True`, source cutoff `2022-04-24 20:00:00`, preserved User Funnel counts 23,608 → 17,623 → 12,406 → 6,233, preserved Ride Funnel counts 385,477 → 223,652 → 212,628 → 148,464, and no change to the Metric Contract or accepted Phase 3 findings. Replaced the transient “current pushed main” status concept with stable acceptance checkpoints and required live HEAD verification. Phase 4 remains paused pending separate explicit Data authorization; this amendment does not authorize Phase 4 work or Git transport.
 - **2026-08-29:** Clarified the Data–Troi–Spock execution model after the earlier protected-document restriction proved too broad. Data remains final authority and Data/Troi retain substantive planning and analytical decision authority, while Spock is the repository mutation agent and may edit any explicitly authorized repository file, including governance-controlled documents. Replaced blanket file-level write prohibition with bounded task authorization, no-silent-scope-expansion, separate Git gates, and mandatory STOP on substantive ambiguity. This preserves the reason for the earlier safeguard—preventing accidental governance corruption—without requiring Data or Troi to perform repository mutations manually.
 - **2026-08-29:** Opened a bounded post-acceptance User Funnel implementation calibration after review found that the accepted canonical implementation exceeds the project’s intended DataCamp beginner → intermediate learning-complexity target. Preserved the Metric Contract, historical Phase 2 acceptance, accepted analytical results, and accepted Phase 3 findings as regression evidence. Defined the first eligible implementation slice as Pandas User Funnel simplification only, with the existing canonical SQL retained unchanged as an independent regression oracle. Paused additional Phase 4, public-data, frontend, visual-polish, and deployment work until the calibration reaches its checkpoint. This planning amendment does not itself authorize analytical code mutation, database access, commit, push, or deployment.
 - **2026-08-28:** Reopened and replaced the earlier light/navy/blue-green Phase 4 visual direction. Approved a portfolio-aligned dark analytical direction using near-black or dark-neutral foundations, restrained muted green/olive/teal-green analytical tones, selective lime emphasis, and semantic warm exception colors where evidence requires attention. Registered `docs/METROCAR_VISUAL_SPEC.md` as the project-specific visual specification while preserving the confirmed dual-funnel, platform/age comparison, date-filter, label-mode, accessibility, and analytical requirements. This planning amendment does not authorize frontend implementation, dependency changes, commit, push, or deployment.
