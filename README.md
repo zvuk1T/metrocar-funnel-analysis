@@ -12,10 +12,11 @@ Metrocar is a ride-sharing funnel-analysis portfolio project demonstrating:
 
 - Phases 1–3 are complete and accepted.
 - The Phase 4 visual specification is approved.
-- Phase 4 frontend implementation has **not** started.
+- Phase 4A now provides a local, reviewable full-snapshot Funnel Explorer.
+- Platform, age, and date filters, comparisons, later insight sections, and deployment remain future work.
 - This is a portfolio rebuild, not a MasterSchool resubmission.
 
-No frontend, live demo, or Render deployment is claimed by this README.
+No live demo or Render deployment is claimed by this README.
 
 ## Canonical high-level funnels
 
@@ -86,6 +87,43 @@ error path prints the URL or a chained traceback.
 `python -m analysis.run` regenerates the Phase 1 structural data-quality report. It is not a Phase 4
 build command. Canonical Phase 2 and Phase 3 logic is available through the modules and production
 SQL listed below.
+
+## Phase 4A local Funnel Explorer
+
+Phase 4A keeps the database boundary outside the browser. The export command runs the accepted
+SQL/Pandas reconciliation and then writes only eight aggregate funnel-stage rows plus cutoff and
+traceability metadata:
+
+```bash
+./.venv/bin/python -m analysis.public_data
+```
+
+The checked-in output is `web/public/data/metrocar-funnels.json`. It contains no entrant, user,
+ride, transaction, review, source-row, or credential data.
+
+The frontend targets Node `24.20.0` and pnpm `11.19.0`. This project-local setup keeps Node under
+the ignored `.runtime/` directory and does not change the system installation or shell profile:
+
+```bash
+export METROCAR_NODE_HOME="$PWD/.runtime/pnpm"
+export PNPM_HOME="$METROCAR_NODE_HOME"
+export PATH="$METROCAR_NODE_HOME/bin:$PATH"
+pnpm runtime set node 24.20.0 --global
+
+cd web
+CI=true pnpm_config_strict_dep_builds=false pnpm install --frozen-lockfile --ignore-workspace
+pnpm_config_verify_deps_before_run=false pnpm run dev
+```
+
+Open <http://127.0.0.1:4321/>. The dependency install deliberately leaves transitive lifecycle
+scripts disabled; the Astro build uses the installed platform packages successfully without them.
+
+Frontend validation uses:
+
+```bash
+pnpm_config_verify_deps_before_run=false pnpm run check
+pnpm_config_verify_deps_before_run=false pnpm run build
+```
 
 ## Current reading order
 

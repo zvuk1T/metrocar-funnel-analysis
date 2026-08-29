@@ -7,5 +7,11 @@ __pycache__/
 *.pyc
 .pytest_cache/
 
+# Project-local Node runtime and frontend build artifacts
+.runtime/
+web/node_modules/
+web/.astro/
+web/dist/
+
 # macOS Finder metadata
 .DS_Store

@@ -1,0 +1,56 @@
+---
+import funnelData from "../../public/data/metrocar-funnels.json";
+import FunnelExplorer from "../components/FunnelExplorer";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import type { FunnelData } from "../lib/funnel-data";
+
+const data = funnelData as FunnelData;
+const cutoff = data.scope.sourceCutoff.replace("T", " ");
+---
+
+<BaseLayout
+  title="Metrocar Funnel Explorer"
+  description="An interactive view of Metrocar's validated user and ride funnels."
+>
+  <main>
+    <header class="hero" aria-labelledby="page-title">
+      <div class="hero__content">
+        <p class="eyebrow"><span aria-hidden="true">04A /</span> Analytical case study</p>
+        <h1 id="page-title">Where does Metrocar lose momentum?</h1>
+        <p class="hero__lede">
+          One governed story, two compatible grains. Explore the validated
+          full-snapshot funnel without mixing download entrants and rides.
+        </p>
+      </div>
+      <dl class="snapshot-card" aria-label="Current analytical scope">
+        <div>
+          <dt>Scope</dt>
+          <dd>Full snapshot</dd>
+        </div>
+        <div>
+          <dt>Source cutoff</dt>
+          <dd>{cutoff} <abbr title="Source timezone is unavailable">source time</abbr></dd>
+        </div>
+        <div>
+          <dt>Validation</dt>
+          <dd><span class="status-dot" aria-hidden="true"></span> SQL + Pandas reconciled</dd>
+        </div>
+      </dl>
+    </header>
+
+    <section id="funnel-explorer" class="explorer-section" aria-labelledby="explorer-title">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">Funnel Explorer</p>
+          <h2 id="explorer-title">See every stage. Keep every definition.</h2>
+        </div>
+        <p>
+          Switch the analytical grain or label perspective. Geometry always
+          represents exact counts; the selected label mode changes presentation only.
+        </p>
+      </div>
+
+      <FunnelExplorer client:only="react" data={data} />
+    </section>
+  </main>
+</BaseLayout>

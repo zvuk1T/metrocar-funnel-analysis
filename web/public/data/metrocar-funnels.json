@@ -1,0 +1,86 @@
+{
+  "funnels": {
+    "ride": {
+      "grain": "One distinct requested ride",
+      "label": "Ride Funnel",
+      "stages": [
+        {
+          "count": 385477,
+          "key": "requested",
+          "label": "Requested",
+          "percentOfPrevious": null,
+          "percentOfTop": 100.0
+        },
+        {
+          "count": 223652,
+          "key": "finished",
+          "label": "Finished",
+          "percentOfPrevious": 58.019544616150895,
+          "percentOfTop": 58.019544616150895
+        },
+        {
+          "count": 212628,
+          "key": "paid",
+          "label": "Paid",
+          "percentOfPrevious": 95.07091374099046,
+          "percentOfTop": 55.1597112149363
+        },
+        {
+          "count": 148464,
+          "key": "reviewed",
+          "label": "Reviewed",
+          "percentOfPrevious": 69.82335346238501,
+          "percentOfTop": 38.5143601304358
+        }
+      ],
+      "unit": "rides"
+    },
+    "user": {
+      "grain": "One recorded app-download entrant",
+      "label": "User Funnel",
+      "stages": [
+        {
+          "count": 23608,
+          "key": "downloaded",
+          "label": "Downloaded",
+          "percentOfPrevious": null,
+          "percentOfTop": 100.0
+        },
+        {
+          "count": 17623,
+          "key": "signed_up",
+          "label": "Signed Up",
+          "percentOfPrevious": 74.64842426296171,
+          "percentOfTop": 74.64842426296171
+        },
+        {
+          "count": 12406,
+          "key": "requested",
+          "label": "Requested",
+          "percentOfPrevious": 70.39664075356069,
+          "percentOfTop": 52.54998305659099
+        },
+        {
+          "count": 6233,
+          "key": "completed",
+          "label": "Completed",
+          "percentOfPrevious": 50.241818474931485,
+          "percentOfTop": 26.402067095899696
+        }
+      ],
+      "unit": "download entrants"
+    }
+  },
+  "schemaVersion": 1,
+  "scope": {
+    "cohortEndExclusive": null,
+    "cohortStart": null,
+    "kind": "full_snapshot",
+    "sourceCutoff": "2022-04-24T20:00:00"
+  },
+  "traceability": {
+    "metricContract": "docs/METRIC_DEFINITION_CONTRACT.md",
+    "python": "analysis.funnel.run_funnel_analysis",
+    "sql": "sql/production/02_funnel_analysis.sql"
+  }
+}
