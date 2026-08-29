@@ -1,8 +1,12 @@
 # Metrocar Funnel Analysis — VS Code Agent Execution Plan
 
-> **Plan status:** PHASES 1–3 COMPLETE AND ACCEPTED — PHASE 4 AWAITING SEPARATE AUTHORIZATION
+> **Plan status:** PHASES 1–3 REMAIN ACCEPTED — USER FUNNEL IMPLEMENTATION CALIBRATION ACTIVE — PHASE 4 PAUSED
 >
-> Phases 1, 2, and 3 are complete and accepted at trusted repository checkpoint `4d3269117cd258a443c138aa8d3b0ce10c3564af` (`feat: canonicalize Phase 3 business insights`). The accepted validation evidence is `68 passed, 0 failed, 0 skipped`, with Phase 3 SQL/Pandas first-ride reconciliation `all_match=True`. Phase 4 is the next project phase; frontend implementation and deployment of the new Metrocar portfolio application have not begun. Phase 4 implementation, commit, push, and deployment each require separate bounded authorization unless Data explicitly bundles those actions.
+> Phases 1, 2, and 3 remain accepted at the historical analytical checkpoint `4d3269117cd258a443c138aa8d3b0ce10c3564af` (`feat: canonicalize Phase 3 business insights`). The current trusted pushed `main` checkpoint is `45a35f360937e510d5f42785cbf2bc62559958cf` (`docs: calibrate analytical code to DataCamp level`).
+>
+> A bounded post-acceptance calibration of the canonical User Funnel implementation is now active. Its purpose is to align the real production analytical code with the DataCamp beginner → intermediate default established in `HOW-WE-WORK.md` while preserving the locked Metric Contract, accepted analytical results, reproducibility, required validation, the Ride Funnel, and accepted Phase 3 findings.
+>
+> Additional Phase 4 work is paused until this analytical calibration reaches its required checkpoint and Data explicitly reauthorizes Phase 4. Pre-existing local Phase 4A work remains unaccepted working-tree state and must be preserved without expansion.
 
 ## 1. Purpose of This Document
 
@@ -70,7 +74,7 @@ If two higher-authority instructions conflict, document the conflict and ask the
 
 ### 2.4 Canonical project document map
 
-| Document | Authority and purpose | Content ownership |
+| Document | Authority and purpose | Decision/content authority |
 |---|---|---|
 | `METROCAR_PROJECT_EXECUTION_PLAN.md` | Governs project scope, phases, checkpoints, deliverables, and readiness gates. | User and planning assistant only. |
 | `docs/METRIC_DEFINITION_CONTRACT.md` | Sole detailed authority for Phase 2 funnel entities, stage membership, joins, filters, formulas, attribution, limitations, and validation rules. | User and planning assistant only. |
@@ -78,6 +82,8 @@ If two higher-authority instructions conflict, document the conflict and ask the
 | `docs/ANALYSIS_INSIGHT_LOG.md` | Durable register for evidence-backed observations, patterns, caveats, hypotheses, and recommendations. | User and planning assistant by default; an implementation agent may append only when the task explicitly grants that authority. |
 | `docs/METROCAR_VISUAL_SPEC.md` | Governs approved Phase 4 visual hierarchy, interaction, project-specific visual identity, Plotly presentation, responsive behavior, and visual acceptance criteria. It is subordinate to this execution plan and `docs/METRIC_DEFINITION_CONTRACT.md` and must not redefine analytical metrics. | User and planning assistant by default; an implementation agent may create or update it only under explicit bounded authority. |
 | `docs/data_quality_report.md` | Accepted Phase 1 evidence for the live schema and structural data-quality profile. | Generated evidence; update only through an explicitly authorized reproducible Phase 1 rerun. |
+
+Data and Troi own substantive decisions for planning and governance documents; this is decision/content authority, not filesystem write protection. Spock is the repository mutation agent and may edit any named repository file, including planning and governance documents, under explicit bounded authorization. Such mutation does not authorize Spock to invent or expand governance, scope, definitions, phase status, or authorization, and all Git actions remain separately gated. See `AGENTS.md` for the detailed execution rule.
 
 The task-specific reading tier is governed by `AGENTS.md`. The execution plan intentionally does not duplicate the detailed metric contract. If a detailed Phase 2 metric rule appears ambiguous here, use `docs/METRIC_DEFINITION_CONTRACT.md`; if the documents materially conflict, stop and escalate to the user and planning assistant rather than choosing an interpretation.
 
@@ -669,7 +675,7 @@ web/
 
 **Status:** Complete and accepted.
 
-**Authorization:** This phase was completed under separate bounded authorization. Its accepted implementation is not reopened by this plan.
+**Authorization:** This phase was completed under separate bounded authorization and remains the accepted historical analytical baseline. This plan now explicitly reopens only the bounded post-acceptance User Funnel implementation calibration defined below. That calibration preserves the Metric Contract and accepted regression evidence and does not reopen the Ride Funnel, Phase 3 findings, or other Phase 2 scope.
 
 #### Objective
 
@@ -718,11 +724,147 @@ Stop after the bounded Phase 2 deliverables and validation evidence named in the
 - add assertions for key invariants and reconcile totals across analysis paths;
 - refuse unnecessary abstraction: do not build a generic analytics framework when a few readable functions and tables solve the confirmed problem.
 
+### Post-Acceptance Analytical Calibration — User Funnel
+
+**Status:** Active planning scope. Analytical implementation still requires a separate bounded Data authorization.
+
+#### Purpose
+
+Rework the canonical User Funnel implementation so that the real production analytical logic is understandable at approximately DataCamp beginner → intermediate analytical complexity, as required by `HOW-WE-WORK.md`.
+
+This is an implementation-complexity calibration, not a metric redesign.
+
+`docs/METRIC_DEFINITION_CONTRACT.md` remains unchanged and authoritative for:
+
+- analytical grain;
+- stage membership;
+- join direction and row preservation;
+- cohort-entry filtering;
+- source-data-cutoff semantics;
+- platform and age attribution;
+- formulas;
+- subset and monotonicity rules;
+- validation;
+- reproducibility.
+
+The historically accepted Phase 2 results and accepted Phase 3 findings remain regression evidence. They must not be changed merely to simplify implementation.
+
+#### Target analytical mental model
+
+The preferred User Funnel implementation should expose the analytical reasoning directly:
+
+1. validate the source conditions and relationships required by the User Funnel;
+2. reduce repeated ride activity to one Boolean Requested/Completed result per signup-linked user;
+3. anchor the analytical population on `app_downloads`;
+4. preserve downloads without signup through a `LEFT JOIN`;
+5. join signup attributes and per-user ride flags through the governed relationship path;
+6. derive Downloaded, Signed Up, Requested, and Completed as Boolean entrant-level stages;
+7. preserve governed platform and age attribution, including source `Unknown` and `Not available — no signup`;
+8. calculate stage counts and rates with ordinary, readable Pandas operations;
+9. validate grain, subset membership, monotonicity, segmentation, cohort/cutoff behavior, formulas, and reconciliation.
+
+Complexity beyond this model must be earned by a verified correctness, reproducibility, privacy/security, edge-case, or concrete maintainability requirement.
+
+Validation that detects an invalid source condition is not by itself justification for carrying defensive anomaly-resolution machinery through every analytical row.
+
+At the same time, validation must not be weakened.
+
+Material Metric Contract validation failures remain mandatory STOP conditions.
+
+Non-material reportable anomalies must remain visible according to the Metric Contract and must not be silently discarded, imputed, or reclassified.
+
+#### First eligible implementation slice
+
+After a separate explicit Data authorization, the first eligible mutation slice is the Pandas User Funnel only.
+
+Authorized candidate implementation files for that future slice:
+
+- `analysis/funnel.py`
+- User-Funnel-relevant portions of `tests/test_funnel.py`
+
+The first implementation slice should:
+
+- simplify only the Pandas User Funnel path;
+- preserve existing public callable interfaces where practical;
+- preserve the governed User Funnel meaning;
+- preserve source-cutoff and cohort-entry semantics;
+- preserve required validation;
+- preserve accepted User Funnel results;
+- leave the Ride Funnel implementation unchanged.
+
+For the first Pandas slice, keep these files unchanged:
+
+- `analysis/reconcile.py`
+- `sql/production/02_funnel_analysis.sql`
+
+The existing canonical SQL remains the independent accepted regression oracle while Pandas is simplified.
+
+If the Pandas rewrite cannot reconcile without changing `analysis/reconcile.py`, canonical SQL, the Ride Funnel, Metric Contract meaning, or another out-of-scope artifact, STOP for a new planning decision rather than expanding scope.
+
+The first slice must not include SQL simplification.
+
+Only after the rewritten Pandas User Funnel passes its checkpoint may a separate SQL User Funnel simplification slice be proposed.
+
+#### Frozen scope during calibration
+
+Unless separately authorized, do not continue or modify:
+
+- the Ride Funnel implementation;
+- Phase 3 business-analysis logic;
+- accepted Phase 3 findings;
+- `docs/ANALYSIS_INSIGHT_LOG.md`;
+- public-data generation;
+- `learning/metrocar_walkthrough.py`;
+- README or portfolio polish;
+- `web/**`;
+- frontend implementation;
+- deployment;
+- unrelated cleanup or refactoring.
+
+Pre-existing working-tree changes outside an authorized analytical slice must be preserved exactly.
+
+#### Calibration checkpoint
+
+Before the rewritten Pandas User Funnel can be accepted, verify and report:
+
+- one row per governed `app_download_key`;
+- preservation of the selected download cohort through enrichment joins;
+- exact Boolean stage membership and subset relationships;
+- monotonic stage counts;
+- governed platform attribution;
+- governed age attribution;
+- the distinction between source `Unknown` and `Not available — no signup`;
+- half-open cohort-entry filtering;
+- one reproducible source-data cutoff;
+- full-precision formulas;
+- zero-denominator behavior;
+- segmented-to-overall reconciliation;
+- exact identifier-, membership-, attribution-, count-, rate-, and segment-level reconciliation against the unchanged canonical SQL;
+- reconciliation to the accepted full-snapshot User Funnel values registered in `docs/METROCAR_VISUAL_SPEC.md` §4.1 and related accepted repository evidence;
+- preservation of the accepted source cutoff and relevant Insight Log evidence;
+- no regression in the untouched Ride Funnel;
+- focused automated tests;
+- required live read-only reconciliation when explicitly authorized;
+- preservation of all unrelated pre-existing working-tree changes.
+
+A material Metric Contract validation failure is a mandatory STOP.
+
+This calibration section does not itself authorize:
+
+- analytical code mutation;
+- database access;
+- commit;
+- push;
+- deployment;
+- progression to Phase 4.
+
+Those actions remain separately gated.
+
 ### Phase 4 — Visual analysis and storytelling
 
-**Status:** Next project phase. Frontend implementation has not begun.
+**Status:** Paused while the post-acceptance User Funnel analytical calibration is active.
 
-**Authorization:** Phase 4 requires separate bounded authorization. This plan status correction does not authorize implementation, commit, push, or deployment.
+**Authorization:** Phase 4 remains separately gated. No additional frontend, public-data, visual-polish, deployment, or related Phase 4 work is authorized until the User Funnel analytical calibration reaches its checkpoint and Data explicitly reopens Phase 4. Pre-existing local Phase 4A working-tree work remains unaccepted and must be preserved without expansion.
 
 - create the full user-level funnel and separate ride-level funnel defined in Section 4.2;
 - implement or prepare the validated data products for platform, age-range, and date-range filters;
@@ -1118,22 +1260,42 @@ Later phases may proceed only when their prerequisites are satisfied:
 - the previous phase's acceptance checks pass;
 - the user explicitly approves the next phase.
 
-### 12.4 Planning ownership and protected documents
+### 12.4 Planning decision authority and repository mutation
 
-The user and planning assistant exclusively maintain the content of:
+Data is the final project decision authority.
+
+Data and the planning assistant (Troi) hold substantive planning/content decision authority for:
 
 - `AGENTS.md`;
 - `METROCAR_PROJECT_EXECUTION_PLAN.md`;
 - `docs/METRIC_DEFINITION_CONTRACT.md`.
 
-Implementation agents, including Kimi, must treat these files as protected and read-only. They may not edit, rewrite, restore, rename, move, delete, replace, regenerate, or format them. Proposed changes belong in the checkpoint report for the planning assistant to evaluate and apply. If an implementation agent observes an unexpected diff, merge conflict, missing protected document, or inconsistency, it must stop and report the issue without attempting repair.
+This authority determines what governance, scope, or analytical definition may be changed. It does not make those files repository-write-protected.
 
-An implementation agent may stage, commit, or push an already reviewed protected-document change only when the user explicitly authorizes that exact transport action and names the files. Transport authority is not content-edit authority: the agent must verify that the reviewed files remain byte-for-byte unchanged, must not resolve conflicts, and must stop on any discrepancy.
+Spock is the repository mutation agent and may edit these or any other repository files when an explicit bounded task authorizes the named files and intended substantive change.
 
-`docs/ANALYSIS_INSIGHT_LOG.md` is writable by the user and planning assistant by default. An implementation agent may append to it only when the current task explicitly grants Insight Log write authority and defines the permitted evidence scope. Existing entries must not be silently rewritten or deleted.
+Repository mutation authority does not transfer planning authority.
+
+Spock must not independently invent, expand, reinterpret, or change governance, project scope, Metric Contract meaning, phase status, or authorization boundaries.
+
+If a task supplies exact replacement text, apply it faithfully and STOP if repository context would require a substantive decision to make it fit.
+
+If a task supplies bounded semantic intent, make the smallest faithful change and report the exact resulting diff.
+
+Mutation, staging, commit, push, deployment, destructive Git actions, and progression to another task or phase remain separate gates unless Data explicitly bundles actions under the proportional Git rule.
+
+Unexpected conflicting diffs, merge conflicts, missing canonical sources, substantive ambiguity, or required scope expansion are mandatory STOP conditions.
+
+`docs/ANALYSIS_INSIGHT_LOG.md` remains writable by Data and Troi by default. Spock may change it only when the current bounded task explicitly grants that authority and defines the permitted evidence scope.
+
+Existing records must not be silently rewritten or deleted.
+
+Preserve the accepted `docs/data_quality_report.md`, source databases, source tables, and raw source files as read-only evidence unless a separate explicit authorization states otherwise.
 
 ## 13. Change Log
 
+- **2026-08-29:** Clarified the Data–Troi–Spock execution model after the earlier protected-document restriction proved too broad. Data remains final authority and Data/Troi retain substantive planning and analytical decision authority, while Spock is the repository mutation agent and may edit any explicitly authorized repository file, including governance-controlled documents. Replaced blanket file-level write prohibition with bounded task authorization, no-silent-scope-expansion, separate Git gates, and mandatory STOP on substantive ambiguity. This preserves the reason for the earlier safeguard—preventing accidental governance corruption—without requiring Data or Troi to perform repository mutations manually.
+- **2026-08-29:** Opened a bounded post-acceptance User Funnel implementation calibration after review found that the accepted canonical implementation exceeds the project’s intended DataCamp beginner → intermediate learning-complexity target. Preserved the Metric Contract, historical Phase 2 acceptance, accepted analytical results, and accepted Phase 3 findings as regression evidence. Defined the first eligible implementation slice as Pandas User Funnel simplification only, with the existing canonical SQL retained unchanged as an independent regression oracle. Paused additional Phase 4, public-data, frontend, visual-polish, and deployment work until the calibration reaches its checkpoint. This planning amendment does not itself authorize analytical code mutation, database access, commit, push, or deployment.
 - **2026-08-28:** Reopened and replaced the earlier light/navy/blue-green Phase 4 visual direction. Approved a portfolio-aligned dark analytical direction using near-black or dark-neutral foundations, restrained muted green/olive/teal-green analytical tones, selective lime emphasis, and semantic warm exception colors where evidence requires attention. Registered `docs/METROCAR_VISUAL_SPEC.md` as the project-specific visual specification while preserving the confirmed dual-funnel, platform/age comparison, date-filter, label-mode, accessibility, and analytical requirements. This planning amendment does not authorize frontend implementation, dependency changes, commit, push, or deployment.
 - **2026-08-28:** Aligned current-status statements with accepted repository checkpoint `4d3269117cd258a443c138aa8d3b0ce10c3564af`: Phases 1–3 are complete and accepted, Phase 4 frontend implementation and deployment have not begun, and Phase 4 implementation, commit, push, and deployment remain separately gated. Preserved earlier readiness gates and dated authorization records as project history.
 - **2026-08-27:** Applied the reviewed Phase 2 governance amendment. Registered the canonical planning documents and accepted Phase 1 evidence, made the metric contract the sole detailed definition authority, reconciled outdated provisional wording, marked the three original metric-definition decisions resolved, replaced the former contract-drafting phase with a bounded reproducible-analysis phase, strengthened protected-document ownership, and added the Phase 2 readiness gate. This was a planning-only change; analytical implementation remains not started and not authorized.

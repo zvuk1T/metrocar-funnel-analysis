@@ -20,7 +20,7 @@ Read documents in the following order.
    - relevant changelog entries.
 4. Read the explicit task authorization, brief, or handover.
 
-Before acting, identify the authorized scope, permitted files, protected files, required evidence, and next mandatory stop.
+Before acting, identify the authorized scope, permitted files, governance-controlled files and ownership boundaries, required evidence, and next mandatory stop.
 
 Before any non-trivial code or analytical implementation task, complete the Pre-Implementation Synthesis defined in `HOW-WE-WORK.md` before mutation.
 
@@ -43,21 +43,59 @@ The execution plan governs scope and phase status. The Metric Contract governs a
 
 ## Scope and Ownership
 
-Agents must not independently change project scope, business definitions, metrics, stages, filters, windows, segments, or assumptions.
+Agents must not independently change project scope, business definitions, metrics, stages, filters, windows, segments, assumptions, phase status, or authorization boundaries.
 
-The user and planning assistant are the exclusive content editors of these protected documents:
+Data is the final decision authority.
+
+Data and the planning assistant (Troi) hold substantive planning and content-decision authority for the governance-controlled documents:
 
 - `AGENTS.md`
 - `METROCAR_PROJECT_EXECUTION_PLAN.md`
 - `docs/METRIC_DEFINITION_CONTRACT.md`
 
-Implementation agents, including Kimi, must never edit, regenerate, reformat, rename, move, restore, delete, merge, conflict-resolve, or otherwise alter these files.
+This ownership governs what may be decided. It does not make those files repository-write-protected and does not require Data or Troi to perform repository mutations manually.
 
-An implementation agent may stage, commit, or push an already reviewed, planning-owned change to a protected document only when the user gives explicit, task-specific authorization for the named file and named Git actions. This is transport authority only. The agent must not alter any byte of the reviewed change and must verify that the diff matches it without unrelated content. Any discrepancy, merge conflict, required edit, or additional change is a mandatory stop.
+Spock, as the repository execution agent, may edit any repository file, including governance-controlled documents, when the current bounded task explicitly authorizes the named file or files and the intended substantive change.
 
-Without explicit authorization, implementation agents may only propose protected-document changes in their handover.
+Such authorization must provide enough scope to determine:
 
-Write access to `docs/ANALYSIS_INSIGHT_LOG.md` must be explicitly assigned for the task. Otherwise, proposed entries belong in the handover. Treat the accepted `docs/data_quality_report.md`, source databases, source tables, and raw source files as read-only unless a separate authorization states otherwise.
+- which file or files may change;
+- the objective or content intent;
+- what must remain unchanged;
+- required validation;
+- the mandatory STOP boundary.
+
+Repository mutation authority does not transfer planning or analytical decision authority.
+
+Spock must not independently invent, expand, reinterpret, or change:
+
+- governance;
+- project scope;
+- business definitions;
+- metric definitions;
+- funnel stages;
+- filters or windows;
+- attribution rules;
+- formulas;
+- assumptions;
+- phase status;
+- authorization boundaries.
+
+When a task supplies exact replacement text, Spock should apply it faithfully. If repository context makes exact application impossible without a substantive decision, Spock must STOP and report the discrepancy.
+
+When a task supplies bounded semantic intent rather than exact replacement text, Spock must make the smallest faithful edit that implements the authorized decision and must report the exact resulting diff for review.
+
+Reading or planning does not authorize mutation.
+
+Mutation does not authorize staging, commit, push, deployment, destructive Git operations, or progression into another task or phase.
+
+Those remain separate authorization gates except where Data explicitly bundles actions under the proportional Git rule.
+
+If an authorized governance edit reveals an unexpected conflicting diff, missing canonical source, merge conflict, substantive ambiguity, or required scope expansion, preserve the evidence and STOP rather than resolving the issue independently.
+
+Write access to `docs/ANALYSIS_INSIGHT_LOG.md` must still be explicitly assigned for the task. Otherwise, proposed entries belong in the handover.
+
+Treat the accepted `docs/data_quality_report.md`, source databases, source tables, and raw source files as read-only unless a separate authorization explicitly states otherwise.
 
 ## Communication and Learning Standard
 
@@ -178,14 +216,14 @@ Keep changes small, scoped, and reviewable.
 - Use a clear task-specific commit message.
 - Do not rewrite history, discard user work, or use destructive Git operations without explicit approval.
 
-Protected-document handling must always follow the stricter ownership rule above.
+Governance-controlled document handling must always follow the decision-authority, explicit-mutation-authorization, Git-gate, and STOP rules above.
 
 ## Completion Standard
 
 A task is complete only when:
 
 - the authorized scope is satisfied;
-- ownership and protected-file boundaries were respected;
+- decision-authority, ownership, and authorized file-scope boundaries were respected;
 - the result is understandable and reproducible;
 - required traceability is present;
 - validation and tests passed, or limitations were accurately reported;
