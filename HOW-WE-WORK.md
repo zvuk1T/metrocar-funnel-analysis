@@ -188,6 +188,95 @@ The target is:
 
 A student should be able to locate the business logic and follow its flow without first learning an unnecessary framework invented for this project.
 
+### Analytical code calibration
+
+For Metrocar analytical Python and SQL, including the canonical production implementation, default to approximately:
+
+> **DataCamp beginner → intermediate analytical level**
+
+Intermediate is the normal Masterschool working level. Prefer DataCamp-recognizable analytical idioms.
+
+Ordinary Pandas tools include:
+
+- filtering and Boolean masks;
+- new columns;
+- `groupby`, `agg`, `any`, `sum`, `count`, and `nunique`;
+- `notna` and `isna`;
+- `merge` and ordinary merge validation; and
+- simple ratios.
+
+Ordinary SQL tools include:
+
+- `SELECT`, `WHERE`, and `CASE`;
+- `GROUP BY` and aggregate functions;
+- ordinary joins, including `LEFT JOIN`;
+- simple subqueries and CTEs;
+- `EXISTS`; and
+- window functions when the analytical problem genuinely requires them.
+
+Judge complexity by conceptual load, not by whether one operation is labelled “advanced.” Prefer one analytical idea at a time, short explicit transformations, descriptive intermediate variables, and top-to-bottom readable logic. `validate=` or another ordinary integrity check is not automatically too advanced when it makes an expected relationship explicit.
+
+Do not use these as the analytical default:
+
+- class hierarchies;
+- generic analytical engines or frameworks;
+- deep helper stacks;
+- speculative abstractions;
+- clever compression or dense one-liners; or
+- defensive machinery for hypothetical cases unsupported by verified project evidence.
+
+Production robustness may exceed this learning-complexity target only when correctness, reproducibility, validation, privacy or security, a verified edge case, or a concrete maintainability requirement earns the added complexity. When production code does exceed the normal DataCamp-level mental model, keep the underlying analytical idea visible and explain why the additional complexity is necessary.
+
+Student-friendly code never means weakening the Metric Contract, tests, validation, reproducibility, privacy, or analytical invariants.
+
+> **Learn the analytical idea in DataCamp form first; add production robustness only when a verified requirement earns it.**
+
+### Text cells teach; code cells demonstrate
+
+This subsection applies specifically to the student-facing cell-based walkthrough.
+
+Markdown or `# %% [markdown]` teaching cells own the business purpose, WHY, mental model, analytical grain, assumptions, common traps, interpretation, and validation explanation.
+
+Code cells demonstrate the analytical concept with the shortest clear implementation that preserves canonical meaning. Prefer one analytical idea per ordinary code cell. Roughly 5–12 lines is a useful soft guideline for an ordinary analytical code cell, not a hard limit.
+
+If a cell becomes long because it contains several analytical ideas, split the ideas instead of compressing the syntax. Infrastructure or setup code may legitimately be longer when necessary, but it must not become the model for analytical teaching code.
+
+Do not move conceptual explanation into excessive inline comments merely to shorten Markdown, and do not comment obvious syntax. Keep the explanation and comment discipline consistent with Section 4.
+
+### DataCamp refresher references
+
+DataCamp is a learning-complexity and refresher reference. It is **not** analytical authority over Metrocar. The Metric Contract remains authoritative for analytical definitions.
+
+When a material technique maps cleanly to a currently verified DataCamp course or chapter, the walkthrough may add one compact reference when the technique is first taught:
+
+```text
+📚 DataCamp refresher
+
+Course: <verified official course>
+Chapter: <verified official chapter when useful>
+Concept: <short description of the technique used here>
+```
+
+Apply these rules:
+
+- add the reference only when a meaningful reusable technique is first taught;
+- do not repeat the same reference in every later cell;
+- prefer Course → Chapter → Concept;
+- omit Chapter when a course-level reference is sufficient;
+- use only verified official DataCamp names and official DataCamp links;
+- use the reference so Data knows where to return for deeper relearning; and
+- make Metrocar demonstrate its own application and transfer of the technique.
+
+Never copy into public Metrocar:
+
+- DataCamp exercise solutions or starter code;
+- full exercise prompts or paid lesson content;
+- transcripts or platform feedback;
+- account, progress, or XP data; or
+- private study material.
+
+Do not expose or link private study-repository paths from the public Metrocar project.
+
 ---
 
 ## 6. Complexity must be earned
