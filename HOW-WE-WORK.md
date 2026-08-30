@@ -190,11 +190,25 @@ A student should be able to locate the business logic and follow its flow withou
 
 ### Analytical code calibration
 
-For Metrocar analytical Python and SQL, including the canonical production implementation, default to approximately:
+For Metrocar analytical Python and SQL, including the canonical production
+implementation, DataCamp is the learning boundary, not a difficulty ceiling:
 
-> **DataCamp beginner → intermediate analytical level**
+> **Metrocar analytical code may use DataCamp-learnable techniques at any
+> level — beginner, intermediate, or advanced — provided Data can learn,
+> understand, explain, and approximately reconstruct the implementation and
+> its role in the analysis.**
 
-Intermediate is the normal Masterschool working level. Prefer DataCamp-recognizable analytical idioms.
+The difficulty label is not the constraint. A technique is acceptable when it
+has a genuine official DataCamp learning path, Data can understand why it is
+needed and what enters and leaves the step, and its use keeps the analytical
+grain, assumptions, transformations, and validation visible.
+
+The project-local Python and SQL reference maps contain the paths currently
+most relevant to Metrocar. They are starting maps, not exhaustive catalogs of
+everything DataCamp teaches. A technique absent from those maps may still be
+used when an official DataCamp course, chapter, concept, or realistic learning
+path can be identified. For a non-obvious or advanced technique, identify that
+path when reasonably possible so Data knows where to learn or refresh it.
 
 Ordinary Pandas tools include:
 
@@ -214,7 +228,16 @@ Ordinary SQL tools include:
 - `EXISTS`; and
 - window functions when the analytical problem genuinely requires them.
 
-Judge complexity by conceptual load, not by whether one operation is labelled “advanced.” Prefer one analytical idea at a time, short explicit transformations, descriptive intermediate variables, and top-to-bottom readable logic. `validate=` or another ordinary integrity check is not automatically too advanced when it makes an expected relationship explicit.
+Judge complexity by conceptual load, not by whether one operation is labelled
+“advanced.” Prefer one analytical idea at a time, short explicit
+transformations, descriptive intermediate variables, and top-to-bottom
+readable logic. `validate=` or another ordinary integrity check is not
+automatically too advanced when it makes an expected relationship explicit.
+
+A collection of individually DataCamp-learnable techniques can still be
+unacceptable when their composition creates unnecessary indirection or makes
+the business question, grain, sources, filters, joins, calculations,
+assumptions, validation, or evidence limits difficult to follow.
 
 Do not use these as the analytical default:
 
@@ -225,11 +248,46 @@ Do not use these as the analytical default:
 - clever compression or dense one-liners; or
 - defensive machinery for hypothetical cases unsupported by verified project evidence.
 
-Production robustness may exceed this learning-complexity target only when correctness, reproducibility, validation, privacy or security, a verified edge case, or a concrete maintainability requirement earns the added complexity. When production code does exceed the normal DataCamp-level mental model, keep the underlying analytical idea visible and explain why the additional complexity is necessary.
+Correctness, validation, reproducibility, privacy, security, tests, and the
+Metric Contract remain mandatory. They are not a separate permission to hide
+the analysis behind implementation that Data cannot learn and explain. Meet
+those requirements with an understandable analytical design; if the proposed
+composition becomes opaque, simplify or reconsider the design rather than
+bypassing the learning requirement.
 
-Student-friendly code never means weakening the Metric Contract, tests, validation, reproducibility, privacy, or analytical invariants.
+> **Use the DataCamp learning path that fits the analytical problem, then keep
+> the Metrocar reasoning visible enough for Data to explain and reconstruct.**
 
-> **Learn the analytical idea in DataCamp form first; add production robustness only when a verified requirement earns it.**
+### Web and frontend implementation boundary
+
+The analytical learning rule applies to Python/Pandas analysis, SQL analysis,
+statistics, analytical transformations and validation, and analytical tests
+whose logic forms part of the analytical mental model.
+
+It does not apply to HTML, CSS, Astro, React, TypeScript, frontend component
+architecture, responsive layout, browser-side Plotly integration, package or
+build tooling, or deployment configuration. Those technologies do not need a
+DataCamp course mapping. Frontend work may be AI-assisted or vibe-coded.
+
+This separation does not authorize unnecessary frontend complexity. The
+frontend may exceed Data's coding knowledge, but it should not exceed the
+complexity actually required by the portfolio experience. Prefer standard
+Astro, HTML, CSS, and TypeScript patterns; a small number of meaningful
+components; direct data flow; descriptive names; limited state; minimal
+dependencies; and clear separation between the data artifact, page/layout,
+components, styles, and configuration.
+
+Avoid elaborate state management, deep component hierarchies, generic design
+systems, unnecessary service or repository layers, meta-framework machinery,
+and clever TypeScript abstractions unless the portfolio experience genuinely
+requires them.
+
+Data's frontend comprehension goal is high-level orientation. Data should be
+able to identify where the page starts, where analytical data is loaded, which
+component renders each main section, where styles live, which files are
+configuration, and how validated analytical output reaches the browser. Data
+is not required to reconstruct frontend code independently as he is expected
+to do with the analytical implementation.
 
 ### Text cells teach; code cells demonstrate
 
@@ -245,9 +303,15 @@ Do not move conceptual explanation into excessive inline comments merely to shor
 
 ### DataCamp refresher references
 
-DataCamp is a learning-complexity and refresher reference. It is **not** analytical authority over Metrocar. The Metric Contract remains authoritative for analytical definitions.
+DataCamp is the analytical learning boundary and a refresher reference, not a
+difficulty ceiling. It is **not** analytical authority over Metrocar. The
+Metric Contract remains authoritative for analytical definitions.
 
-When a material technique maps cleanly to a currently verified DataCamp course or chapter, the walkthrough may add one compact reference when the technique is first taught:
+When a material technique maps cleanly to a currently verified DataCamp course
+or chapter, the walkthrough may add one compact reference when the technique
+is first taught. For a non-obvious or advanced analytical technique, identify
+the official course, chapter, concept, or realistic learning path when
+reasonably possible:
 
 ```text
 📚 DataCamp refresher

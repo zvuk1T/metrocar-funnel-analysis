@@ -6,6 +6,8 @@
 >
 > The bounded post-acceptance calibration aligned the canonical User Funnel implementation with the DataCamp beginner → intermediate default established in `HOW-WE-WORK.md` while preserving the locked Metric Contract, accepted analytical results, reproducibility, required validation, the Ride Funnel, and accepted Phase 3 findings.
 >
+> That sentence records the historical calibration target. The current forward-looking policy treats DataCamp as the analytical learning boundary, not a difficulty ceiling: beginner, intermediate, and advanced DataCamp-learnable techniques may be used when Data can understand, explain, and approximately reconstruct their role and the combined analytical architecture remains inspectable. Frontend/web engineering is outside that analytical DataCamp requirement, may be AI-assisted, and remains subject to proportionate simplicity and high-level orientation requirements.
+>
 > Phase 4 remains paused and requires separate explicit Data authorization. Pre-existing local Phase 4A work remains unaccepted working-tree state and must be preserved without expansion.
 
 ## 1. Purpose of This Document
@@ -179,7 +181,8 @@ Before handoff, the implementing agent must verify and report `PASS` or `FAIL` f
 - the deployed application has no Dash runtime dependency;
 - the public application reads only validated, precomputed, non-sensitive analytical data and makes no live database connection;
 - the frontend is implemented with Astro, React interactive islands, TypeScript, and Plotly.js;
-- Python and frontend code remain proportionate to a student project: direct transformations, small focused functions/components, and no unnecessary frameworks or abstraction layers;
+- analytical Python and SQL use genuine official DataCamp learning paths at any relevant level and remain understandable, explainable, and approximately reconstructable by Data without unnecessary analytical architecture;
+- frontend code is not subject to DataCamp-course lookup or independent-reconstruction requirements, but remains conventional and proportionate: direct data flow, few focused components, minimal dependencies, and no unnecessary frameworks or abstraction layers;
 - every transformation and analysis step is reproducible and documented in canonical code, the student-facing walkthrough, or both;
 - the required student-facing learning walkthrough exists and makes the major analytical reasoning reconstructable through small, explicit teaching steps that reconcile with the canonical SQL/Python implementation;
 - both confirmed funnel grains are represented accurately and clearly;
@@ -261,6 +264,44 @@ The acceptance question for a learning slice is not merely whether the code runs
 > Can Data explain why each material step exists, what it does, and how its result was validated?
 
 If not, the learning slice is incomplete even when the calculation is technically correct.
+
+#### 3.4.7 Analytical learning and frontend engineering boundary
+
+The DataCamp learning requirement applies to Python/Pandas analysis, SQL,
+statistics, analytical transformations and validation, and analytical tests
+whose logic belongs to the analytical mental model. DataCamp is not a maximum
+difficulty level. Beginner, intermediate, and advanced analytical techniques
+may all be used when an official DataCamp course, chapter, concept, or
+realistic learning path can be identified and Data can understand, explain,
+and approximately reconstruct their use. The project-local DataCamp maps are
+starting references rather than exhaustive catalogs.
+
+Individually learnable techniques do not justify an opaque combined system.
+The architecture must keep the business question, grain, sources, filters,
+joins, transformations, assumptions, calculations, validation, and evidence
+limits visible. Correctness, validation, privacy, reproducibility, and tests
+remain mandatory and do not create a separate production-complexity bypass.
+
+HTML, CSS, Astro, React, TypeScript, frontend components, responsive layout,
+browser-side Plotly integration, package/build tooling, and deployment
+configuration are a separate portfolio/web-engineering layer. They do not
+need DataCamp mappings and may be AI-assisted or vibe-coded. Data may choose to
+describe that assistance transparently in the public portfolio; exact public
+wording remains a later decision.
+
+The frontend may exceed Data's coding knowledge, but it must not exceed the
+complexity required by the portfolio experience. Prefer standard patterns, a
+small number of meaningful components, direct data flow, descriptive names,
+limited state, minimal dependencies, and clear separation between data
+artifacts, page/layout, components, styles, and configuration. Avoid elaborate
+state management, deep hierarchies, generic design systems, unnecessary
+service layers, extra meta-framework machinery, and clever TypeScript
+abstractions without a visible requirement.
+
+Data's frontend acceptance goal is high-level orientation: he can identify the
+page entry, analytical-data source, main rendering components, styles,
+configuration, and the path from validated analytical output to the visible
+browser view. Independent reconstruction of frontend code is not required.
 
 ## 4. Confirmed Metrocar Funnel
 
@@ -352,11 +393,18 @@ Therefore, the clean-room implementation must:
 - not treat the page title alone as a requirement to implement the entire funnel exclusively in SQL;
 - prefer clear, tested vectorized logic; the listed Pandas functions are useful references rather than mandatory syntax when an equivalent implementation is clearer.
 
-#### 4.1.6 Required simplicity level
+#### 4.1.6 Required analytical explainability
 
-This is a strong student project, not an enterprise data platform. Prefer transparent Pandas transformations that a student can read from top to bottom.
+This is a strong student project, not an enterprise data platform. Prefer
+transparent Pandas transformations that Data can read from top to bottom.
+DataCamp-learnable analytical techniques at beginner, intermediate, or
+advanced level are eligible; the difficulty label is not a maximum. When a
+non-obvious or advanced technique is genuinely useful, identify its official
+DataCamp learning path when reasonably possible and keep its input, output,
+grain, assumptions, and validation explicit.
 
-Use the official examples as the complexity benchmark:
+Use the official examples as the preferred direct starting point when they
+express the analytical intent clearly:
 
 - Boolean stage columns;
 - `notna()`, `groupby()`, `agg()`, `any()`, `sum()`, Boolean masks, and `.T` where they express the intent directly;
@@ -371,6 +419,10 @@ funnel = base_table.groupby("platform")[stage_columns].sum().T
 ```
 
 Do not introduce a custom pipeline framework, generic query builder, class hierarchy, plugin system, dependency-injection layer, or design pattern merely to appear sophisticated. Add an abstraction only when it removes demonstrated repetition or protects a verified invariant. Prefer named intermediate variables, short functions, ordinary data structures, readable SQL, and focused tests over clever compression.
+
+Correctness, validation, privacy, reproducibility, and tests remain mandatory,
+but they do not authorize analytical architecture that Data cannot understand
+and explain.
 
 ### 4.2 Confirmed dual-funnel interactive scope
 
@@ -732,6 +784,11 @@ Stop after the bounded Phase 2 deliverables and validation evidence named in the
 
 The canonical User Funnel implementation was reworked so that the real production analytical logic is understandable at approximately DataCamp beginner → intermediate analytical complexity, as required by `HOW-WE-WORK.md`.
 
+This section records the historical target and acceptance evidence for that
+completed calibration. It does not impose a beginner-to-intermediate maximum
+on future analytical work; the current policy is defined in Section 3.4.7 and
+`HOW-WE-WORK.md`.
+
 This was an implementation-complexity calibration, not a metric redesign.
 
 `docs/METRIC_DEFINITION_CONTRACT.md` remains unchanged and authoritative for:
@@ -855,6 +912,12 @@ Those actions remain separately gated.
 **Status:** Paused / awaiting separate Data authorization.
 
 **Authorization:** Phase 4 remains separately gated. Completion of the User Funnel calibration does not reopen Phase 4. No additional frontend, public-data, visual-polish, deployment, or related Phase 4 work is authorized until Data explicitly authorizes it. Pre-existing local Phase 4A working-tree work remains unaccepted and must be preserved without expansion.
+
+When separately authorized, Phase 4 frontend work follows the web-engineering
+boundary in Section 3.4.7: it is outside the analytical DataCamp curriculum,
+may be AI-assisted, and must remain as simple, conventional, and easy to
+orient within as the portfolio experience reasonably permits. This statement
+does not authorize Phase 4 implementation.
 
 - create the full user-level funnel and separate ride-level funnel defined in Section 4.2;
 - implement or prepare the validated data products for platform, age-range, and date-range filters;
@@ -1112,6 +1175,11 @@ Use this working architecture unless the user later approves a better equivalent
 10. Python uses a project-local `venv` and pinned `requirements.txt`; canonical repeatable analysis is implemented in production `.py` and `.sql` files. The student-facing walkthrough required by Section 3.4.6 may use an optional notebook format or the preferred cell-based Python format, and either remains subordinate to the canonical implementation.
 11. PostgreSQL access uses a synchronous SQLAlchemy 2.x engine with the psycopg 3 driver and readable raw SQL, without ORM or async infrastructure.
 
+This boundary separates analytical ownership from frontend implementation.
+Data owns and must understand the analysis. The frontend may be AI-assisted or
+vibe-coded, while remaining conventional and understandable to Data at the
+architectural level described in Section 3.4.7.
+
 The user may later reuse parts of this project in the **Data Gym Brain Project**. The current workspace contains no reliable specification for that project, so the implementing agent must not invent an integration. It should instead keep metric definitions, validated aggregate schemas, insight content, and reusable frontend components modular and documented so a later integration can be designed without rewriting the analysis.
 
 ### 11.6 Extensible business questions and SQL practice
@@ -1284,6 +1352,7 @@ Preserve the accepted `docs/data_quality_report.md`, source databases, source ta
 
 ## 13. Change Log
 
+- **2026-08-30:** Replaced the forward-looking beginner-to-intermediate analytical ceiling with a DataCamp-learnable-at-any-level rule: beginner, intermediate, and advanced techniques are eligible when Data can understand, explain, and approximately reconstruct their use and the combined analytical architecture remains inspectable. Removed production robustness as a bypass around analytical learning acceptance. Defined frontend/web engineering as a separate layer outside the DataCamp-course requirement; it may be AI-assisted or vibe-coded but must remain conventional, proportionately simple, and understandable to Data at a high level. Preserved historical calibration descriptions, accepted results and checkpoints, Metric Contract meaning, Phase 1–3 history, and the paused Phase 4 gate. This documentation alignment does not authorize analytical implementation, Phase 4 work, Git transport, or deployment.
 - **2026-08-29:** Accepted the completed post-acceptance User Funnel implementation calibration at Pandas checkpoint `4d3e3c2cec4e6442ccc3f81b5580bb63b3174f43` and SQL checkpoint `132226337e29459f3f6f23c40d7c0459cc6db4fa`. Recorded 25 focused tests passed with 3 live tests deselected, live SQL/Pandas `all_match=True`, source cutoff `2022-04-24 20:00:00`, preserved User Funnel counts 23,608 → 17,623 → 12,406 → 6,233, preserved Ride Funnel counts 385,477 → 223,652 → 212,628 → 148,464, and no change to the Metric Contract or accepted Phase 3 findings. Replaced the transient “current pushed main” status concept with stable acceptance checkpoints and required live HEAD verification. Phase 4 remains paused pending separate explicit Data authorization; this amendment does not authorize Phase 4 work or Git transport.
 - **2026-08-29:** Clarified the Data–Troi–Spock execution model after the earlier protected-document restriction proved too broad. Data remains final authority and Data/Troi retain substantive planning and analytical decision authority, while Spock is the repository mutation agent and may edit any explicitly authorized repository file, including governance-controlled documents. Replaced blanket file-level write prohibition with bounded task authorization, no-silent-scope-expansion, separate Git gates, and mandatory STOP on substantive ambiguity. This preserves the reason for the earlier safeguard—preventing accidental governance corruption—without requiring Data or Troi to perform repository mutations manually.
 - **2026-08-29:** Opened a bounded post-acceptance User Funnel implementation calibration after review found that the accepted canonical implementation exceeds the project’s intended DataCamp beginner → intermediate learning-complexity target. Preserved the Metric Contract, historical Phase 2 acceptance, accepted analytical results, and accepted Phase 3 findings as regression evidence. Defined the first eligible implementation slice as Pandas User Funnel simplification only, with the existing canonical SQL retained unchanged as an independent regression oracle. Paused additional Phase 4, public-data, frontend, visual-polish, and deployment work until the calibration reaches its checkpoint. This planning amendment does not itself authorize analytical code mutation, database access, commit, push, or deployment.

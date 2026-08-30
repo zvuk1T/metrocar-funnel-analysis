@@ -4,6 +4,10 @@
 >
 > **Source check:** track membership and the named chapters were verified against the current official DataCamp track page and course metadata on 2026-08-29. DataCamp remains the source of truth for course content and current catalog structure.
 
+This map contains the Python and Pandas learning paths currently most relevant
+to Metrocar. It is a starting map, not an exhaustive catalog of everything
+DataCamp teaches.
+
 ## Source and privacy boundary
 
 Record only verified track, course, and chapter identity; concise concept summaries; code-complexity calibration; and transfer guidance.
@@ -116,22 +120,30 @@ Verified chapters:
 
 ## Code-level calibration
 
-The intended project-learning range is:
+DataCamp is the analytical learning boundary, not a difficulty ceiling.
+Beginner, intermediate, and advanced Python or Pandas techniques may all be
+used when they are genuinely DataCamp-learnable and Data can understand,
+explain, and approximately reconstruct their use in Metrocar.
 
-`DataCamp beginner → intermediate analytical level`
-
-Intermediate is the normal Masterschool working level.
+A technique is acceptable when an official DataCamp course, chapter, concept,
+or realistic learning path can be identified; Data can explain why the step is
+needed and what enters and leaves it; and the resulting composition keeps the
+business question, grain, transformations, assumptions, and validation
+visible. A technique does not become unacceptable merely because it is absent
+from this reference map.
 
 - Prefer short, direct analytical code.
 - Teach one analytical idea at a time.
 - Explicit intermediate variables are good.
 - Familiar pandas idioms such as filtering, Boolean masks, new columns, `groupby`, `agg`, `any`, `sum`, `count`, `nunique`, `notna`, `isna`, `merge`, and simple ratios are normal.
 - Familiar SQL such as `SELECT`, `WHERE`, `CASE`, `GROUP BY`, aggregates, ordinary joins including `LEFT JOIN`, simple subqueries, CTEs, `EXISTS`, and window functions is legitimate when genuinely required by the learning progression.
-- Judge complexity by conceptual load, not by whether one feature is called “advanced.”
+- Non-obvious or advanced analytical techniques should identify the relevant official DataCamp learning path when reasonably possible.
+- Judge complexity by conceptual load and composition, not by whether one feature is called “advanced.”
 - Student code should not default to class hierarchies, generic engines or frameworks, deep helper stacks, speculative abstractions, dense one-liners, or defensive machinery for hypothetical cases unsupported by evidence.
-- Production robustness may exceed student complexity when correctness, validation, reproducibility, privacy, or verified edge cases require it.
+- Correctness, validation, reproducibility, privacy, security, tests, and governed analytical invariants remain mandatory and must be achieved without bypassing Data's learning and explainability requirement.
 
-> Learn the analytical idea in DataCamp form first; add production robustness only when a verified requirement earns it.
+> Use the DataCamp learning path that fits the analytical problem, then keep
+> the Metrocar reasoning visible enough for Data to explain and reconstruct.
 
 ## Future Metrocar refresher convention
 

@@ -37,6 +37,15 @@ This retrospective uses three labels throughout:
   adoption would require a governance change, it remains a proposal until Data
   authorizes that change separately.
 
+**Subsequent policy alignment.** Historical descriptions below retain the
+earlier beginner-to-intermediate target because that was the policy under
+which the calibration and reset occurred. Data has since changed the
+forward-looking analytical rule: DataCamp remains the learning boundary, but
+beginner, intermediate, and advanced DataCamp-learnable techniques are all
+eligible when Data can understand, explain, and approximately reconstruct
+their use. Frontend/web engineering is now explicitly outside that analytical
+DataCamp requirement.
+
 ## 1. Why implementation stopped
 
 Metrocar did not stop because its accepted analytical evidence had been shown
@@ -267,16 +276,26 @@ an out-of-vocabulary construct was introduced. Technical correctness could
 therefore win repeated local trade-offs over learning simplicity. More
 documentation alone would not have solved this problem.
 
-**Corrective principle.** Data has clarified the restart decision:
+**Corrective principle.** At the pre-reset checkpoint, the proposed restart
+rule was that analytical Python and SQL should remain inside the project-local
+verified beginner-to-intermediate vocabulary unless Data approved a specific
+exception. That statement remains historically accurate, but it no longer
+defines the forward-looking policy.
 
-> Analytical Python and SQL in Metrocar should remain inside the project-local
-> verified DataCamp beginner → intermediate vocabulary unless Data explicitly
-> approves a specific exception before implementation.
+Data subsequently replaced the difficulty ceiling with this rule:
 
-This is recorded here as a restart decision, not silently installed as new
-governance. Future governance adoption remains a separate reviewed task. The
-project-local Python and SQL reference maps now improve both discoverability
-and the ability to check proposed constructs against the agreed vocabulary.
+> Metrocar analytical code may use DataCamp-learnable techniques at any level
+> — beginner, intermediate, or advanced — provided Data can learn, understand,
+> explain, and approximately reconstruct the implementation and its role in
+> the analysis.
+
+The project-local Python and SQL maps are starting references, not exhaustive
+catalogs. Non-obvious or advanced techniques should identify a genuine
+official DataCamp learning path when reasonably possible. The acceptance
+boundary is Data's understanding and the clarity of the combined analytical
+architecture, not the course difficulty label. Correctness, validation,
+privacy, reproducibility, and tests remain mandatory without creating a
+separate production-complexity bypass.
 
 ### 3.7 Project-critical DataCamp maps lived outside Metrocar
 
@@ -474,7 +493,7 @@ architecture missed the learning objective.
 
 | Symptom | Root cause | Corrective principle |
 |---|---|---|
-| Complex analytical code despite a simple-code goal | The existing DataCamp rule remained a default without a mandatory construct-level exception gate, so production robustness repeatedly won local trade-offs | Bind each analytical slice to the verified DataCamp vocabulary; require prior approval for exceptions |
+| Complex analytical code despite a simple-code goal | The existing DataCamp rule remained a default with a production-complexity bypass, so technical architecture repeatedly won local trade-offs over learner comprehension | Require a genuine official DataCamp learning path at any level, Data understanding, and an inspectable combined analytical architecture |
 | Technical PASS was treated as learning PASS | Automated evidence was clearer and easier to report than human comprehension | Record two independent gates; require both before acceptance |
 | Agent self-report stood in for artifact-level review | Execution and learning review partially collapsed, and Troi's complete top-to-bottom artifact review was missing at some checkpoints | Troi reviews the actual artifact; Data gives final learning acceptance |
 | One simple User Funnel path suggested whole-project simplicity | Local simplification was generalized across a larger architecture | Review section, artifact, and end-to-end learner path separately |
@@ -526,7 +545,7 @@ the narrowest durable scope where it remains authoritative.
 |---|---|---|
 | Routing and universal execution safety | `AGENTS.md` | Authority map, protected boundaries, universal gates, secrets, Git safety, mandatory STOP behavior |
 | Learning and implementation philosophy | `HOW-WE-WORK.md` | Why-before-how, explainability, teaching sequence, simplicity principles |
-| Analytical vocabulary and refresher map | `docs/DATACAMP_*_REFERENCE.md` | Verified beginner-to-intermediate constructs, idioms, and lookup guidance |
+| Analytical vocabulary and refresher map | `docs/DATACAMP_*_REFERENCE.md` | Verified currently relevant DataCamp learning paths, idioms, and lookup guidance; not an exhaustive catalog or difficulty ceiling |
 | Metric meaning | `docs/METRIC_DEFINITION_CONTRACT.md` | Grain, population, stages, filters, attribution, formulas, parameters, validation meaning |
 | Validated findings | `docs/ANALYSIS_INSIGHT_LOG.md` | Evidence, status, limitations, reproducibility, interpretations, recommendations |
 | Current work and status | Active execution plan | Current phase, authorized task, readiness gate, immediate dependencies |
@@ -558,20 +577,25 @@ Before any analytical mutation, the pre-implementation synthesis should name:
 
 1. the business question and analytical grain;
 2. the governing Metric Contract section;
-3. the relevant Python or SQL DataCamp reference section;
+3. the relevant official DataCamp course, chapter, concept, or realistic
+   learning path, using the project-local maps as starting references;
 4. the intended filters, joins, grouping, Boolean derivations, and summaries;
-5. every proposed construct outside the verified beginner-to-intermediate
-   vocabulary;
+5. any non-obvious or advanced analytical technique and why it fits the
+   question;
 6. how the result will be validated against accepted evidence.
 
-If an outside construct is proposed, implementation stops until Data explicitly
-approves that specific exception. The justification must explain why an
-in-vocabulary construction is insufficient and what learning burden the
-exception adds.
+Beginner, intermediate, and advanced techniques are all eligible. DataCamp is
+the analytical learning boundary, not a maximum difficulty level. A technique
+must have a genuine official DataCamp learning path, and Data must be able to
+learn why it is needed and explain its input, output, grain, assumptions, and
+validation.
 
-This gate is not a ban on professional correctness. It requires professional
-correctness to be achieved with the agreed vocabulary unless a real limitation
-is reviewed in advance.
+Passing the construct-level check is not enough by itself. The composition must
+still expose the business question, source tables, filters, joins,
+transformations, calculations, assumptions, and evidence limits without
+unnecessary indirection. Correctness, validation, privacy, reproducibility,
+and tests remain mandatory, but they do not permit an analytical architecture
+that bypasses Data's learning and explainability requirement.
 
 ### 6.5 Separate acceptance gates
 
@@ -594,7 +618,7 @@ Learning PASS verifies that:
 - Data can read the artifact from top to bottom in its intended order;
 - WHY appears before HOW for material steps;
 - Data can identify the business purpose, source, and grain;
-- the code vocabulary is appropriate to the agreed level;
+- material techniques have identifiable official DataCamp learning paths;
 - Data can approximately reconstruct and explain the analytical approach;
 - the canonical implementation and teaching narrative do not require competing
   mental models.
@@ -639,6 +663,21 @@ passed.
 When presentation resumes, each published metric and finding must still trace
 to the Metric Contract, canonical reproducible logic, and accepted Insight Log
 records. Storytelling may simplify presentation, not business meaning.
+
+The analytical DataCamp-learning requirement does not govern HTML, CSS, Astro,
+React, TypeScript, frontend component architecture, responsive design,
+browser-side Plotly integration, build tooling, or deployment configuration.
+Frontend work may be AI-assisted or vibe-coded. Data may choose to disclose
+that assistance publicly, but this retrospective does not prescribe wording.
+
+This separate boundary does not justify unnecessary web architecture. The
+frontend should remain conventional for the selected stack, use a small number
+of meaningful layers and components, keep data flow direct, and avoid
+speculative abstractions or infrastructure. Data's frontend acceptance goal is
+high-level orientation: he should know where the page starts, where analytical
+data is loaded, which components render the main sections, where styles and
+configuration live, and how validated output reaches the browser. Independent
+frontend reconstruction is not required.
 
 ### 6.9 Destructive-operation protocol
 
@@ -706,9 +745,10 @@ Success is not:
 Success is:
 
 > “Data understands, can explain, reproduce, and defend the analysis; the
-> implementation remains professionally credible while staying inside the
-> agreed learning level; validation demonstrates that the simple implementation
-> is correct.”
+> implementation remains professionally credible, uses genuine DataCamp
+> learning paths at whatever level the problem requires, and keeps the
+> analytical architecture understandable; validation demonstrates that the
+> implementation is correct.”
 
 This definition intentionally keeps professional credibility, learning level,
 and validation together. Removing any one of them would repeat the failure in a
@@ -723,8 +763,8 @@ different direction.
   durable context.
 - Agent self-report is evidence, not acceptance.
 - Technical correctness and human comprehension are separate gates.
-- A complexity budget must name allowed vocabulary and enforce an exception
-  process.
+- Analytical complexity must have an identifiable DataCamp learning path and
+  remain understandable in composition; a difficulty label is not the gate.
 - Local simplification does not prove system-level simplicity.
 - Teaching should shape the core analytical architecture, not merely explain it
   afterward.
