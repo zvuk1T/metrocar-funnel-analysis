@@ -2,7 +2,7 @@
 
 **Status:** Phase 2 definitions locked; implementation requires separate authorization  
 **Owners:** User and planning assistant  
-**Last reviewed:** 2026-08-27
+**Last reviewed:** 2026-08-30
 
 ## 1. Purpose and Authority
 
@@ -55,7 +55,7 @@ Counts are exact integers and must not be rounded.
 
 ## 3. Funnel Calculations and Presentation Rules
 
-The formulas in this section apply only to adjacent stages of the two approved main funnels:
+The conversion and drop-off formulas in Sections 3.1–3.3 apply only to adjacent stages of the two approved main funnels:
 
 ```text
 User funnel:
@@ -132,7 +132,39 @@ then:
 
 When results are segmented, numerator and denominator must belong to the same selected cohort, segment, and data cutoff.
 
-No non-adjacent or additional conversion metric is approved by this section.
+### 3.6 Percent of Top — Descriptive Stage Context
+
+Percent of Top is approved as a descriptive funnel-context measure for every
+stage of each approved main funnel. It is not an adjacent-stage conversion
+rate, does not add a funnel stage, and must not replace Percent of Previous.
+
+For any stage `S`, let `T` be the funnel's top stage:
+
+| Funnel | Top stage `T` |
+|---|---|
+| User Funnel | Downloaded |
+| Ride Funnel | Requested |
+
+```text
+percent_of_top_pct(S)
+    = 100 × N(S) / N(T)
+```
+
+The numerator and top-stage denominator must use the same selected cohort,
+segment, and reproducible source-data cutoff.
+
+Percent of Top must be calculated from exact unrounded stage counts at full
+available precision. Section 3.5 governs presentation rounding.
+
+If `N(T) = 0`, Percent of Top is `NULL` for every stage and the presentation
+label is `N/A`. It must not be displayed as `0%`, `100%`, or infinity.
+
+When `N(T) > 0`, Percent of Top for the top stage is `100%`. A later stage may
+also equal `100%` when its exact stage count equals `N(T)`; this indicates no
+loss from the top population and does not make Percent of Top an adjacent-stage
+conversion rate.
+
+No non-adjacent or additional conversion metric is approved by Sections 3.1–3.5. Section 3.6 approves only the named descriptive Percent of Top context measure.
 
 ## 4. User Funnel
 
@@ -554,6 +586,38 @@ Later-stage membership must be calculated using existence flags, grain-level pre
 
 Multiple signups or ride requests must not multiply an `app_download_key`.
 
+#### 11.1.1 Multiple-Entrant User-Link Ambiguity
+
+Repeated or otherwise duplicate signup rows that preserve the same non-null
+(`user_id`, `session_id`) pair do not by themselves satisfy this ambiguity
+predicate. They contribute one distinct relationship to this check and remain
+separately reportable as source multiplicity.
+
+For a selected User Funnel cohort, a material ambiguity exists only when one
+non-null `signups.user_id` is linked through signup rows observed by the
+reproducible source-data cutoff to more than one distinct non-null
+`signups.session_id`, and those session IDs match more than one distinct
+`app_downloads.app_download_key` in the selected download-entry cohort.
+
+`app_downloads.download_ts` defines User Funnel cohort entry. Signup evidence
+is observed through the shared source-data cutoff. A signup session activates
+this predicate only when it matches a download entrant inside the selected
+cohort.
+
+This rule defines a validation predicate. It does not assert that the source
+data contains such a relationship.
+
+Any positive predicate result must be detected, retained as diagnostic
+evidence, and reported. It must not be resolved by row order, arbitrary first
+or last selection, earliest or latest session, collapsing distinct entrant
+keys, or automatically assigning one user's downstream ride activity to one
+or every linked entrant.
+
+If the predicate returns any user, User Funnel acceptance for the selected
+cohort, canonical promotion, and publication must STOP until Data explicitly
+approves a contract-level attribution rule. Diagnostic inspection does not
+grant acceptance or publication authority.
+
 ### 11.2 Ride-Funnel Attribution
 
 The ride funnel must be anchored on `ride_requests`.
@@ -624,6 +688,7 @@ Validation must confirm that:
 
 - every stage count uses the declared distinct grain;
 - adjacent-stage conversion and drop-off calculations use the formulas in Section 3;
+- Percent of Top uses the applicable funnel's top-stage count for the same cohort, segment, and source-data cutoff, sets the top-stage value to `100%` when the top-stage count is nonzero, returns `NULL` and displays as `N/A` for every stage when the top-stage count is zero, allows a later stage to equal `100%` when its count equals the top-stage count, and is not labeled as adjacent-stage conversion;
 - segmented numerators and denominators use the same cohort, segment, and data cutoff;
 - zero denominators return `NULL` and display as `N/A`;
 - rounding occurs only after full-precision calculation;
@@ -635,6 +700,7 @@ Validation must report:
 
 - unmatched records along the required relationship paths;
 - any join cardinality capable of duplicating the declared grain;
+- any non-null `signups.user_id` satisfying the multiple-entrant predicate in Section 11.1.1, reported separately from repeated rows preserving the same (`user_id`, `session_id`) relationship;
 - duplicate `app_download_key` or `ride_id` source records;
 - multiple transaction rows for one `ride_id`;
 - multiple Approved transaction rows for one `ride_id`;

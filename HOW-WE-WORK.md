@@ -1,6 +1,6 @@
-# How We Work — Metrocar
+# How We Work and Learn — Metrocar
 
-**Status:** Project learning and implementation contract
+**Status:** Project learning, understanding, and implementation contract
 
 **Purpose:** Keep Metrocar professionally credible, analytically rigorous, and genuinely understandable as a learning project.
 
@@ -241,10 +241,20 @@ grain, assumptions, transformations, and validation visible.
 
 The project-local Python and SQL reference maps contain the paths currently
 most relevant to Metrocar. They are starting maps, not exhaustive catalogs of
-everything DataCamp teaches. A technique absent from those maps may still be
-used when an official DataCamp course, chapter, concept, or realistic learning
-path can be identified. For a non-obvious or advanced technique, identify that
-path when reasonably possible so Data knows where to learn or refresh it.
+everything DataCamp teaches.
+
+Every newly introduced material analytical technique must have a credible
+official DataCamp learning path before it enters implementation. Record its
+first-appearance mapping and mapping basis as defined in the DataCamp learning
+bridge below.
+
+A technique absent from the project-local maps may still be used when a
+credible official Course → Chapter → Concept path can be verified. If no such
+path can be identified, the technique is not ready: verify the path, choose an
+understandable mapped alternative, or stop for a Data decision.
+
+The DataCamp path teaches the technique. It does not define Metrocar business
+meaning; the Metric Contract remains authoritative for that meaning.
 
 Ordinary Pandas tools include:
 
@@ -337,17 +347,39 @@ If a cell becomes long because it contains several analytical ideas, split the i
 
 Do not move conceptual explanation into excessive inline comments merely to shorten Markdown, and do not comment obvious syntax. Keep the explanation and comment discipline consistent with Section 4.
 
-### DataCamp refresher references
+### DataCamp learning bridge and Learning PASS
 
 DataCamp is the analytical learning boundary and a refresher reference, not a
-difficulty ceiling. It is **not** analytical authority over Metrocar. The
-Metric Contract remains authoritative for analytical definitions.
+difficulty ceiling or analytical authority over Metrocar. The Metric Contract
+governs Metrocar meaning. The project-local DataCamp maps are verified starting
+references, not an exhaustive catalog.
 
-When a material technique maps cleanly to a currently verified DataCamp course
-or chapter, the walkthrough may add one compact reference when the technique
-is first taught. For a non-obvious or advanced analytical technique, identify
-the official course, chapter, concept, or realistic learning path when
-reasonably possible:
+Before implementation, every newly introduced material analytical technique
+must have a credible official DataCamp learning path. Record the mapping in the
+slice package at its first appearance in the pre-implementation synthesis, and
+add a public-safe refresher when the technique is first taught publicly.
+
+Record each mapping as:
+
+| Technique | First appearance | Course → Chapter → Concept | Why it is needed | Mapping basis |
+|---|---|---|---|---|
+
+Use one mapping basis:
+
+- `CONFIRMED_PRIVATE` — confirmed against authorized private study material;
+- `CONFIRMED_PUBLIC` — confirmed against current official public DataCamp
+  course, chapter, or concept sources;
+- `PROJECT_MAP_ONLY` — supported only by a verified public-safe project-local
+  reference map; or
+- `UNVERIFIED` — not yet supported well enough to satisfy the learning gate.
+
+Chapter may be omitted when a course-level reference is sufficient. An
+`UNVERIFIED` technique must be verified or replaced before implementation. Do
+not repeat a mapping for later uses of the same technique unless its role
+changes materially.
+
+When the technique is first taught publicly, the walkthrough must show one
+compact public-safe refresher:
 
 ```text
 📚 DataCamp refresher
@@ -357,25 +389,82 @@ Chapter: <verified official chapter when useful>
 Concept: <short description of the technique used here>
 ```
 
-Apply these rules:
+Use only verified official names and official links. The reference identifies
+where to relearn the technique; the Metrocar artifact must provide its own
+original application, reasoning, examples, and validation.
 
-- add the reference only when a meaningful reusable technique is first taught;
-- do not repeat the same reference in every later cell;
-- prefer Course → Chapter → Concept;
-- omit Chapter when a course-level reference is sufficient;
-- use only verified official DataCamp names and official DataCamp links;
-- use the reference so Data knows where to return for deeper relearning; and
-- make Metrocar demonstrate its own application and transfer of the technique.
+For each meaningful analytical slice, assemble one proportionate learning
+package, beginning with pre-implementation synthesis and continuing across the
+authorized task, learner-facing artifact, validation evidence, and review
+report:
 
-Never copy into public Metrocar:
+- the business question, exact repository checkpoint, reviewed files or
+  sections, and slice boundary;
+- input and output grain, source and relationship path, assumptions, and
+  limitations;
+- the intended top-to-bottom reading order, with WHY before HOW;
+- the first-appearance technique mappings, why each technique is needed, and
+  material common traps;
+- semantic validation evidence, including what each material check protects
+  and what fixture or candidate evidence cannot establish; and
+- the specific reasoning Data must explain during teach-back.
 
-- DataCamp exercise solutions or starter code;
-- full exercise prompts or paid lesson content;
-- transcripts or platform feedback;
-- account, progress, or XP data; or
-- private study material.
+The required order is:
 
-Do not expose or link private study-repository paths from the public Metrocar project.
+```text
+verified DataCamp learning path
+→ implementation
+→ learner-facing explanation
+→ semantic validation
+→ Troi reviews the actual artifact in reading order
+→ Data explains the reasoning
+→ Data grants or withholds Learning PASS for the stated checkpoint and slice
+```
+
+Technical PASS and Learning PASS are independent decisions.
+
+Technical PASS records that the applicable grain, joins, stage logic, formulas,
+edge cases, tests, and reconciliation checks passed at the stated checkpoint.
+It does not prove understanding.
+
+Learning PASS records Data's judgment that he can explain why each material
+step exists, its inputs and outputs, grain, assumptions, and validation, and
+can approximately reconstruct the analytical approach. Geordi, Spock, and Troi
+may provide evidence or recommendations; only Data grants Learning PASS.
+Neither PASS may be inferred from the other.
+
+A candidate or fixture-based slice may receive a scope-limited Technical PASS
+and Learning PASS before separately authorized full-snapshot reconciliation.
+Those decisions apply only to the identified artifact, checkpoint, analytical
+slice, and reviewed evidence. They do not by themselves authorize database
+access, full-snapshot reconciliation, canonical promotion, downstream
+publication, or the next slice. Canonical promotion or publication requires
+the separately authorized full-snapshot evidence and every other applicable
+acceptance and authorization gate.
+
+If Data cannot explain a material step, Learning PASS is withheld. Identify the
+exact gap, return to the mapped concept, simplify or redesign the Metrocar
+application, rerun the affected semantic validation, have Troi review the
+changed artifact, and repeat Data's teach-back. Do not preserve an opaque
+design merely because it already has Technical PASS.
+
+A later material change reopens Learning PASS for the affected slice. Material
+changes include changes to grain; source or join path and cardinality; stage
+membership; cohort or cutoff rules; attribution; denominators or formulas;
+missing, unknown, or unavailable-value treatment; validation meaning; or the
+composition of analytical techniques. Pure naming, formatting, or comment
+cleanup that preserves meaning and the reviewed mental model does not reopen
+the gate.
+
+Authorized private study may be used to understand teaching sequence, idioms,
+prerequisites, intermediate steps, and common mistakes. Public Metrocar content
+must remain original. Never publish DataCamp exercise solutions or starter
+code, full prompts or paid lesson content, transcripts or platform feedback,
+account, progress, or XP data, private notes, or private study-repository paths.
+
+Do not create a parallel learning manual, ledger, or score. A self-test may
+support teach-back, but it is diagnostic and unscored and cannot grant Learning
+PASS.
 
 ---
 

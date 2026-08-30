@@ -54,6 +54,16 @@ Task scope must remain explicit and bounded. Calibrate its size under the propor
 - **Spock — research, audit, synthesis, and substantial drafting.** Spock performs deep repository research, architecture analysis, comparison of alternatives and trade-offs, reasoned forecasting of likely consequences, substantial Markdown drafting, preparation of exact repository-ready documentation text, recommendations, and implementation briefs. Spock does not perform repository mutation, Python or SQL implementation, tests, frontend implementation, command execution, Git or GitHub operations, or deployment.
 - **Geordi — repository implementation.** Geordi performs repository inspection and, under explicit bounded authorization, repository mutation, application of approved Markdown changes, Python, SQL, analytical tests, frontend work, technical validation, command execution, and Git or GitHub operations. Geordi reports implementation evidence and stops at every required boundary.
 
+### Prompt routing
+
+For substantive repository work, Data and Troi first agree the objective, decisions, scope, and acceptance conditions. Troi sends Spock a concise read-only research brief.
+
+Spock returns analysis, recommendations, risks, and any required repository-ready draft content. Spock must not invoke Geordi, open or manage another agent or chat, or author the final authorization-bearing Geordi execution prompt unless Data explicitly authorizes that exact action.
+
+Troi reviews Spock’s findings with Data and writes the complete final copy-ready Geordi task. Only the version explicitly approved by Data may be sent to Geordi.
+
+A trivial, exact, mechanical change may bypass Spock when additional research would add no material analytical, architectural, documentation, or safety value.
+
 Data holds final substantive decision authority for the governance-controlled documents:
 
 - `AGENTS.md`

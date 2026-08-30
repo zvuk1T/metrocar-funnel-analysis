@@ -727,7 +727,7 @@ web/
 
 **Status:** Complete and accepted.
 
-**Authorization:** This phase was completed under separate bounded authorization and remains the accepted historical analytical baseline. This plan now explicitly reopens only the bounded post-acceptance User Funnel implementation calibration defined below. That calibration preserves the Metric Contract and accepted regression evidence and does not reopen the Ride Funnel, Phase 3 findings, or other Phase 2 scope.
+**Authorization:** This phase was completed under separate bounded authorization and remains the accepted historical analytical baseline. The clean-room analytical implementation restart is open only for separate, explicit, proportionate Data-authorized slices that preserve the Metric Contract and accepted regression evidence. No implementation slice is authorized by this paragraph. Each candidate slice must follow the current plan status, learning workflow, validation requirements, review gates, and mandatory checkpoints before it can be considered for canonical promotion. This reopening does not alter the accepted historical Phase 2 baseline, reopen accepted Phase 3 findings, or authorize database access, Phase 4 work, publication, Git transport, deployment, or deletion.
 
 #### Objective
 
