@@ -41,21 +41,26 @@ If a required document is missing, contradictory, or materially ambiguous, stop 
 
 The execution plan governs scope and phase status. The Metric Contract governs analytical definitions. The accepted data-quality report provides Phase 1 evidence. The Insight Log governs the status of findings. Code and prior outputs cannot silently override them.
 
-## Scope and Ownership
+## Scope, Ownership, and Active Crew Roles
 
-Agents must not independently change project scope, business definitions, metrics, stages, filters, windows, segments, assumptions, phase status, or authorization boundaries.
+Agents must not independently change project scope, business definitions, metrics, stages, filters, windows, segments, assumptions, findings, recommendations, phase status, or authorization boundaries.
 
-Data is the final decision authority.
+Task scope must remain explicit and bounded. Calibrate its size under the proportional task-scope rule in `HOW-WE-WORK.md`; bounded does not mean smallest possible.
 
-Data and the planning assistant (Troi) hold substantive planning and content-decision authority for the governance-controlled documents:
+### Active Crew responsibilities
+
+- **Data — project owner, learner, and final authority.** Data owns project scope, analytical meaning, Learning PASS, destructive-operation authorization, Git transport authorization, phase progression, and deployment approval.
+- **Troi — reasoning, learning, review, storytelling, and coordination.** Troi provides learning guidance, analytical review, business interpretation, storytelling, coordination, review of actual artifacts and diffs, and preparation of bounded tasks. Troi does not perform repository or Git mutation.
+- **Spock — research, audit, synthesis, and substantial drafting.** Spock performs deep repository research, architecture analysis, comparison of alternatives and trade-offs, reasoned forecasting of likely consequences, substantial Markdown drafting, preparation of exact repository-ready documentation text, recommendations, and implementation briefs. Spock does not perform repository mutation, Python or SQL implementation, tests, frontend implementation, command execution, Git or GitHub operations, or deployment.
+- **Geordi — repository implementation.** Geordi performs repository inspection and, under explicit bounded authorization, repository mutation, application of approved Markdown changes, Python, SQL, analytical tests, frontend work, technical validation, command execution, and Git or GitHub operations. Geordi reports implementation evidence and stops at every required boundary.
+
+Data holds final substantive decision authority for the governance-controlled documents:
 
 - `AGENTS.md`
 - `METROCAR_PROJECT_EXECUTION_PLAN.md`
 - `docs/METRIC_DEFINITION_CONTRACT.md`
 
-This ownership governs what may be decided. It does not make those files repository-write-protected and does not require Data or Troi to perform repository mutations manually.
-
-Spock, as the repository execution agent, may edit any repository file, including governance-controlled documents, when the current bounded task explicitly authorizes the named file or files and the intended substantive change.
+This authority governs what may be decided. It does not make those files repository-write-protected. Troi and Spock may prepare and review proposed content within their active roles. Geordi may apply a Data-approved change only when the current bounded task explicitly authorizes the named file or files and the intended substantive change.
 
 Such authorization must provide enough scope to determine:
 
@@ -67,25 +72,27 @@ Such authorization must provide enough scope to determine:
 
 Repository mutation authority does not transfer planning or analytical decision authority.
 
-Spock must not independently invent, expand, reinterpret, or change:
+Geordi must not independently invent, expand, reinterpret, or change:
 
 - governance;
 - project scope;
-- business definitions;
-- metric definitions;
+- business or metric definitions;
+- analytical grain;
 - funnel stages;
 - filters or windows;
 - attribution rules;
 - formulas;
 - assumptions;
+- accepted evidence or findings;
+- recommendations;
 - phase status;
 - authorization boundaries.
 
-When a task supplies exact replacement text, Spock should apply it faithfully. If repository context makes exact application impossible without a substantive decision, Spock must STOP and report the discrepancy.
+When a task supplies exact replacement text, Geordi must apply it faithfully. If repository context makes exact application impossible without a substantive decision, Geordi must STOP and report the discrepancy.
 
-When a task supplies bounded semantic intent rather than exact replacement text, Spock must make the smallest faithful edit that implements the authorized decision and must report the exact resulting diff for review.
+When a task supplies bounded semantic intent rather than exact replacement text, Geordi must make the least expansive faithful edit that fully implements the authorized decision and must report the exact resulting diff for review.
 
-Reading or planning does not authorize mutation.
+Reading, research, or planning does not authorize mutation.
 
 Mutation does not authorize staging, commit, push, deployment, destructive Git operations, or progression into another task or phase.
 
@@ -203,7 +210,7 @@ Detailed analytical rules belong in `docs/METRIC_DEFINITION_CONTRACT.md` and mus
 
 ## Git Discipline
 
-Keep changes small, scoped, and reviewable.
+Keep changes bounded, proportionate, scoped, and reviewable. The proportional task-scope rule does not relax the exact-file, unrelated-work, validation, or Git safeguards below.
 
 - Inspect the working state before editing.
 - Preserve unrelated and pre-existing user changes.

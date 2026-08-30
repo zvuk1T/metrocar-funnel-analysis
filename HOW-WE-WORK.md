@@ -4,7 +4,7 @@
 
 **Purpose:** Keep Metrocar professionally credible, analytically rigorous, and genuinely understandable as a learning project.
 
-This document is the Metrocar-specific spoke of the canonical Data–Spock learning methodology.
+This document is the Metrocar-specific learning and implementation methodology for Data and the active Crew defined in `AGENTS.md`.
 
 It does not replace:
 
@@ -68,7 +68,7 @@ Which governing definitions, findings, architectural rules, privacy boundaries, 
 
 ### Simplest valid approach
 
-What is the simplest professional implementation that satisfies those constraints?
+What is the simplest coherent professional design that satisfies the authorized outcome and those constraints?
 
 ### Validation
 
@@ -81,6 +81,42 @@ Where does the authorized task end?
 If a material answer is missing, contradictory, or requires an unsupported assumption, implementation is premature.
 
 STOP and escalate instead of resolving it silently in code.
+
+### Proportional task scope
+
+“Simplest valid approach” means the simplest coherent design that satisfies the authorized outcome. It does not mean the smallest possible task.
+
+Choose task scope using:
+
+1. conceptual cohesion;
+2. learning value;
+3. reviewability;
+4. actual project risk;
+5. reversibility;
+6. validation needs;
+7. coordination and handover cost.
+
+The preferred task is proportionate, conceptually coherent, outcome-complete within its authorized boundary, understandable, reviewable, rational relative to actual project risk, reversible where practical, and large enough to avoid unnecessary handovers and process overhead.
+
+A single Geordi task may include several tightly related analytical steps when they share one business question, analytical grain, mental model, and validation path and are easier for Data to understand and review together.
+
+“One analytical idea at a time” governs reading order, teaching sequence, and visible reasoning inside code and walkthrough sections. It does not require one transformation, one function, or one file per Geordi task, and it is not a rule for microscopic implementation slices.
+
+Metrocar is a school and recruiter-facing portfolio project, not a live client production system. Ordinary local Python, SQL, test, walkthrough, and frontend mistakes are normally recoverable learning signals and do not require enterprise-level ceremony or artificial task fragmentation.
+
+When choices compete, preserve this priority:
+
+```text
+business question
+→ correct grain
+→ understandable DataCamp-learnable analysis
+→ validation
+→ interpretation
+→ evidence-backed judgment
+→ recruiter-facing communication
+```
+
+This calibration does not weaken strict controls over analytical meaning, grain, Metric Contract definitions, accepted evidence, secrets, destructive operations, Git history, unsupported public claims, required validation, or mandatory STOP conditions.
 
 ---
 

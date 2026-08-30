@@ -1,14 +1,14 @@
 # Metrocar Funnel Analysis — VS Code Agent Execution Plan
 
-> **Plan status:** PHASES 1–3 AND USER FUNNEL CALIBRATION COMPLETE AND ACCEPTED — PHASE 4 PAUSED / AWAITING SEPARATE DATA AUTHORIZATION
+> **Plan status:** ACCEPTED ANALYTICAL MEANING AND EVIDENCE PRESERVED — CLEAN-ROOM ANALYTICAL IMPLEMENTATION RESTART OPEN FOR SEPARATELY AUTHORIZED SLICES — PHASE 4 PAUSED
 >
-> Phases 1, 2, and 3 remain accepted at the stable analytical checkpoint `4d3269117cd258a443c138aa8d3b0ce10c3564af` (`feat: canonicalize Phase 3 business insights`). The accepted User Funnel calibration checkpoints are `4d3e3c2cec4e6442ccc3f81b5580bb63b3174f43` for Pandas and `132226337e29459f3f6f23c40d7c0459cc6db4fa` for SQL. These are stable acceptance checkpoints, not a record of the current repository HEAD; current local, tracking, and live remote state must be verified when needed.
+> The Metric Contract, accepted Phase 1 evidence, accepted source cutoff and funnel counts, and Validated Insight Log findings remain authoritative regression evidence.
 >
-> The bounded post-acceptance calibration aligned the canonical User Funnel implementation with the DataCamp beginner → intermediate default established in `HOW-WE-WORK.md` while preserving the locked Metric Contract, accepted analytical results, reproducibility, required validation, the Ride Funnel, and accepted Phase 3 findings.
+> The preserved pre-reset analytical implementation, learning walkthrough, public-data exporter, and frontend prototype remain recoverable and frozen. They are not architectural authority for the clean-room rebuild.
 >
-> That sentence records the historical calibration target. The current forward-looking policy treats DataCamp as the analytical learning boundary, not a difficulty ceiling: beginner, intermediate, and advanced DataCamp-learnable techniques may be used when Data can understand, explain, and approximately reconstruct their role and the combined analytical architecture remains inspectable. Frontend/web engineering is outside that analytical DataCamp requirement, may be AI-assisted, and remains subject to proportionate simplicity and high-level orientation requirements.
+> Clean-room implementation may proceed only through explicit, proportionate, coherent Data-authorized tasks. A candidate analytical slice requires credential-free technical validation, Troi review of the actual artifact, Data Learning PASS, and separately authorized full-snapshot reconciliation before canonical promotion or downstream publication.
 >
-> Phase 4 remains paused and requires separate explicit Data authorization. Pre-existing local Phase 4A work remains unaccepted working-tree state and must be preserved without expansion.
+> This status does not authorize a specific implementation task, database access, Git transport, Phase 4 work, deployment, or deletion.
 
 ## 1. Purpose of This Document
 
@@ -76,16 +76,16 @@ If two higher-authority instructions conflict, document the conflict and ask the
 
 ### 2.4 Canonical project document map
 
-| Document | Authority and purpose | Decision/content authority |
+| Document | Authority and purpose | Final substantive authority |
 |---|---|---|
-| `METROCAR_PROJECT_EXECUTION_PLAN.md` | Governs project scope, phases, checkpoints, deliverables, and readiness gates. | User and planning assistant only. |
-| `docs/METRIC_DEFINITION_CONTRACT.md` | Sole detailed authority for Phase 2 funnel entities, stage membership, joins, filters, formulas, attribution, limitations, and validation rules. | User and planning assistant only. |
-| `AGENTS.md` | Binding working method for tiered reading, agent boundaries, checkpoints, safety, validation, documentation, and Git discipline. | User and planning assistant only. |
-| `docs/ANALYSIS_INSIGHT_LOG.md` | Durable register for evidence-backed observations, patterns, caveats, hypotheses, and recommendations. | User and planning assistant by default; an implementation agent may append only when the task explicitly grants that authority. |
-| `docs/METROCAR_VISUAL_SPEC.md` | Governs approved Phase 4 visual hierarchy, interaction, project-specific visual identity, Plotly presentation, responsive behavior, and visual acceptance criteria. It is subordinate to this execution plan and `docs/METRIC_DEFINITION_CONTRACT.md` and must not redefine analytical metrics. | User and planning assistant by default; an implementation agent may create or update it only under explicit bounded authority. |
-| `docs/data_quality_report.md` | Accepted Phase 1 evidence for the live schema and structural data-quality profile. | Generated evidence; update only through an explicitly authorized reproducible Phase 1 rerun. |
+| `METROCAR_PROJECT_EXECUTION_PLAN.md` | Governs project scope, phases, checkpoints, deliverables, and readiness gates. | Data. |
+| `docs/METRIC_DEFINITION_CONTRACT.md` | Sole detailed authority for Phase 2 funnel entities, stage membership, joins, filters, formulas, attribution, limitations, and validation rules. | Data. |
+| `AGENTS.md` | Binding working method for tiered reading, Crew boundaries, checkpoints, safety, validation, documentation, and Git discipline. | Data. |
+| `docs/ANALYSIS_INSIGHT_LOG.md` | Durable register for evidence-backed observations, patterns, caveats, hypotheses, and recommendations. | Data; repository mutation still requires explicit task authority. |
+| `docs/METROCAR_VISUAL_SPEC.md` | Governs approved Phase 4 visual hierarchy, interaction, project-specific visual identity, Plotly presentation, responsive behavior, and visual acceptance criteria. It is subordinate to this execution plan and `docs/METRIC_DEFINITION_CONTRACT.md` and must not redefine analytical metrics. | Data; repository mutation still requires explicit task authority. |
+| `docs/data_quality_report.md` | Accepted Phase 1 evidence for the live schema and structural data-quality profile. | Reproducibly generated evidence; Data authorizes any rerun or replacement. |
 
-Data and Troi own substantive decisions for planning and governance documents; this is decision/content authority, not filesystem write protection. Spock is the repository mutation agent and may edit any named repository file, including planning and governance documents, under explicit bounded authorization. Such mutation does not authorize Spock to invent or expand governance, scope, definitions, phase status, or authorization, and all Git actions remain separately gated. See `AGENTS.md` for the detailed execution rule.
+This table records final substantive authority, not research, drafting, review, or repository-mutation responsibilities. Current Crew roles and repository-execution boundaries are governed by `AGENTS.md`; proportional task sizing is governed by `HOW-WE-WORK.md`. Historical role descriptions in completed-phase records and dated Change Log entries remain historical and do not override those forward-looking rules.
 
 The task-specific reading tier is governed by `AGENTS.md`. The execution plan intentionally does not duplicate the detailed metric contract. If a detailed Phase 2 metric rule appears ambiguous here, use `docs/METRIC_DEFINITION_CONTRACT.md`; if the documents materially conflict, stop and escalate to the user and planning assistant rather than choosing an interpretation.
 
@@ -911,7 +911,7 @@ Those actions remain separately gated.
 
 **Status:** Paused / awaiting separate Data authorization.
 
-**Authorization:** Phase 4 remains separately gated. Completion of the User Funnel calibration does not reopen Phase 4. No additional frontend, public-data, visual-polish, deployment, or related Phase 4 work is authorized until Data explicitly authorizes it. Pre-existing local Phase 4A working-tree work remains unaccepted and must be preserved without expansion.
+**Authorization:** Phase 4 remains separately gated. Completion of the User Funnel calibration does not reopen Phase 4. No additional frontend, public-data, visual-polish, deployment, or related Phase 4 work is authorized until Data explicitly authorizes it. Pre-existing Phase 4A artifacts remain unaccepted and must be preserved without expansion; their presence in the repository does not authorize Phase 4 work.
 
 When separately authorized, Phase 4 frontend work follows the web-engineering
 boundary in Section 3.4.7: it is outside the analytical DataCamp curriculum,
@@ -1318,40 +1318,23 @@ Later phases may proceed only when their prerequisites are satisfied:
 - the previous phase's acceptance checks pass;
 - the user explicitly approves the next phase.
 
-### 12.4 Planning decision authority and repository mutation
+### 12.4 Decision authority and repository execution
 
 Data is the final project decision authority.
 
-Data and the planning assistant (Troi) hold substantive planning/content decision authority for:
+Current Crew responsibilities, repository-mutation boundaries, Git gates, and mandatory STOP conditions are governed by `AGENTS.md`. Proportional task sizing is governed by `HOW-WE-WORK.md`.
 
-- `AGENTS.md`;
-- `METROCAR_PROJECT_EXECUTION_PLAN.md`;
-- `docs/METRIC_DEFINITION_CONTRACT.md`.
+Geordi may change a governance-controlled document, analytical evidence register, implementation artifact, or other repository file only when an explicit Data-authorized task names the permitted file and substantive scope.
 
-This authority determines what governance, scope, or analytical definition may be changed. It does not make those files repository-write-protected.
+Repository mutation does not transfer authority to change project scope, Metric Contract meaning, accepted evidence, findings, recommendations, phase status, or authorization boundaries.
 
-Spock is the repository mutation agent and may edit these or any other repository files when an explicit bounded task authorizes the named files and intended substantive change.
+Preserve `docs/data_quality_report.md`, source databases, source tables, and raw source files as read-only evidence unless a separate explicit authorization states otherwise.
 
-Repository mutation authority does not transfer planning authority.
-
-Spock must not independently invent, expand, reinterpret, or change governance, project scope, Metric Contract meaning, phase status, or authorization boundaries.
-
-If a task supplies exact replacement text, apply it faithfully and STOP if repository context would require a substantive decision to make it fit.
-
-If a task supplies bounded semantic intent, make the smallest faithful change and report the exact resulting diff.
-
-Mutation, staging, commit, push, deployment, destructive Git actions, and progression to another task or phase remain separate gates unless Data explicitly bundles actions under the proportional Git rule.
-
-Unexpected conflicting diffs, merge conflicts, missing canonical sources, substantive ambiguity, or required scope expansion are mandatory STOP conditions.
-
-`docs/ANALYSIS_INSIGHT_LOG.md` remains writable by Data and Troi by default. Spock may change it only when the current bounded task explicitly grants that authority and defines the permitted evidence scope.
-
-Existing records must not be silently rewritten or deleted.
-
-Preserve the accepted `docs/data_quality_report.md`, source databases, source tables, and raw source files as read-only evidence unless a separate explicit authorization states otherwise.
+Historical role descriptions remain historical records and do not override the current Crew rules in `AGENTS.md`.
 
 ## 13. Change Log
 
+- **2026-08-30:** Aligned forward-looking Crew responsibilities with Data as project owner, learner, and final authority; Troi as reasoning, learning, review, storytelling, and coordination; Spock as research, audit, synthesis, consequence forecasting, and substantial Markdown drafting; and Geordi as the explicitly authorized repository implementation agent. Added proportional, coherent task sizing and clarified that “simplest valid approach” and “one analytical idea at a time” do not require microscopic tasks. Formally opened the clean-room analytical implementation restart for separately authorized slices, preserved accepted analytical meaning and evidence, replaced stale Phase 4A working-tree wording, retained historical role records and separate Git, phase, deployment, destructive-operation, and STOP gates, and granted no analytical implementation, database, Phase 4, Git transport, deployment, or deletion authority.
 - **2026-08-30:** Replaced the forward-looking beginner-to-intermediate analytical ceiling with a DataCamp-learnable-at-any-level rule: beginner, intermediate, and advanced techniques are eligible when Data can understand, explain, and approximately reconstruct their use and the combined analytical architecture remains inspectable. Removed production robustness as a bypass around analytical learning acceptance. Defined frontend/web engineering as a separate layer outside the DataCamp-course requirement; it may be AI-assisted or vibe-coded but must remain conventional, proportionately simple, and understandable to Data at a high level. Preserved historical calibration descriptions, accepted results and checkpoints, Metric Contract meaning, Phase 1–3 history, and the paused Phase 4 gate. This documentation alignment does not authorize analytical implementation, Phase 4 work, Git transport, or deployment.
 - **2026-08-29:** Accepted the completed post-acceptance User Funnel implementation calibration at Pandas checkpoint `4d3e3c2cec4e6442ccc3f81b5580bb63b3174f43` and SQL checkpoint `132226337e29459f3f6f23c40d7c0459cc6db4fa`. Recorded 25 focused tests passed with 3 live tests deselected, live SQL/Pandas `all_match=True`, source cutoff `2022-04-24 20:00:00`, preserved User Funnel counts 23,608 → 17,623 → 12,406 → 6,233, preserved Ride Funnel counts 385,477 → 223,652 → 212,628 → 148,464, and no change to the Metric Contract or accepted Phase 3 findings. Replaced the transient “current pushed main” status concept with stable acceptance checkpoints and required live HEAD verification. Phase 4 remains paused pending separate explicit Data authorization; this amendment does not authorize Phase 4 work or Git transport.
 - **2026-08-29:** Clarified the Data–Troi–Spock execution model after the earlier protected-document restriction proved too broad. Data remains final authority and Data/Troi retain substantive planning and analytical decision authority, while Spock is the repository mutation agent and may edit any explicitly authorized repository file, including governance-controlled documents. Replaced blanket file-level write prohibition with bounded task authorization, no-silent-scope-expansion, separate Git gates, and mandatory STOP on substantive ambiguity. This preserves the reason for the earlier safeguard—preventing accidental governance corruption—without requiring Data or Troi to perform repository mutations manually.
