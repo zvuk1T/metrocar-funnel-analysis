@@ -82,6 +82,9 @@ If a material answer is missing, contradictory, or requires an unsupported assum
 
 STOP and escalate instead of resolving it silently in code.
 
+For analytical work, the question-to-next-question contract in Section 10 is
+part of this pre-implementation synthesis.
+
 ### Proportional task scope
 
 “Simplest valid approach” means the simplest coherent design that satisfies the authorized outcome. It does not mean the smallest possible task.
@@ -578,74 +581,214 @@ Do not manufacture a lesson or elaborate reflection for trivial work.
 
 ---
 
-## 10. DIKW is an active test
+## 10. Question-to-next-question analytical contract
 
-Use the climb:
+Every meaningful analytical slice begins with a question, not a selected
+conclusion.
 
-```text
-Data
-  ↓
-Information
-  ↓
-Knowledge
-  ↓
-Wisdom
-  ↓
-Action
-```
+Apply this contract proportionately to pre-implementation synthesis,
+learner-facing walkthrough sections, proposed Insight Log records,
+interpretation and recommendation review, and recruiter-facing analytical
+stories. A technical helper or individual test does not require its own
+standalone story.
 
-Ask:
-
-**Data** — What was actually observed?
-
-**Information** — How is it organized and contextualized?
-
-**Knowledge** — What supported pattern or mechanism do we understand?
-
-**Wisdom** — What judgment is reasonable given the evidence and uncertainty?
-
-**Action** — What should be changed, tested, measured, investigated, or deliberately left unchanged?
-
-A polished chart or Markdown summary does not automatically constitute knowledge.
-
----
-
-## 11. Storytelling is part of the reasoning
-
-For analytical communication, use:
+Use this order:
 
 ```text
-Context
-   ↓
-Business question
-   ↓
-Evidence
-   ↓
-Meaning
-   ↓
-Judgment
-   ↓
-Action
-   ↓
-Limitations
+Audience and decision
+→ Context
+→ Business question
+→ Analytical question
+→ Evidence contract
+→ Analysis and validation
+→ Verified fact
+→ Interpretation
+→ Alternative explanations or hypotheses
+→ Judgment
+→ Recommendation or action when justified
+→ Limitations and consequences
+→ Next question
 ```
+
+| Component | Minimum required answer or evidence | Claim and ownership boundary |
+|---|---|---|
+| Audience and decision | Who owns the underlying Metrocar business decision or uncertainty, who will read the artifact, and why the answer matters now | The decision owner determines analytical relevance. The reader determines communication depth and emphasis, not the result |
+| Context | Accepted facts, scope, constraints, and prior evidence needed to understand the question | Context may orient the analysis but may not become an assumed conclusion |
+| Business question | The decision-relevant question in business language | It requires Data approval when it changes project scope |
+| Analytical question | A specific, measurable question whose answer would inform the business question | Question before technique |
+| Evidence contract | Source, cohort, grain, metric, segment, cutoff, assumptions, validation, and evidence ceiling | The Metric Contract remains authoritative for analytical meaning |
+| Analysis and validation | Reproducible logic and the checks required to trust it | Technical correctness applies only to the stated artifact and evidence state |
+| Verified fact | What was directly observed, at which grain and scope, after applicable validation | A fixture fact is not a Metrocar business finding |
+| Interpretation | What the verified fact may mean for the analytical and business questions | It must be labeled as interpretation and remain within the evidence |
+| Alternative explanations or hypotheses | Material plausible explanations that the current evidence cannot distinguish | A hypothesis is not a finding or causal claim |
+| Judgment | What the evidence currently supports, does not support, and why | Data owns final project judgment; Crew members may recommend |
+| Recommendation or action | The smallest justified action, experiment, validation, or deliberate non-action | A final business recommendation requires applicable Validated findings and Data approval |
+| Limitations and consequences | Unknowns, assumptions, trade-offs, risks, omitted outcomes, and what could change the judgment | Uncertainty remains visible |
+| Next question | The smallest material uncertainty opened by the current answer | It must not be used to avoid making the bounded judgment already supported |
+
+The underlying Metrocar decision owner and the artifact reader are not
+necessarily the same audience.
+
+A hypothetical business stakeholder determines which question and evidence are
+decision-relevant. A recruiter, technical reader, or student determines the
+appropriate communication depth, reading order, and progressive disclosure.
+Portfolio appeal must not determine the analytical result.
+
+A meaningful analytical slice is closed when it can state:
+
+```text
+This is the question we answered.
+This is the evidence and grain used.
+This is what the evidence supports.
+This is the judgment currently justified.
+This is what remains unknown.
+This is the next question.
+```
+
+Closure does not require artificial finality. An open next question does not
+excuse failure to make a supported judgment about the current one.
 
 Always distinguish:
 
-- observed fact;
-- interpretation;
-- hypothesis;
-- recommendation.
+- a fact directly supported by validated evidence;
+- an interpretation of that fact;
+- a hypothesis requiring additional evidence;
+- a recommendation combining evidence with context and judgment; and
+- an implemented outcome that must later be observed.
 
-The story may organize attention.
+No claim is promoted automatically from one category to another.
 
-It may not change what the evidence supports.
+---
 
-A strong conclusion can be:
+## 11. DIKW evidence ceilings and metric integrity
 
-> We know where the loss is concentrated, but the current evidence does not identify its cause.
+Use DIKW as an evidence gate, not a decorative label.
 
-Uncertainty is part of the analysis, not an embarrassment to hide.
+The working definitions are:
+
+- **Data** — traceable observations at a known grain.
+- **Information** — observations organized and contextualized for a defined
+  question.
+- **Knowledge** — a validated pattern or transferable mechanism within the
+  stated evidence scope.
+- **Wisdom** — context-sensitive judgment with explicit assumptions,
+  alternatives, consequences, and trade-offs.
+- **Action** — a separately authorized intervention, experiment,
+  measurement, investigation, or deliberate non-action.
+
+For the empirical path, Knowledge means the strongest supported understanding
+permitted by the analytical design. A validated descriptive pattern may be
+Knowledge without establishing a causal mechanism.
+
+For the learning path, Knowledge requires Data to explain the mechanism,
+distinguish it from a plausible alternative, and transfer the principle to a
+different example.
+
+Two related paths operate in Metrocar:
+
+```text
+Empirical project path
+
+source records
+→ governed information
+→ candidate pattern
+→ Validated finding
+→ context-sensitive judgment
+→ authorized action or publication
+```
+
+```text
+Data's learning path
+
+observed code or result
+→ understood transformation
+→ reconstructed method
+→ transferable analytical principle
+→ independent judgment
+```
+
+Apply these evidence ceilings:
+
+| Evidence state | May establish | Does not establish |
+|---|---|---|
+| Fixture-only semantic analysis | That governed logic behaves correctly on the designed fixture | A real Metrocar pattern, causality, or business recommendation |
+| Candidate clean-room implementation | A coherent candidate method with scope-limited validation | Canonical promotion, a real Metrocar finding, or publication |
+| Authorized full-snapshot result | A reproducible observed pattern eligible for finding review | An automatically Validated interpretation or recommendation |
+| Validated Insight Log finding | A validated pattern within its recorded population, cutoff, and limitations | Causality unless the analytical design supports it |
+| Interpretation | A plausible evidence-bounded meaning | A new observed fact |
+| Hypothesis | A testable possible explanation | An established cause |
+| Recommendation | A context-sensitive judgment supported by applicable Validated findings | A guaranteed outcome or authorization to act |
+| Recruiter-facing publication | Communication of already accepted evidence and judgment | New analytical authority or stronger evidence |
+
+Technical PASS and Learning PASS remain independent under Section 5,
+subsection `DataCamp learning bridge and Learning PASS`.
+
+Technical PASS applies to the technical reliability of the stated artifact and
+evidence scope.
+
+Learning PASS applies to Data’s understanding of the stated analytical slice
+and reviewed mental model.
+
+Neither PASS may exceed the evidence ceiling of the reviewed artifact, produce
+a Metrocar finding by itself, establish causality, or authorize publication or
+business action.
+
+### Metric-integrity check
+
+This check operationalizes a Goodhart-style caution: a useful measure can
+become misleading when optimization focuses on the measure rather than the
+underlying outcome. This is not a reason to reject metrics.
+
+Before a material metric or metric family is first introduced into an
+analytical slice, or materially repurposed, and again before it supports a
+materially new interpretation, recommendation, or optimization target, ask:
+
+- What underlying user or business outcome is this metric intended to
+  represent?
+- Is it an outcome, proxy, process measure, or diagnostic indicator?
+- What important value or consequence does it omit?
+- How could the metric improve while the underlying outcome stays unchanged or
+  becomes worse?
+- What could deteriorate while the metric improves?
+- Which adjacent count, rate, segment, qualitative evidence, or next question
+  would expose that distortion?
+- Is the metric being used as evidence, a diagnostic signal, or an
+  optimization target?
+- Which limitation must remain visible in the story?
+
+Answer the check proportionately. Mark a question as not applicable with a
+reason instead of inventing a hypothetical failure mode.
+
+For funnel analysis:
+
+- stage counts require their cohort and denominator context;
+- Percent of Top requires the exact top-stage count and does not describe the
+  adjacent transition;
+- Percent of Previous describes the adjacent transition but not total survival
+  from entry;
+- absolute drop-off requires its corresponding population and rate; and
+- relative drop-off requires its corresponding count and denominator.
+
+Read stage counts, cohort, Percent of Top, Percent of Previous, absolute
+drop-off, and relative drop-off as connected evidence rather than treating one
+measure as the complete funnel story.
+
+A funnel metric may be analytically correct while remaining incomplete
+evidence of user value, service quality, satisfaction, retention,
+profitability, or long-term business outcomes.
+
+Record the check in the existing pre-implementation synthesis when a metric is
+first introduced into a slice or materially repurposed.
+
+Revisit it during interpretation and recommendation review when the metric is
+used for a materially stronger claim, an optimization target, or a different
+decision.
+
+Use the existing Insight Log, walkthrough, and public limitations fields when
+the caution is material.
+
+Do not create a separate metric-integrity ledger, redefine the Metric Contract,
+or introduce another metric through this check.
 
 ---
 
