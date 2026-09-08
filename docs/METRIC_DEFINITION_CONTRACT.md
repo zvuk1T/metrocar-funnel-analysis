@@ -1,12 +1,14 @@
-# Metrocar Phase 2 Metric Definition Contract
+# Metrocar Metric Definition Contract
 
-**Status:** Phase 2 definitions locked; implementation requires separate authorization  
-**Owners:** User and planning assistant  
-**Last reviewed:** 2026-08-30
+**Status:** Current analytical definitions; implementation requires separate authorization
+
+**Final substantive authority:** Data
+
+**Last reviewed:** 2026-09-08
 
 ## 1. Purpose and Authority
 
-This document is the binding definition contract for Phase 2 funnel analysis.
+This document is the binding definition contract for current Metrocar funnel analysis.
 
 It defines:
 
@@ -19,13 +21,15 @@ It defines:
 - join direction and row preservation;
 - multiplicity handling;
 - validation and monotonicity requirements;
-- reproducibility and student-walkthrough documentation requirements.
+- reproducibility and learner-facing analytical-document requirements.
 
-All future SQL, Python modules, notebooks, datasets, visualizations, findings, and recommendations must follow this contract.
+All future SQL, Python analytical artifacts, datasets, visualizations, findings, and recommendations must follow this contract.
 
-This document contains no final analytical result and does not authorize implementation. It must not be interpreted as permission to add metrics, alter business definitions, or begin another project phase.
+`docs/MASTERSCHOOL_METROCAR_SOURCE_BRIEF.md` governs reconstruction of the original curriculum. This contract governs current analytical meaning. Current precision that goes beyond the historical curriculum must not be attributed to MasterSchool.
 
-If implementation conflicts with this contract, implementation must stop until the user or planning assistant resolves the conflict.
+This document contains no final analytical result and does not authorize implementation. It must not be interpreted as permission to add metrics, alter business definitions, or progress into another analytical task.
+
+If implementation conflicts with this contract, implementation must stop until Data resolves the conflict.
 
 ## 2. General Counting Principle
 
@@ -69,7 +73,9 @@ Accepted and cancel-after-accept are secondary diagnostics and are not included 
 
 For adjacent stages `A → B`:
 
-### 3.1 Conversion Rate
+### 3.1 Conversion Rate / Percent of Previous
+
+The historical curriculum label `Percent of Previous` and the current contract term `adjacent-stage conversion rate` refer to the same analytical measure.
 
 ```text
 conversion_rate_pct(A → B)
@@ -130,7 +136,7 @@ then:
 - Reconciliation and monotonicity checks must use unrounded counts and rates.
 - All results within the same table or visualization must use the same percentage precision.
 
-When results are segmented, numerator and denominator must belong to the same selected cohort, segment, and data cutoff.
+When results are segmented, numerator and denominator must belong to the same selected cohort, segment, and approved source snapshot.
 
 ### 3.6 Percent of Top — Descriptive Stage Context
 
@@ -145,13 +151,15 @@ For any stage `S`, let `T` be the funnel's top stage:
 | User Funnel | Downloaded |
 | Ride Funnel | Requested |
 
+“Top” is scope-dependent: it means the first stage of the selected approved funnel. `Downloaded` is therefore not a universal denominator. A new sub-funnel and its top stage require separate approval under the scope-change rule in Section 15.
+
 ```text
 percent_of_top_pct(S)
     = 100 × N(S) / N(T)
 ```
 
 The numerator and top-stage denominator must use the same selected cohort,
-segment, and reproducible source-data cutoff.
+segment, and approved source snapshot.
 
 Percent of Top must be calculated from exact unrounded stage counts at full
 available precision. Section 3.5 governs presentation rounding.
@@ -379,7 +387,24 @@ Therefore:
 
 Cancellation does not independently add, remove, or reorder a main-funnel stage.
 
-## 7. Cohort-Entry Date Filtering
+## 7. Source Snapshot, Cohort Entry, and Downstream Timing
+
+### 7.1 Approved Source Snapshot / Provenance Boundary
+
+The approved Metrocar source snapshot is the default evidence boundary. The source-data cutoff is primarily provenance metadata that identifies the evidence state reproducibly. It is not, by default, an independent event-time eligibility filter applied to every downstream record.
+
+For the default full-snapshot analysis:
+
+```text
+approved source snapshot
+→ rows present in that snapshot are available evidence
+→ cohort filters select entrants when a question defines a cohort
+→ downstream outcomes are evaluated from the rows present in the approved snapshot
+```
+
+Each run must record enough existing source-cutoff metadata to identify the approved source snapshot reproducibly. Where an approved source-cutoff value already exists, use that value. Do not invent or substitute a new timestamp or snapshot ID.
+
+### 7.2 Cohort-Entry Date Filtering
 
 Date filters select entities by the timestamp at which they enter their respective funnel:
 
@@ -397,17 +422,27 @@ entry_timestamp >= start_date
 AND entry_timestamp < day_after_end_date
 ```
 
+### 7.3 Downstream Outcome Membership
+
 Later-stage events remain attributed to the selected entry cohort even if they occur after the selected end date.
 
 Downstream stage timestamps must not be independently restricted to the cohort-entry date range.
 
-For a selected cohort, later-stage outcomes are evaluated using all outcomes observed by the reproducible source-data cutoff for that run.
-
-No arbitrary conversion window is part of this contract.
+Under the default snapshot-as-observed model, downstream membership is established from qualifying rows present in the approved source snapshot according to the governed stage rules. This includes qualifying signup, ride, transaction, and review rows. No additional per-event timestamp cutoff is applied unless a separately approved metric explicitly requires one.
 
 Newer entry cohorts have had less time to reach later stages. Every relevant report must therefore state the cohort-maturity caveat.
 
-A future comparison based on an equal observation window would require a separately defined and approved metric.
+### 7.4 Review Timing Limitation
+
+The current reviewed source does not provide a reliable review-event timestamp. Reviewed membership may therefore establish only that a qualifying review record was present in the approved source snapshot. It must not be used to claim that the review occurred before a particular event-time cutoff.
+
+Review time must not be inferred from a drop-off timestamp, transaction timestamp, request timestamp, or another ride timestamp.
+
+### 7.5 Future Event-Time Metrics
+
+No arbitrary conversion window is part of this contract.
+
+An equal-window comparison, event-time “as of” analysis, within-N-days lifecycle measure, or other time-bounded downstream measure requires a separate Data-approved metric and cohort design under Section 15. Such a measure must not silently redefine the default snapshot funnel.
 
 ## 8. Platform Attribution
 
@@ -594,15 +629,15 @@ predicate. They contribute one distinct relationship to this check and remain
 separately reportable as source multiplicity.
 
 For a selected User Funnel cohort, a material ambiguity exists only when one
-non-null `signups.user_id` is linked through signup rows observed by the
-reproducible source-data cutoff to more than one distinct non-null
+non-null `signups.user_id` is linked through signup rows present in the
+approved source snapshot to more than one distinct non-null
 `signups.session_id`, and those session IDs match more than one distinct
 `app_downloads.app_download_key` in the selected download-entry cohort.
 
 `app_downloads.download_ts` defines User Funnel cohort entry. Signup evidence
-is observed through the shared source-data cutoff. A signup session activates
-this predicate only when it matches a download entrant inside the selected
-cohort.
+comes from the same approved source snapshot identified by the recorded
+source-cutoff metadata. A signup session activates this predicate only when it
+matches a download entrant inside the selected cohort.
 
 This rule defines a validation predicate. It does not assert that the source
 data contains such a relationship.
@@ -653,7 +688,7 @@ Missing signup, download, transaction, or review records must affect attribution
 
 ## 12. Validation Requirements
 
-Before any Phase 2 result is accepted, the implementation must demonstrate the following.
+Before any governed analytical result is accepted, the implementation must demonstrate the following.
 
 ### 12.1 Grain Preservation
 
@@ -688,8 +723,8 @@ Validation must confirm that:
 
 - every stage count uses the declared distinct grain;
 - adjacent-stage conversion and drop-off calculations use the formulas in Section 3;
-- Percent of Top uses the applicable funnel's top-stage count for the same cohort, segment, and source-data cutoff, sets the top-stage value to `100%` when the top-stage count is nonzero, returns `NULL` and displays as `N/A` for every stage when the top-stage count is zero, allows a later stage to equal `100%` when its count equals the top-stage count, and is not labeled as adjacent-stage conversion;
-- segmented numerators and denominators use the same cohort, segment, and data cutoff;
+- Percent of Top uses the applicable funnel's top-stage count for the same cohort, segment, and approved source snapshot, sets the top-stage value to `100%` when the top-stage count is nonzero, returns `NULL` and displays as `N/A` for every stage when the top-stage count is zero, allows a later stage to equal `100%` when its count equals the top-stage count, and is not labeled as adjacent-stage conversion;
+- segmented numerators and denominators use the same cohort, segment, and approved source snapshot;
 - zero denominators return `NULL` and display as `N/A`;
 - rounding occurs only after full-precision calculation;
 - drop-off rates are not calculated from rounded conversion rates.
@@ -753,7 +788,9 @@ Validation must confirm that:
 - ride cohorts are selected only by `request_ts`;
 - the half-open date boundary is applied correctly;
 - downstream outcomes are not removed merely because they occur after the selected end date;
-- the source-data cutoff is recorded;
+- the approved source snapshot and its source-cutoff provenance metadata are recorded;
+- downstream membership uses qualifying rows present in that snapshot without an additional per-event timestamp cutoff;
+- Reviewed timing claims comply with the limitation in Section 7.4;
 - reporting carries the required cohort-maturity and timezone caveats.
 
 ### 12.7 Segment Reconciliation
@@ -777,31 +814,39 @@ Every published metric must be traceable to one or both of the following version
 1. **Exact SQL**
    - repository-relative `.sql` file path;
    - named query, CTE, statement, or output;
-   - required input parameters;
-   - cohort filter values and source-data cutoff.
+   - material input parameters;
+   - cohort and filter values;
+   - approved source snapshot and source-cutoff provenance metadata.
 
-2. **Canonical Python implementation**
-   - repository-relative module path;
-   - exact importable module and function name;
-   - required function parameters;
-   - cohort filter values and source-data cutoff.
+2. **Approved canonical Python implementation**
+   - approved artifact form: learner-facing notebook, learner-facing cell-based `.py` analytical document, supporting importable Python module/function, or an approved combination;
+   - repository-relative artifact path;
+   - durable locator appropriate to the artifact, such as a stable named section, `# %%` analytical section, named output, or importable module/function when applicable;
+   - material inputs and parameters;
+   - cohort and filter values;
+   - approved source snapshot and source-cutoff provenance metadata;
+   - validation evidence.
 
-A generic file path, screenshot, copied result table, manual calculation, or notebook display is not sufficient.
+A generic file path, screenshot, copied result table, manual calculation, or display-only result is not canonical evidence. A notebook display is not sufficient by itself, but the executable notebook containing the governed logic may itself be an approved canonical Python implementation.
 
 If both SQL and Python implementations exist for the same result, their outputs at the declared grain and parameters must reconcile.
+
+If multiple canonical paths exist for the same governed result, the reproducibility record must identify their roles and reconcile them where required.
 
 Each reproducibility reference must identify:
 
 - the applicable section of this contract;
 - the exact executable artifact;
+- the artifact form and durable locator;
 - the analytical grain;
-- the input parameters;
-- the source-data cutoff;
+- the material inputs and parameters;
+- the cohort and filter values;
+- the approved source snapshot and source-cutoff provenance metadata;
 - the named output or returned object;
 - the related validation evidence;
 - related Insight Log IDs, where applicable.
 
-Every finding in `docs/ANALYSIS_INSIGHT_LOG.md` must reference the exact SQL and/or canonical Python module/function that reproduces its evidence.
+Every finding in `docs/ANALYSIS_INSIGHT_LOG.md` must reference the exact SQL and/or approved canonical Python reference that reproduces its evidence.
 
 Every recommendation must identify the `Validated` Insight Log record or records that support it.
 
@@ -809,20 +854,15 @@ Observations, interpretations, and recommendations must remain clearly distingui
 
 If a value cannot be reproduced from the documented source, parameters, and canonical executable logic, it must not be presented as an accepted project result.
 
-## 14. Student Walkthrough Role and Documentation
+## 14. Learner-Facing Analytical Document Role and Documentation
 
-The student-facing analytical walkthrough is the learning narrative. It may be an approved Jupyter/Colab notebook or an approved cell-based Python walkthrough using `# %%` sections. The artifact explains analytical reasoning, presents validation evidence, and interprets results.
+The primary learner-facing analytical document combines the real analytical work with its explanation. A learner-facing analytical document may be approved in Jupyter/Colab notebook form or as a cell-based `.py` analytical document using `# %%` sections. `AGENTS.md`, `HOW-WE-WORK.md`, and the authorized analytical task govern which approved artifact serves as the primary learning path.
 
-The walkthrough is not the sole or canonical source of metric truth. Canonical analytical truth remains in the exact SQL and/or canonical Python artifacts governed by Section 13.
+When the learner-facing document is the approved canonical Python implementation, its material calculations may live directly in that executable artifact. A separate supporting module or function is not required merely to satisfy architecture.
 
-No material metric calculation may exist only inside the walkthrough. Ordinary walkthrough use must execute, invoke, or clearly reference the canonical SQL and/or Python artifact defined in Section 13.
+When a learner-facing document is supplementary rather than canonical, it must reuse, execute, clearly reference, or explicitly reconcile to the approved canonical implementation. Any reconciliation must use the same analytical grain, material inputs and parameters, cohort and filter values, and approved source snapshot/cutoff metadata. The supplementary document must not become a second independent implementation or metric authority.
 
-An explicitly educational teaching reconstruction may reproduce selected core logic in simpler steps only when:
-
-1. the reconstruction preserves every relevant rule in this contract;
-2. it is clearly labeled as educational;
-3. it reconciles exactly to the canonical implementation for the same parameters and source-data cutoff; and
-4. it does not become an independent metric authority.
+Canonical analytical meaning remains governed by this contract. No learner-facing artifact may redefine it.
 
 Before every significant code cell, `# %%` section, or coherent group of closely related steps, an explanatory learning block appropriate to the artifact must explain, in proportion to the operation’s complexity:
 
@@ -831,23 +871,23 @@ Before every significant code cell, `# %%` section, or coherent group of closely
 - the analytical grain;
 - the applicable stage or formula definition;
 - the source tables and exact join keys;
-- the cohort-entry filter and source-data cutoff;
-- the canonical SQL query and/or Python module/function being executed;
+- the cohort-entry filter and approved source snapshot/cutoff metadata;
+- the exact SQL and/or approved canonical Python reference being executed or implemented;
 - the expected output;
 - the required validation or monotonicity condition;
 - relevant maturity, attribution, or timezone limitations.
 
-For `.ipynb`, the learning block may be a Markdown cell. For a cell-based `.py` walkthrough, it may be a `# %% [markdown]` section or clearly separated teaching block. Import-only, configuration-only, or simple display steps may share a short introductory block.
+For `.ipynb`, the learning block may be a Markdown cell. For a cell-based `.py` analytical document, it may be a `# %% [markdown]` section or clearly separated teaching block. Import-only, configuration-only, or simple display steps may share a short introductory block.
 
-The walkthrough must record or expose:
+The learner-facing analytical document must record or expose:
 
 - filter parameters;
-- the source-data cutoff;
+- the approved source snapshot and source-cutoff provenance metadata;
 - canonical executable references;
 - validation outputs;
 - related Insight Log IDs where findings are discussed.
 
-The walkthrough may explain or reconstruct this contract for learning, but it may not redefine it.
+The learner-facing analytical document may explain this contract for learning, but it may not redefine it.
 
 Any change to grain, stages, attribution, filtering, formulas, validation treatment, or business meaning still requires explicit planning approval.
 
