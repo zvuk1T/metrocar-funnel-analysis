@@ -15,3 +15,6 @@ web/dist/
 
 # macOS Finder metadata
 .DS_Store
+
+# Local historical documentation archive
+.local_archive/

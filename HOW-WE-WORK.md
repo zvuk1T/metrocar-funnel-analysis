@@ -10,11 +10,11 @@ It does not replace:
 
 - `AGENTS.md`;
 - `METROCAR_PROJECT_EXECUTION_PLAN.md`;
-- `docs/METRIC_DEFINITION_CONTRACT.md`;
-- `docs/ANALYSIS_INSIGHT_LOG.md`; or
-- `docs/METROCAR_VISUAL_SPEC.md`.
+- `docs/MASTERSCHOOL_METROCAR_SOURCE_BRIEF.md`;
+- `docs/METRIC_DEFINITION_CONTRACT.md`; or
+- `docs/ANALYSIS_INSIGHT_LOG.md`.
 
-Those documents govern authority, scope, analytical truth, validated findings, and visual/product requirements.
+Those documents have separate roles: authority and safety, current rebuild status and gates, historical curriculum reconstruction, current analytical meaning, and current finding status.
 
 This document governs how we reason, learn, explain, and implement.
 
@@ -103,9 +103,9 @@ The preferred task is proportionate, conceptually coherent, outcome-complete wit
 
 A single Geordi task may include several tightly related analytical steps when they share one business question, analytical grain, mental model, and validation path and are easier for Data to understand and review together.
 
-“One analytical idea at a time” governs reading order, teaching sequence, and visible reasoning inside code and walkthrough sections. It does not require one transformation, one function, or one file per Geordi task, and it is not a rule for microscopic implementation slices.
+“One analytical idea at a time” governs reading order, teaching sequence, and visible reasoning inside the main analytical Python document. It does not require one transformation, one function, or one file per Geordi task, and it is not a rule for microscopic implementation slices.
 
-Metrocar is a school and recruiter-facing portfolio project, not a live client production system. Ordinary local Python, SQL, test, walkthrough, and frontend mistakes are normally recoverable learning signals and do not require enterprise-level ceremony or artificial task fragmentation.
+Metrocar is a school and recruiter-facing portfolio project, not a live client production system. Ordinary local mistakes in Python, SQL, tests, the main analytical document, and frontend code are normally recoverable learning signals and do not require enterprise-level ceremony or artificial task fragmentation.
 
 When choices compete, preserve this priority:
 
@@ -167,7 +167,7 @@ Depending on the artifact, this may be:
 - a concise module or function docstring;
 - a short section comment before a non-obvious transformation;
 - a SQL header or CTE comment;
-- notebook Markdown before a meaningful code block;
+- a `# %% [markdown]` block before meaningful code in the main analytical Python document;
 - nearby methodology text when system-level context is more appropriate.
 
 Explain, when material:
@@ -338,17 +338,54 @@ configuration, and how validated analytical output reaches the browser. Data
 is not required to reconstruct frontend code independently as he is expected
 to do with the analytical implementation.
 
-### Text cells teach; code cells demonstrate
+### The main analytical document is the course
 
-This subsection applies specifically to the student-facing cell-based walkthrough.
+The main cell-based analytical Python document combines two responsibilities:
 
-Markdown or `# %% [markdown]` teaching cells own the business purpose, WHY, mental model, analytical grain, assumptions, common traps, interpretation, and validation explanation.
+- the real analytical Python implementation; and
+- the primary learner-facing Metrocar course.
 
-Code cells demonstrate the analytical concept with the shortest clear implementation that preserves canonical meaning. Prefer one analytical idea per ordinary code cell. Roughly 5–12 lines is a useful soft guideline for an ordinary analytical code cell, not a hard limit.
+Its `# %% [markdown]` learning blocks and the actual code cells that follow form
+one top-to-bottom analytical sequence. The code cells must contain the real
+analysis used by the project, not a teaching reconstruction of a different
+implementation.
 
-If a cell becomes long because it contains several analytical ideas, split the ideas instead of compressing the syntax. Infrastructure or setup code may legitimately be longer when necessary, but it must not become the model for analytical teaching code.
+For each meaningful analytical concept or question, use this learner-facing
+reading spine proportionately:
 
-Do not move conceptual explanation into excessive inline comments merely to shorten Markdown, and do not comment obvious syntax. Keep the explanation and comment discipline consistent with Section 4.
+```text
+Topic / Question
+→ 🎯 Goal
+→ 🧠 Approach and WHY
+→ 📚 DataCamp learning pointer
+→ Actual analytical code
+→ ✅ Result / Observation
+→ ✅ Notes for Students
+→ ➡️ Next question
+```
+
+The learning block should make the purpose, input and output grain or state,
+material assumptions, and intended check understandable before the reader has
+to decode the code. The result or observation must stay within the available
+evidence. Notes for Students should capture only the validation meaning,
+important limitation, reusable principle, or common trap needed to understand
+and reconstruct the step.
+
+Prefer one analytical idea per ordinary code cell or coherent group of cells.
+If a cell becomes long because it contains several analytical ideas, split the
+ideas instead of compressing the syntax. Infrastructure or setup code may
+legitimately be longer when necessary, but it must not become the model for
+analytical teaching code.
+
+Do not move conceptual explanation into excessive inline comments merely to
+shorten Markdown, and do not comment obvious syntax. Keep the explanation and
+comment discipline consistent with Section 4.
+
+A separate notebook or walkthrough is optional and supplementary. It may be
+added later for a concrete presentation, interoperability, or review need, but
+it must reuse the real implementation. It must not be required to understand
+the analysis, duplicate the analytical logic, redefine metric meaning, or
+replace the main analytical Python document as the primary learning path.
 
 ### DataCamp learning bridge and Learning PASS
 
@@ -381,8 +418,8 @@ Chapter may be omitted when a course-level reference is sufficient. An
 not repeat a mapping for later uses of the same technique unless its role
 changes materially.
 
-When the technique is first taught publicly, the walkthrough must show one
-compact public-safe refresher:
+When the technique is first taught publicly, the main analytical Python
+document must show one compact public-safe refresher:
 
 ```text
 📚 DataCamp refresher
@@ -398,8 +435,8 @@ original application, reasoning, examples, and validation.
 
 For each meaningful analytical slice, assemble one proportionate learning
 package, beginning with pre-implementation synthesis and continuing across the
-authorized task, learner-facing artifact, validation evidence, and review
-report:
+authorized task, the main analytical Python document, validation evidence, and
+review report:
 
 - the business question, exact repository checkpoint, reviewed files or
   sections, and slice boundary;
@@ -416,9 +453,8 @@ The required order is:
 
 ```text
 verified DataCamp learning path
-→ implementation
-→ learner-facing explanation
-→ semantic validation
+→ actual implementation and adjacent learner-facing explanation in the main analytical Python document
+→ semantic validation supported by tests, SQL, and reconciliation as applicable
 → Troi reviews the actual artifact in reading order
 → Data explains the reasoning
 → Data grants or withholds Learning PASS for the stated checkpoint and slice
@@ -587,7 +623,7 @@ Every meaningful analytical slice begins with a question, not a selected
 conclusion.
 
 Apply this contract proportionately to pre-implementation synthesis,
-learner-facing walkthrough sections, proposed Insight Log records,
+sections of the main analytical Python document, proposed Insight Log records,
 interpretation and recommendation review, and recruiter-facing analytical
 stories. A technical helper or individual test does not require its own
 standalone story.
@@ -784,8 +820,8 @@ Revisit it during interpretation and recommendation review when the metric is
 used for a materially stronger claim, an optimization target, or a different
 decision.
 
-Use the existing Insight Log, walkthrough, and public limitations fields when
-the caution is material.
+Use the existing Insight Log, main analytical Python document, and public
+limitations fields when the caution is material.
 
 Do not create a separate metric-integrity ledger, redefine the Metric Contract,
 or introduce another metric through this check.
@@ -862,13 +898,15 @@ Form follows understanding.
 
 `AGENTS.md` governs authority, reading, mutation, validation, and STOP behavior.
 
-`METROCAR_PROJECT_EXECUTION_PLAN.md` governs project scope, phases, deliverables, and acceptance boundaries.
+`METROCAR_PROJECT_EXECUTION_PLAN.md` governs the current rebuild objective, status, active document map, next gate, and STOP boundaries.
+
+`docs/MASTERSCHOOL_METROCAR_SOURCE_BRIEF.md` governs reconstruction of what the original MasterSchool curriculum taught and required. It does not govern current metric meaning or implementation.
 
 `docs/METRIC_DEFINITION_CONTRACT.md` governs analytical meaning.
 
-`docs/ANALYSIS_INSIGHT_LOG.md` governs validated findings, interpretations, caveats, and recommendations.
+`docs/ANALYSIS_INSIGHT_LOG.md` governs the status of current findings, interpretations, caveats, and recommendations.
 
-`docs/METROCAR_VISUAL_SPEC.md` governs how validated evidence becomes the recruiter-facing analytical case study.
+Recruiter-facing visual and product requirements are approved later, after the analytical story exists. An archived visual plan has no current authority.
 
 `HOW-WE-WORK.md` governs the learning and implementation discipline connecting those layers.
 

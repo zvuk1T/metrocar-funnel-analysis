@@ -13,11 +13,11 @@ Read documents in the following order.
 1. Read `AGENTS.md` completely.
 2. Read `HOW-WE-WORK.md` completely.
 3. Read the governing sections of `METROCAR_PROJECT_EXECUTION_PLAN.md`, including:
-   - project and phase status;
+   - current project and reset status;
    - the current authorized task;
    - the document map and ownership;
-   - the applicable readiness gate or checkpoint;
-   - relevant changelog entries.
+   - the applicable gate or checkpoint;
+   - the relevant reset note.
 4. Read the explicit task authorization, brief, or handover.
 
 Before acting, identify the authorized scope, permitted files, governance-controlled files and ownership boundaries, required evidence, and next mandatory stop.
@@ -28,10 +28,11 @@ Before any non-trivial code or analytical implementation task, complete the Pre-
 
 Read these after Tier 1 when relevant:
 
+- For questions about the original MasterSchool curriculum, assignment provenance, or historical requirements: read `docs/MASTERSCHOOL_METROCAR_SOURCE_BRIEF.md` completely.
 - For metric calculation, analytical implementation, validation, interpretation, visualization, or insight logging: read `docs/METRIC_DEFINITION_CONTRACT.md` completely.
-- When Phase 1 evidence is used: read the relevant sections of `docs/data_quality_report.md`.
+- When accepted structural or source-profile evidence is used: read the relevant sections of `docs/data_quality_report.md`.
 - When creating, changing, or relying on a finding: read `docs/ANALYSIS_INSIGHT_LOG.md` and all related records.
-- For student-facing analytical walkthrough work, whether an approved notebook or cell-based Python walkthrough: read the canonical SQL, Python modules/functions, tests, and source documentation used by that walkthrough.
+- For work on the primary learner-facing main analytical Python document, or on any separately authorized supplementary notebook or walkthrough: read the canonical SQL, supporting Python modules/functions, tests, and source documentation used by that analytical step.
 
 ### Tier 3 — Execution Materials
 
@@ -39,7 +40,7 @@ Read only the source files, schemas, tests, and supporting documents directly re
 
 If a required document is missing, contradictory, or materially ambiguous, stop and request a planning decision. Do not resolve governance or business-definition conflicts independently.
 
-The execution plan governs scope and phase status. The Metric Contract governs analytical definitions. The accepted data-quality report provides Phase 1 evidence. The Insight Log governs the status of findings. Code and prior outputs cannot silently override them.
+The execution plan governs current scope, status, and gates. The MasterSchool Source Brief governs reconstruction of the original curriculum, not current metric meaning. The Metric Contract governs current analytical definitions. The accepted data-quality report provides snapshot-specific structural evidence. The Insight Log governs the status of current findings. Code, archived documents, and prior outputs cannot silently override them.
 
 ## Scope, Ownership, and Active Crew Roles
 
@@ -144,32 +145,40 @@ If implementation reveals a schema conflict, missing definition, unexpected data
 
 ## Reproducibility and Traceability
 
-The student-facing analytical walkthrough is the learning narrative. It may be an approved Jupyter/Colab notebook or a cell-based Python walkthrough using `# %%` sections. It is not the sole or canonical source of analytical truth.
+The main analytical Python document is both the real Python analytical implementation and the primary learner-facing course. It must keep the actual analysis understandable from top to bottom, remain governed by the Metric Contract, and retain the supporting SQL, tests, and reconciliation evidence required for reproducibility.
 
 Every published metric or finding must be reproducible through one or both of:
 
 - exact saved SQL identified by repository-relative path and stable query, CTE, statement, or output name;
-- a canonical Python module and function identified by repository-relative path, import path, and function name.
+- an approved canonical Python implementation identified by repository-relative path and a durable locator.
 
-Walkthrough-only calculations are insufficient final evidence. The walkthrough must invoke or clearly reference the canonical SQL or Python implementation, or explicitly reconcile an approved teaching reconstruction to it, and must record the relevant parameters and source-data cutoff.
+An approved canonical Python implementation may use either of the following forms, or an approved combination of them; neither form requires the other:
+
+- a learner-facing analytical notebook or cell-based `.py` document, identified by a stable named section, `# %%` analytical section where applicable, named output, or other durable locator; or
+- a supporting Python module and function, identified by repository-relative path, import path, and function name where applicable.
+
+The canonical reference must record the relevant parameters and source-data cutoff. A learner-facing analytical artifact may itself be canonical when it is explicit, reproducible, inspectable, testable where appropriate, traceable to governed metric definitions, and understandable by Data. In that case, it does not need to duplicate or invoke a separate Python module or function. A supporting module or function remains optional and should be introduced only when it materially improves correctness, reuse, validation, or maintainability.
+
+A supplementary notebook or walkthrough may be added later only under separate authorization and for a concrete supplementary purpose. If it is not itself the approved canonical Python implementation, it must reuse or execute the real analytical implementation, or clearly reference or reconcile to it, rather than reproduce it. It must not be required to understand the real Python analysis, become a second implementation, redefine metric meaning, or replace the main analytical Python document as the primary learning path. The main document and any supplementary artifact must record the relevant parameters and source-data cutoff.
 
 Every published metric must reference its governing Metric Contract section and its exact SQL and/or canonical Python implementation. Every finding must have an Insight Log ID and reproducibility reference. Every recommendation must identify the Validated finding or findings supporting it. Observations, interpretations, and recommendations must remain distinct.
 
 Screenshots, copied result tables, and undocumented manual calculations may supplement evidence but cannot replace reproducible logic.
 
-## Student Walkthrough Documentation
+## Main Analytical Python Document
 
-Before every significant code cell or section, or coherent group of closely related steps, place an explanatory learning block appropriate to the artifact: a Markdown cell for `.ipynb`, or a `# %% [markdown]` block or clearly separated teaching section for cell-based `.py`. Follow the learning principles in `HOW-WE-WORK.md` rather than duplicating them here.
+Before every significant analytical concept or question, or coherent group of closely related steps, place a concise `# %% [markdown]` learning block next to the actual analytical code in the main cell-based Python document. Follow the learner-facing reading spine in `HOW-WE-WORK.md` rather than duplicating it here.
 
 As applicable, explain:
 
-- why the step is needed;
-- the business question or validation objective;
-- the input and analytical grain;
+- the topic or business question and why the step is needed;
+- the approach, input, and analytical grain or state;
+- the relevant DataCamp learning pointer when a material technique first appears;
 - the transformation, join, or filter;
 - the governing contract rule;
-- the expected output;
-- how success will be validated.
+- the result or observation and how it is validated;
+- the notes Data needs to explain or reconstruct the step;
+- the next question opened by the result.
 
 Import-only, configuration-only, and simple display steps may share a short explanation. Avoid unexplained monolithic code sections.
 

@@ -1,139 +1,103 @@
 # Metrocar Funnel Analysis
 
-Metrocar is a ride-sharing funnel-analysis portfolio project demonstrating:
+Metrocar is an educational ride-sharing funnel-analysis project being rebuilt as a recruiter-facing portfolio case study.
 
-- reproducible SQL/Pandas analysis;
-- governed user and ride funnels;
-- validated business insights;
-- evidence-backed recommendations; and
-- a planned Astro + React + TypeScript + Plotly.js interactive analytical case study.
-
-## Current status
-
-- Phases 1–3 are complete and accepted.
-- The Phase 4 visual specification is approved.
-- Phase 4A now provides a local, reviewable full-snapshot Funnel Explorer.
-- Platform, age, and date filters, comparisons, later insight sections, and deployment remain future work.
-- This is a portfolio rebuild, not a MasterSchool resubmission.
-
-No live demo or Render deployment is claimed by this README.
-
-## Canonical high-level funnels
-
-These accepted full-snapshot counts follow `docs/METRIC_DEFINITION_CONTRACT.md` and the canonical
-SQL/Pandas analysis. The two funnels retain their separate governed grains.
-
-### User funnel
+The project is designed to show a complete analytical reasoning path:
 
 ```text
-Downloaded 23,608
-→ Signed Up 17,623
-→ Requested 12,406
-→ Completed 6,233
+business question
+→ data and analytical grain
+→ SQL/Pandas evidence
+→ validation
+→ interpretation
+→ responsible judgment
 ```
 
-### Ride funnel
+## Current Status
 
-```text
-Requested 385,477
-→ Finished 223,652
-→ Paid 212,628
-→ Reviewed 148,464
-```
+The project is at a controlled analytical-rebuild checkpoint.
 
-## Setup
+- The original MasterSchool Metrocar curriculum has been reconstructed as a public-safe historical source.
+- Accepted structural source evidence has been preserved.
+- Current metric definitions remain governed while they await a separate comparison with the historical source.
+- The active analytical story and Insight Log have been reset so that earlier conclusions do not automatically select the new business question.
+- Reproducible SQL/Python analysis will be rebuilt one coherent, approved question at a time.
+- Frontend architecture and portfolio presentation are deferred until the analytical story exists.
 
-1. Create the environment and install dependencies:
+Previous analytical and frontend artifacts may remain in the repository or Git history as historical and regression material. They do not define the current architecture or current portfolio conclusions.
 
-   ```bash
-   python3.12 -m venv .venv
-   source .venv/bin/activate
-   pip install -r requirements.txt
-   ```
+There is no current live-demo or deployment claim.
 
-2. Configure the database credential locally (never commit it):
+## Original Curriculum
 
-   ```bash
-   cp .env.example .env
-   # edit .env and set METROCAR_DATABASE_URL to the PostgreSQL connection URL
-   ```
+The historical assignment, learning sequence, database model, funnel concepts, formulas, SQL/Pandas techniques, business questions, storytelling expectations, and submission context are reconstructed in:
 
-   `.env` is listed in `.gitignore` and must stay out of version control.
+- [`docs/MASTERSCHOOL_METROCAR_SOURCE_BRIEF.md`](docs/MASTERSCHOOL_METROCAR_SOURCE_BRIEF.md)
 
-## Existing structural-profile command
+This is a historical source reference. It does not redefine current Metrocar metrics or implementation.
 
-- `analysis/db.py` — safe, read-only SQLAlchemy 2.x + psycopg 3 connection.
-- `analysis/schema.py` — expected tables/columns/keys from the plan.
-- `analysis/profile.py` — read-only structural profiling queries.
-- `analysis/report.py` — renders the credential-free data-quality report.
-- `sql/production/01_structural_profile.sql` — the same checks as readable SQL.
-- `docs/data_quality_report.md` — generated profiling output.
+## Current Analytical Standard
 
-## Run existing checks
+Metrocar follows these principles:
 
-```bash
-# regenerate the data-quality report (requires METROCAR_DATABASE_URL)
-# single safe entry point: checks the connection and exits with a
-# credential-free message on any failure
-python -m analysis.run
+- understanding before automation;
+- WHY before HOW;
+- business question before technique;
+- explicit analytical grain;
+- visible joins, filters, transformations, and denominators;
+- DataCamp-learnable SQL and Python/Pandas;
+- semantic validation rather than “the code ran” validation;
+- separate Technical PASS and Learning PASS;
+- clear separation of fact, interpretation, hypothesis, and recommendation; and
+- frontend presentation only after the evidence and story are accepted.
 
-# run tests (database tests skip if the credential is not set)
-pytest
-```
+The project is intended to be professionally credible while remaining understandable enough for Data to explain and reconstruct the analytical reasoning.
 
-The database connection is enforced read-only at the connection level, and no
-error path prints the URL or a chained traceback.
+## Active Reading Path
 
-`python -m analysis.run` regenerates the Phase 1 structural data-quality report. It is not a Phase 4
-build command. Canonical Phase 2 and Phase 3 logic is available through the modules and production
-SQL listed below.
+For the shortest useful overview:
 
-## Phase 4A local Funnel Explorer
+1. [`docs/MASTERSCHOOL_METROCAR_SOURCE_BRIEF.md`](docs/MASTERSCHOOL_METROCAR_SOURCE_BRIEF.md) — what the original curriculum taught.
+2. [`METROCAR_PROJECT_EXECUTION_PLAN.md`](METROCAR_PROJECT_EXECUTION_PLAN.md) — what the rebuild is doing now.
+3. [`HOW-WE-WORK.md`](HOW-WE-WORK.md) — how the analysis must be learned, explained, and validated.
+4. [`docs/METRIC_DEFINITION_CONTRACT.md`](docs/METRIC_DEFINITION_CONTRACT.md) — what current analytical metrics mean.
+5. [`docs/data_quality_report.md`](docs/data_quality_report.md) — accepted structural evidence for the recorded source snapshot.
+6. [`docs/ANALYSIS_INSIGHT_LOG.md`](docs/ANALYSIS_INSIGHT_LOG.md) — what the current rebuild has established.
+7. [`docs/DATACAMP_PYTHON_REFERENCE.md`](docs/DATACAMP_PYTHON_REFERENCE.md) and [`docs/DATACAMP_SQL_REFERENCE.md`](docs/DATACAMP_SQL_REFERENCE.md) — verified learning navigation.
 
-Phase 4A keeps the database boundary outside the browser. The export command runs the accepted
-SQL/Pandas reconciliation and then writes only eight aggregate funnel-stage rows plus cutoff and
-traceability metadata:
+Agents and repository contributors must begin with [`AGENTS.md`](AGENTS.md).
 
-```bash
-./.venv/bin/python -m analysis.public_data
-```
+## Reproducibility
 
-The checked-in output is `web/public/data/metrocar-funnels.json`. It contains no entrant, user,
-ride, transaction, review, source-row, or credential data.
+Each accepted analytical question will identify:
 
-The frontend targets Node `24.20.0` and pnpm `11.19.0`. This project-local setup keeps Node under
-the ignored `.runtime/` directory and does not change the system installation or shell profile:
+- its source and analytical grain;
+- its current metric definition;
+- exact SQL and/or Python/Pandas implementation;
+- cohort, cutoff, filters, and assumptions;
+- validation and reconciliation evidence;
+- the applicable DataCamp learning path;
+- Data’s Learning PASS; and
+- any accepted finding or recommendation.
 
-```bash
-export METROCAR_NODE_HOME="$PWD/.runtime/pnpm"
-export PNPM_HOME="$METROCAR_NODE_HOME"
-export PATH="$METROCAR_NODE_HOME/bin:$PATH"
-pnpm runtime set node 24.20.0 --global
+Exact run instructions will be restored here only after the first rebuilt analytical path is approved as current. Historical commands or outputs should not be treated as current merely because they still exist.
 
-cd web
-CI=true pnpm_config_strict_dep_builds=false pnpm install --frozen-lockfile --ignore-workspace
-pnpm_config_verify_deps_before_run=false pnpm run dev
-```
+## Data and Privacy
 
-Open <http://127.0.0.1:4321/>. The dependency install deliberately leaves transitive lifecycle
-scripts disabled; the Astro build uses the installed platform packages successfully without them.
+Metrocar uses an educational historical dataset.
 
-Frontend validation uses:
+Database credentials are not part of the repository and must never be committed or exposed. The accepted data-quality report contains structural evidence, not credentials or raw source records.
 
-```bash
-pnpm_config_verify_deps_before_run=false pnpm run check
-pnpm_config_verify_deps_before_run=false pnpm run build
-```
+## Intended Portfolio Outcome
 
-## Current reading order
+After the analytical story is established, Metrocar will become a focused interactive case study that lets a recruiter understand:
 
-1. [`AGENTS.md`](AGENTS.md)
-2. [`METROCAR_PROJECT_EXECUTION_PLAN.md`](METROCAR_PROJECT_EXECUTION_PLAN.md)
-3. [`docs/METRIC_DEFINITION_CONTRACT.md`](docs/METRIC_DEFINITION_CONTRACT.md)
-4. [`docs/data_quality_report.md`](docs/data_quality_report.md)
-5. [`analysis/funnel.py`](analysis/funnel.py) +
-   [`sql/production/02_funnel_analysis.sql`](sql/production/02_funnel_analysis.sql)
-6. [`analysis/business_insights.py`](analysis/business_insights.py) +
-   [`sql/production/03_business_insights.sql`](sql/production/03_business_insights.sql)
-7. [`docs/ANALYSIS_INSIGHT_LOG.md`](docs/ANALYSIS_INSIGHT_LOG.md)
-8. [`docs/METROCAR_VISUAL_SPEC.md`](docs/METROCAR_VISUAL_SPEC.md)
+- the business question;
+- the funnel and its analytical grain;
+- the evidence;
+- the reasoning;
+- the supported judgment;
+- the limitations; and
+- the resulting action or next question.
+
+The future web layer will present accepted analysis. It will not define analytical truth.
